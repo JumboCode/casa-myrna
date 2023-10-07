@@ -1,3 +1,43 @@
+## CASA-MYRNA
+## Git Do's and Don'ts
+*DON'T 
+  - UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
+  - don't push to dev directly, you should be working on a different branch as dev will be the branch we push our most up to date code to
+  - don't handle merge conflicts without Elizabeth or Nishika being present
+  - don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! whether it is an easy or difficult fix will vary, but still fixable!
+
+*Do
+  - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road. 
+  - If you have just begun a coding session after a few days, run the following git commands:
+      ```git
+    git pull  
+    git checkout [curr_branch]
+    git merge dev
+    ```
+  - If you see on github that the current branch you're on is behind the dev branch:
+    ```git
+    git checkout [curr_branch]
+    git merge dev
+    ```
+    This will merge everything from the dev branch onto your current branch. 
+  - If you have just finished editing a few files, and would only like to set a SINGLE file to the stage:
+    ```git
+    git add [filename]
+    ```
+  - If you would like to add all of the files you edited to the stage:
+    ```git
+    git add .
+    ```
+  - If you have added files to the stage and would like to commit them to the stage:
+    ```git
+    git commit -m "[insert message here]"
+    ```
+  - If you have made commits to your local branch and would like to push to github:
+    ```git
+    git push
+    ```
+
+## WEB APP INFO
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
