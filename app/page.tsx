@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react"
+import React from "react";
 
 
 export default function Component() {
