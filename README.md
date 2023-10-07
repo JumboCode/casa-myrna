@@ -40,8 +40,13 @@
   * We will not be accepting code without any comments!!
       - Functions should have a description of what it does
       - large loops or code with a lot of logic should have a description as well
-  * Use camel case instead of underscores for variable names or filenames
+  * Use camelCase instead of underscores for variable names or filenames
   * Since you will be working on a separate branch from our dev branch, you will need to submit pull requests (PRs) along with your testing process.
+  * Since you will be working on a separate branch from our dev branch, we will also be using a naming convention for the branches:
+    ```
+    [frontend or backend]/[ticket#]-ticket-title
+    ``` 
+      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend/45-creating-profile-page`
 
 ## WEB APP INFO
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
