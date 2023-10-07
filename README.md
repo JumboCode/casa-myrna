@@ -4,7 +4,7 @@
   - UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
   - don't push to dev directly, you should be working on a different branch as dev will be the branch we push our most up to date code to
   - don't handle merge conflicts without Elizabeth or Nishika being present
-  - don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! whether it is an easy or difficult fix will vary, but still fixable!
+  - don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! reach out to Nishika if this does happen and she will help!
 
 *Do
   - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road. 
