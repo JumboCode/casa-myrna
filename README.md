@@ -36,6 +36,18 @@
     ```git
     git push
     ```
+## Our Tech Stack
+- [React](https://react.dev/) - frontend
+- [Typescript](https://www.typescriptlang.org/) - frontend/backend
+- [Next.js](https://nextjs.org/learn/foundations/about-nextjs/what-is-nextjs) - frontend/backend
+- [PostgreSQL](https://www.postgresql.org/about/) - database
+- [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma) - to communicate with database
+  ![image](https://github.com/JumboCode/casa-myrna/assets/87954052/baa1f6aa-dc7d-4681-9428-0ca3fd0b5b67)
+
+  
+## Tech stack resources
+- [Best Practices for a React/Next.js webapp](https://blogs.perficient.com/2023/04/25/best-practices-for-building-and-sustaining-a-clean-react-next-js-project/)
+- [Example guide on how our entire tech stack will interact with each other](https://vercel.com/guides/nextjs-prisma-postgres) (some of this is not relevant to our tech stack, like github authentication, vercel database hosting, etc.)
 ## Code Conventions
   * We will not be accepting code without any comments!!
       - Functions should have a description of what it does
@@ -85,3 +97,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
