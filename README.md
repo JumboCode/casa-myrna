@@ -45,7 +45,7 @@
   ![image](https://github.com/JumboCode/casa-myrna/assets/87954052/baa1f6aa-dc7d-4681-9428-0ca3fd0b5b67)
 
   
-## Tech stack resources
+## How does our tech stack flow with each other? (resources)
 - [Best Practices for a React/Next.js webapp](https://blogs.perficient.com/2023/04/25/best-practices-for-building-and-sustaining-a-clean-react-next-js-project/)
 - [Example guide on how our entire tech stack will interact with each other](https://vercel.com/guides/nextjs-prisma-postgres) (some of this is not relevant to our tech stack, like github authentication, vercel database hosting, etc.)
 ## Code Conventions
