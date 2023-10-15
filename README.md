@@ -43,6 +43,7 @@
 - [PostgreSQL](https://www.postgresql.org/about/) - database
 - [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma) - to communicate with database
   ![image](https://github.com/JumboCode/casa-myrna/assets/87954052/baa1f6aa-dc7d-4681-9428-0ca3fd0b5b67)
+- [Clerk](https://clerk.com/docs?utm_source=www.google.com&utm_medium=referral&utm_campaign=none) - gives us components for login authentication 
 
   
 ## How does our tech stack flow with each other? (resources)
