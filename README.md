@@ -57,7 +57,7 @@
   * Since you will be working on a separate branch from our dev branch, you will need to submit pull requests (PRs) along with your testing process.
   * Since you will be working on a separate branch from our dev branch, we will also be using a naming convention for the branches:
     ```
-    [frontend or backend]/[ticket#]-ticket-title
+    [frontend or backend]-[ticket#]-ticket-title
     ``` 
       - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend/45-creating-profile-page`
 
