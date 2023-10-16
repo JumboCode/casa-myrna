@@ -1,2 +1,2 @@
 
-export default function Home(){return <div> hello</div>}
+export default function Home(){return <div>hi !</div>}
