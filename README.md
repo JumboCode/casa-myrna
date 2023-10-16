@@ -10,7 +10,8 @@
   - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road.
   - if you need to create a new branch, run these git commands:
   -   ```git
-      git checkout dev # makes sure that you are currently on the dev branch
+      git checkout dev
+      # makes sure that you are currently on the dev branch
       git pull # never hurts to pull
       git checkout frontend #change "frontend" to "backend" if you are a backend dev
       git pull # never hurts to pull
