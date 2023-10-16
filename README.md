@@ -10,17 +10,16 @@
   - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road.
   - if you need to create a new branch, run these git commands:
   -   ```git
-      git checkout dev
-      # makes sure that you are currently on the dev branch
-      git pull # never hurts to pull
-      git checkout frontend #change "frontend" to "backend" if you are a backend dev
-      git pull # never hurts to pull
-      git merge dev # merges finalized code from dev branch onto your current local branch
-      git branch [frontend or backend]-[ticket #]-ticket-title # creates the new branch
-      ** make changes to the file (for next week, you'll change files to create a button **
-      git add . # adds ALL the files you edited to the stage
-      git commit -m "[insert your message]" # saves your changes to your local branch
-      git push # pushes your changes to github ```
+      git checkout dev                                           # makes sure that you are currently on the dev branch
+      git pull                                                   # never hurts to pull
+      git checkout frontend                                      # change "frontend" to "backend" if you are a backend dev
+      git pull                                                   # never hurts to pull
+      git merge dev                                              # merges finalized code from dev branch onto your current local branch
+      git branch [frontend or backend]-[ticket #]-ticket-title   # creates the new branch
+      ** make changes to the files **
+      git add .                                                  # adds ALL the files you edited to the stage
+      git commit -m "[insert your message]"                      # saves your changes to your local branch
+      git push                                                   # pushes your changes to github ```
   - If you have just begun a coding session after a few days, run the following git commands:
       ```git
     git pull  
