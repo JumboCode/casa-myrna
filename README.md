@@ -59,7 +59,7 @@
     ```
     [frontend or backend]-[ticket#]-ticket-title
     ``` 
-      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend/45-creating-profile-page`
+      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend-45-creating-profile-page`
 
 ## WEB APP INFO
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
