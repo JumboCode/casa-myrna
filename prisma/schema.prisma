@@ -7,6 +7,7 @@ generator client {
   provider        = "prisma-client-js"
 }
 
+// Represents registered users 
 model User {
   id            Int   @id @default(autoincrement())
   username      String
@@ -17,26 +18,21 @@ model User {
   created_at    DateTime
   primaryShifts Shift[] @relation("PrimaryUserShift")
   backupShifts  Shift[] @relation("BackUpUserShift")
-
-  // emailVerified DateTime?
-  // image         String?
-  // accounts      Account[]
-  // sessions      Session[]
 }
 
+// Represents work shifts
 model Shift {
   shiftID       Int    @id @default(autoincrement()) 
-        
   backupUserID  Int
   primaryUserID Int 
-  primaryuser          User  @relation("PrimaryUserShift", fields: [primaryUserID], references: [id]) 
-  backupuser           User  @relation("BackUpUserShift", fields: [backupUserID], references: [id])
+  primaryuser   User  @relation("PrimaryUserShift", fields: [primaryUserID], references: [id]) 
+  backupuser    User  @relation("BackUpUserShift", fields: [backupUserID], references: [id])
 
 
-  // date          Date 
+  // date          Date
   // from          Time
   // to            Time
-  // status        status
+  // status        Status
   message       String
   phoneLine     Int
   // created_at    Time
