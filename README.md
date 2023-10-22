@@ -7,7 +7,19 @@
   - don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! reach out to Nishika if this does happen and she will help!
 
 *Do
-  - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road. 
+  - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road.
+  - if you need to create a new branch, run these git commands:
+      ```git
+      git checkout dev                                           # makes sure that you are currently on the dev branch
+      git pull                                                   # never hurts to pull
+      git checkout frontend                                      # change "frontend" to "backend" if you are a backend dev
+      git pull                                                   # never hurts to pull
+      git merge dev                                              # merges finalized code from dev branch onto your current local branch
+      git branch [frontend or backend]-[ticket #]-ticket-title   # creates the new branch
+      ** make changes to the files **
+      git add .                                                  # adds ALL the files you edited to the stage
+      git commit -m "[insert your message]"                      # saves your changes to your local branch
+      git push                                                   # pushes your changes to github ```
   - If you have just begun a coding session after a few days, run the following git commands:
       ```git
     git pull  
@@ -36,6 +48,19 @@
     ```git
     git push
     ```
+## Our Tech Stack
+- [React](https://react.dev/) - frontend
+- [Typescript](https://www.typescriptlang.org/) - frontend/backend
+- [Next.js](https://nextjs.org/learn/foundations/about-nextjs/what-is-nextjs) - frontend/backend
+- [PostgreSQL](https://www.postgresql.org/about/) - database
+- [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma) - to communicate with database
+  ![image](https://github.com/JumboCode/casa-myrna/assets/87954052/baa1f6aa-dc7d-4681-9428-0ca3fd0b5b67)
+- [Clerk](https://clerk.com/docs?utm_source=www.google.com&utm_medium=referral&utm_campaign=none) - gives us components for login authentication 
+
+  
+## How does our tech stack flow with each other? (resources)
+- [Best Practices for a React/Next.js webapp](https://blogs.perficient.com/2023/04/25/best-practices-for-building-and-sustaining-a-clean-react-next-js-project/)
+- [Example guide on how our entire tech stack will interact with each other](https://vercel.com/guides/nextjs-prisma-postgres) (some of this is not relevant to our tech stack, like github authentication, vercel database hosting, etc.)
 ## Code Conventions
   * We will not be accepting code without any comments!!
       - Functions should have a description of what it does
@@ -44,9 +69,9 @@
   * Since you will be working on a separate branch from our dev branch, you will need to submit pull requests (PRs) along with your testing process.
   * Since you will be working on a separate branch from our dev branch, we will also be using a naming convention for the branches:
     ```
-    [frontend or backend]/[ticket#]-ticket-title
+    [frontend or backend]-[ticket#]-ticket-title
     ``` 
-      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend/45-creating-profile-page`
+      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend-45-creating-profile-page`
 
 ## WEB APP INFO
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
@@ -85,3 +110,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
