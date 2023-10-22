@@ -27,13 +27,14 @@ model Shift {
   primaryUserID Int 
   primaryuser   User  @relation("PrimaryUserShift", fields: [primaryUserID], references: [id]) 
   backupuser    User  @relation("BackUpUserShift", fields: [backupUserID], references: [id])
-
-
-  // date          Date
-  // from          Time
-  // to            Time
-  // status        Status
+  
+  
+  // TODO: add Date, Time & Status types when doing routes 
+  date          DateTime
+  from          DateTime
+  to            DateTime
+  status        String
   message       String
   phoneLine     Int
-  // created_at    Time
+  created_at    DateTime
 }
