@@ -1,32 +1,47 @@
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
-import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
-import AbcIcon from '@mui/icons-material/Abc';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ForumIcon from '@mui/icons-material/Forum';
 
 
-const SideNav = (props) => {
+const SideNav = () => {
   return(
   <Stack direction="row" spacing={2}>
       <div className = "sidenav" > 
          <MenuList>
-          <MenuItem component = 'a' href = 'calendar'> 
-            <IconButton color = "inherit" href = "calendar">
-              <AbcIcon />
+            <MenuItem component = 'a' href = 'calendar'> 
+            <IconButton> 
+            <CalendarMonthIcon color = "secondary"> fontSize="small" </CalendarMonthIcon> 
             </IconButton>
-            Calendar 
-          </MenuItem>
-          <MenuItem component = 'a' href = 'announcements'> Announcements </MenuItem>
-          <MenuItem component = 'a' href = 'groupchat'> Groupchat </MenuItem>
-          <MenuItem component = 'a' href = 'profile'> Profile </MenuItem>
+            Calendar </MenuItem>
+            <MenuItem component = 'a' href = 'announcements'>
+              <IconButton color = "secondary"> 
+                <CampaignIcon> fontSize = "small" </CampaignIcon>
+              </IconButton>
+               Announcements </MenuItem>
+            <MenuItem component = 'a' href = 'groupchat'> 
+              <IconButton color = "secondary"> 
+                  <ForumIcon> fontSize = "small" </ForumIcon>
+              </IconButton>
+            Groupchat </MenuItem>
+            <MenuItem component = 'a' href = 'profile'>  
+              <IconButton color = "secondary" > 
+                <AccountCircleIcon>fontSize= "small" </AccountCircleIcon> 
+              </IconButton>
+          Profile </MenuItem>
         </MenuList>
       </div>
   </Stack>
   ); 
 };
+
 
 export default SideNav;
 
