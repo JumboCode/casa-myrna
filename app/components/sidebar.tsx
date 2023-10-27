@@ -26,16 +26,16 @@ const SideNav = () => {
                 <CampaignIcon> fontSize = "small" </CampaignIcon>
               </IconButton>
                Announcements </MenuItem>
-            <MenuItem component = 'a' href = 'groupchat'> 
+            <MenuItem component = 'a' href = 'group-chat'> 
               <IconButton color = "secondary"> 
                   <ForumIcon> fontSize = "small" </ForumIcon>
               </IconButton>
             Groupchat </MenuItem>
-            <MenuItem component = 'a' href = 'profile'>  
-              <IconButton color = "secondary" > 
+            <MenuItem component = 'a' href = 'my-profile'>  
+              <IconButton color = "secondary"> 
                 <AccountCircleIcon>fontSize= "small" </AccountCircleIcon> 
               </IconButton>
-          Profile </MenuItem>
+            Profile</MenuItem>
         </MenuList>
       </div>
   </Stack>
