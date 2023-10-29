@@ -1,2 +1,7 @@
+'use client'
 
-export default function Home(){return <div>hi !</div>}
+import sidebar from "./components/sidebar"; 
+
+export default function Home(){
+  return sidebar()
+}
