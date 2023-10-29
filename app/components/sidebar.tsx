@@ -5,21 +5,22 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import ForumIcon from '@mui/icons-material/Forum';
+import Calendar from "app/images/2.png";
+import Image from "next/image";
 
 
 const SideNav = () => {
   return(
   <Stack direction="row" spacing={2}>
-      <div className = "sidenav" > 
+      <div className = "sidenav" style= {{
+        background:"#F6F6F6",
+        width: "20%",
+        height: "750px",
+      }}>  
+
          <MenuList>
-            <MenuItem component = 'a' href = 'calendar'> 
-            <IconButton> 
-            <CalendarMonthIcon color = "secondary"> fontSize="small" </CalendarMonthIcon> 
-            </IconButton>
+            <MenuItem component = 'a' href = 'calendar' >  
+            <Calendar color = "secondary"> fontSize="small" </Calendar>
             Calendar </MenuItem>
             <MenuItem component = 'a' href = 'announcements'>
               <IconButton color = "secondary"> 
@@ -38,6 +39,13 @@ const SideNav = () => {
             Profile</MenuItem>
         </MenuList>
       </div>
+      <div style = {{background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",
+      width: "80%", 
+      display: "flex", 
+      alignItems: "center",
+      justifyContent: "center"
+    }}>  
+      </div> 
   </Stack>
   ); 
 };
