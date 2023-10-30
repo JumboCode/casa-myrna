@@ -35,9 +35,9 @@ const BoxSx = () => {
     <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}>
         <div style={{justifyContent:'center', alignItems:'center'}}>
         {/* <Grid container spacing={5}  justify-content='space-between' alignItems='flex-center' columns={12}> */}
-            <Grid container spacing={4} direction='column' alignItems='flex-end' margin={2}>
+            <Grid container spacing={4} direction='column' alignItems='flex-end' margin={8}>
                 <Grid container xs={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" textAlign='center' sx={{fontWeight: 'bold',}}>
+                    <Typography variant="h4" textAlign='center' sx={{fontWeight: 'bold'}}>
                         My Profile
                     </Typography>
                 </Grid>
