@@ -1,12 +1,14 @@
 
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Calendar from "app/images/2.png";
+import Announcements from "app/images/2.png";
+import Calendar from "app/images/3.png";
+import Groupchat from "app/images/4.png";
+import Profile from "app/images/7.png";
 import Image from "next/image";
+import Logo from "app/images/1.png";
 
 
 const SideNav = () => {
@@ -16,26 +18,25 @@ const SideNav = () => {
         background:"#F6F6F6",
         width: "20%",
         height: "750px",
+        alignItems: "center",
+        justifyContent: "center"
       }}>  
+      <div style = {{display: "flex",alignItems: "center",
+        justifyContent: "center"}}><Image src = {Logo} alt = "Error" width = {120} height= {120} /> </div>
 
          <MenuList>
+
             <MenuItem component = 'a' href = 'calendar' >  
-            <Calendar color = "secondary"> fontSize="small" </Calendar>
+            <Image src = {Calendar} alt = "Error" width = {30} height= {30}/>
             Calendar </MenuItem>
             <MenuItem component = 'a' href = 'announcements'>
-              <IconButton color = "secondary"> 
-                <CampaignIcon> fontSize = "small" </CampaignIcon>
-              </IconButton>
+            <Image src = {Announcements} alt = "Error" width = {30} height= {30}/>
                Announcements </MenuItem>
             <MenuItem component = 'a' href = 'group-chat'> 
-              <IconButton color = "secondary"> 
-                  <ForumIcon> fontSize = "small" </ForumIcon>
-              </IconButton>
+            <Image src = {Groupchat} alt = "Error" width = {30} height= {30}/>
             Groupchat </MenuItem>
             <MenuItem component = 'a' href = 'my-profile'>  
-              <IconButton color = "secondary"> 
-                <AccountCircleIcon>fontSize= "small" </AccountCircleIcon> 
-              </IconButton>
+            <Image src = {Profile} alt = "Error" width = {30} height= {30}/>
             Profile</MenuItem>
         </MenuList>
       </div>
