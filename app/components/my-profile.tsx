@@ -14,8 +14,8 @@ import Typography from '@mui/material/Typography';
 // import SvgIcon from '@mui/material/SvgIcon';
 // import Icon from '@mui/material/Icon';
 import PersonIcon from '@mui/icons-material/Person';
-const color = grey[300]; //establishes where on the grey scale so we can use it later!
-const hoverColor = grey[300]; //variable for darker shade that happens when yu hover!
+const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
+const hoverColor = "#f6f6f6"; //variable for darker shade that happens when yu hover!
 const darkPurple = deepPurple[900];
 const saveChangesGreen = lightGreen[300];
 const BoxSx = () => {
@@ -28,83 +28,85 @@ const BoxSx = () => {
         alignItems:"center",
         borderRadius: '5%', //makes rounded corners
         backgroundColor: color, //color is variable established above! (grey!)
-        fontFamily: 'default',
+        fontFamily: 'default'
       }}
     >
     {/* This is column 0 */}
     <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}>
-    {/* <Grid container spacing={5}  justify-content='space-between' alignItems='flex-center' columns={12}> */}
-        <Grid container spacing={4} direction='column' alignItems='flex-end'>
-            <Grid container xs={12} sm={12} md={12} lg={12}>
-                <Typography variant="h4" textAlign='center' sx={{fontWeight: 'bold',}} >
-                    My Profile
-                </Typography>
+        <div style={{justifyContent:'center', alignItems:'center'}}>
+        {/* <Grid container spacing={5}  justify-content='space-between' alignItems='flex-center' columns={12}> */}
+            <Grid container spacing={4} direction='column' alignItems='flex-end' margin={2}>
+                <Grid container xs={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" textAlign='center' sx={{fontWeight: 'bold',}}>
+                        My Profile
+                    </Typography>
+                </Grid>
+                <Grid xs={12} sm={12} md={12} lg={12}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }}/>
+                </Grid>
+                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                    <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent:'10px'}}>Upload Picture</Button>
+                </Grid>
             </Grid>
-            <Grid xs={12} sm={12} md={12} lg={12}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }}/>
+        {/* This is column 1 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-center'>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        First Name
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Last Name
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Username
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Email
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
             </Grid>
-            <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
-                <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent:'10px'}}>Upload Picture</Button>
+        {/* This is column 2 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-start'>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Pronouns
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Role
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold', }} >
+                        Password
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography sx={{fontWeight: 'bold',}} >
+                        Phone Number
+                    </Typography>
+                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end'>
+                    <Button variant="contained">Save Changes</Button>
+                </Grid>
             </Grid>
+        </div>
         </Grid>
-    {/* This is column 1 */}
-        <Grid container spacing={4} direction='column' alignItems='flex-center'>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    First Name
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    Last Name
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    Username
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    Email
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-        </Grid>
-    {/* This is column 2 */}
-        <Grid container spacing={4} direction='column' alignItems='flex-start'>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                 <Typography sx={{fontWeight: 'bold',}} >
-                    Pronouns
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    Role
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold', }} >
-                    Password
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12}>
-                <Typography sx={{fontWeight: 'bold',}} >
-                    Phone Number
-                </Typography>
-                <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
-            </Grid>
-            <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end'>
-                <Button variant="contained">Save Changes</Button>
-            </Grid>
-        </Grid>
-    </Grid>
     </Box>
   );
 }
