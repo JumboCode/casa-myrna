@@ -28,33 +28,39 @@ const BoxSx = () => {
         alignItems:"center",
         borderRadius: '5%', //makes rounded corners
         backgroundColor: color, //color is variable established above! (grey!)
-        fontFamily: 'default'
+        fontFamily: 'default',
+        margin: '2%'
       }}
     >
-    {/* This is column 0 */}
-    <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}>
-        <div style={{justifyContent:'center', alignItems:'center'}}>
+        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}  margin={4}>
+        {/* <div style={{justifyContent:'center', alignItems:'center'}}> */}
         {/* <Grid container spacing={5}  justify-content='space-between' alignItems='flex-center' columns={12}> */}
-            <Grid container spacing={4} direction='column' alignItems='flex-end' margin={8}>
-                <Grid container xs={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" textAlign='center' sx={{fontWeight: 'bold'}}>
+           {/* This is column 0 */}
+           {/* <div style={{alignItems:'center'}} align='top'>  */}
+            <Grid container spacing={4} direction='column'>
+                <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='20%'>
+                    <Typography variant="h4" textAlign={'center'} justifyContent={'center'} sx={{fontWeight: 'bold'}}>
                         My Profile
                     </Typography>
                 </Grid>
-                <Grid xs={12} sm={12} md={12} lg={12}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }}/>
+                <Grid xs={15} sm={12} md={12} lg={12}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200, justifyContent:'center', alignItems:'center'}}/>
                 </Grid>
-                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'} justifyContent='center'>
                     <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent:'10px'}}>Upload Picture</Button>
                 </Grid>
             </Grid>
-        {/* This is column 1 */}
-            <Grid container spacing={4} direction='column' alignItems='flex-center'>
+            {/* </div> */}
+            <Grid>
+            </Grid>
+            {/* This is column 1 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-center' paddingTop='12%'>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
-                    <Typography sx={{fontWeight: 'bold',}} >
+                   <Typography sx={{fontWeight: 'bold',}} >
                         First Name
                     </Typography>
                     <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
@@ -75,8 +81,8 @@ const BoxSx = () => {
                     <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
             </Grid>
-        {/* This is column 2 */}
-            <Grid container spacing={4} direction='column' alignItems='flex-start'>
+            {/* This is column 2 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-start' paddingTop='12%' paddingBottom='10%'>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Pronouns
@@ -101,11 +107,12 @@ const BoxSx = () => {
                     </Typography>
                     <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end'>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%'>
                     <Button variant="contained">Save Changes</Button>
                 </Grid>
             </Grid>
-        </div>
+            
+        {/* </div> */}
         </Grid>
     </Box>
   );
