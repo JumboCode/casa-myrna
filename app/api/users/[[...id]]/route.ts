@@ -40,9 +40,9 @@ export async function GET(req: Request,
 
 /* 
  * Inserts a new user into the database
- * Expects json with the fields username, firstName, lastName, pronouns, role, 
- * and created_at, with these fields corresponding to the fields in the user
- * model in schema.prisma
+ * Expects the request body to be json with the fields username, firstName, 
+ * lastName, pronouns, role, and created_at, with these fields corresponding 
+ * to the fields in the user model in schema.prisma
  */
 export async function POST(req: Request) {
   try {
@@ -59,5 +59,47 @@ export async function POST(req: Request) {
     } else {
       return new Response('Error: An unexpected error occured', {status: 500,})
     }
+  }
+}
+
+/* 
+ * Upserts a user into the database
+ * Expects an integer id to be provided as a path parameter 
+ * Expects the request body to be json with the fields username, firstName, 
+ * lastName, pronouns, role, and created_at, with these fields corresponding 
+ * to the fields in the user model in schema.prisma
+ */
+export async function PUT(req: Request,
+  { params }: { params: { id: string } }) {
+  try {
+    let idString = params.id
+    let idNum = parseInt(idString as string, 10) // 10 = base 10 
+    if ((isNaN(idNum))) {
+      return new Response('Error: Please specify an integer user id', {
+        status: 400,
+      })
+    }
+
+    let userData = await req.json();
+    userData = {
+      ...userData,
+      "id": idNum,
+      "created_at": new Date(userData.created_at)
+    };
+
+    const user = await prisma.user.upsert({
+      where: {
+        id: userData.id,
+      },
+      update: userData,
+      create: userData
+    })
+    return new Response(JSON.stringify(user))
+ } catch (error){
+     if (error instanceof Prisma.PrismaClientValidationError) {
+       return new Response('Error: ' + error.message, {status: 400,})
+     } else {
+       return new Response('Error: An unexpected error occured', {status: 500,})
+     }
   }
 }
