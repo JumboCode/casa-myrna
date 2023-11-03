@@ -33,24 +33,21 @@ const BoxSx = () => {
       }}
     >
         <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}  margin={4}>
-        {/* <div style={{justifyContent:'center', alignItems:'center'}}> */}
-        {/* <Grid container spacing={5}  justify-content='space-between' alignItems='flex-center' columns={12}> */}
-           {/* This is column 0 */}
-           {/* <div style={{alignItems:'center'}} align='top'>  */}
-            <Grid container spacing={4} direction='column'>
+           <Grid container spacing={4} direction='column' justifyContent='center' alignItems='center'>
                 <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='20%'>
                     <Typography variant="h4" textAlign={'center'} justifyContent={'center'} sx={{fontWeight: 'bold'}}>
                         My Profile
                     </Typography>
                 </Grid>
-                <Grid xs={15} sm={12} md={12} lg={12}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200, justifyContent:'center', alignItems:'center'}}/>
+                <Grid item xs={12} sm={12} md={12} lg={12} sx={{ justifyContent:'center', alignItems:'center', display: 'flex'}}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }} />
                 </Grid>
-                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'} justifyContent='center'>
-                    <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent:'10px'}}>Upload Picture</Button>
+                <Grid item xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                    <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px' }}>
+                        Upload Picture
+                    </Button>
                 </Grid>
             </Grid>
-            {/* </div> */}
             <Grid>
             </Grid>
             {/* This is column 1 */}
