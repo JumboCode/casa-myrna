@@ -17,7 +17,17 @@ import PersonIcon from '@mui/icons-material/Person';
 const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
 const hoverColor = "#f6f6f6"; //variable for darker shade that happens when yu hover!
 const darkPurple = deepPurple[900];
-const saveChangesGreen = lightGreen[300];
+
+// const { palette } = createTheme();
+// const { augmentColor } = palette;
+// const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+// const theme = createTheme({
+//     palette: {
+//         green: createColor('#89B839'),
+//         purple: createColor('#57228F'),
+//     },
+// });
+
 const BoxSx = () => {
   return (
     <Box
@@ -43,7 +53,7 @@ const BoxSx = () => {
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
-                    <Button fullWidth={true} variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px' }}>
+                    <Button variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: "#57228F", color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none'}}>
                         Upload Picture
                     </Button>
                 </Grid>
@@ -104,8 +114,8 @@ const BoxSx = () => {
                     </Typography>
                     <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%'>
-                    <Button variant="contained">Save Changes</Button>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%' sx = {{ display:'flex', justifyContent:'flex-end'}}>
+                    <Button  sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
                 </Grid>
             </Grid>
             
