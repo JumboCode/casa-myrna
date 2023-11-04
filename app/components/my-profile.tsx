@@ -49,10 +49,10 @@ const BoxSx = () => {
                         My Profile
                     </Typography>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12} sx={{ justifyContent:'center', alignItems:'center', display: 'flex'}}>
+                <Grid xs={12} sm={12} md={12} lg={12} sx={{ justifyContent:'center', alignItems:'center', display: 'flex'}}>
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }} />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
                     <Button variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: "#57228F", color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none'}}>
                         Upload Picture
                     </Button>
@@ -66,26 +66,26 @@ const BoxSx = () => {
                    <Typography sx={{fontWeight: 'bold',}} >
                         First Name
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="Jumbo" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Last Name
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="Code" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Username
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="Casa" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Email
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="myrna@gmail.com" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
@@ -94,25 +94,25 @@ const BoxSx = () => {
                     <Typography sx={{fontWeight: 'bold',}} >
                         Pronouns
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="casa/myrna" InputProps={{readOnly: true }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Role
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="Employee" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold', }} >
                         Password
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="casa.myrna123" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography sx={{fontWeight: 'bold',}} >
                         Phone Number
                     </Typography>
-                    <TextField sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
+                    <TextField defaultValue="000-000-0000" InputProps={{readOnly: true }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%' sx = {{ display:'flex', justifyContent:'flex-end'}}>
                     <Button  sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
