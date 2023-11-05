@@ -1,1 +1,4 @@
-export default function Home(){return <div>Calendar</div>}
+import SideNav from "@/app/components/sidebar"
+
+export default function Home(){
+    return <SideNav></SideNav>}

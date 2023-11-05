@@ -1,43 +1,80 @@
 
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import ForumIcon from '@mui/icons-material/Forum';
+import Announcements from "app/images/2.png";
+import Calendar from "app/images/3.png";
+import Groupchat from "app/images/4.png";
+import Profile from "app/images/7.png";
+import Logout from "app/images/5.png";
+import Image from "next/image";
+import Logo from "app/images/1.png";
+import Hamburger from "app/images/hamburger.png";
 
 
 const SideNav = () => {
   return(
+
   <Stack direction="row" spacing={2}>
-      <div className = "sidenav" > 
-         <MenuList>
-            <MenuItem component = 'a' href = 'calendar'> 
-            <IconButton> 
-            <CalendarMonthIcon color = "secondary"> fontSize="small" </CalendarMonthIcon> 
-            </IconButton>
+      <div className = "sidenav" style= {{
+        background:"#F6F6F6",
+        width: "20%",
+        height: "750px",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+            <MenuList>
+              <MenuItem component = 'a' href = ''>  
+                <Image src = {Hamburger} alt = "Error" width = {20} height= {20} /> 
+              </MenuItem>
+          </MenuList>
+
+      <div style = {{paddingTop: 55, display: "flex",alignItems: "center",
+        justifyContent: "center"}}><Image src = {Logo} alt = "Error" width = {160} height= {160} /> </div>
+
+         <MenuList style= {{paddingTop: 100, paddingLeft: 8, paddingRight: 8}}>
+            <MenuItem style = {{background: "#FFFFFF", borderRadius: 20, color:"#2E0057"}} component = 'a' href = 'calendar' > 
+            <Image src = {Calendar} alt = "Error" width = {30} height= {30}/>
+            <div style = {{paddingRight: 8, background: "#F6F6F6"}}></div> 
             Calendar </MenuItem>
-            <MenuItem component = 'a' href = 'announcements'>
-              <IconButton color = "secondary"> 
-                <CampaignIcon> fontSize = "small" </CampaignIcon>
-              </IconButton>
+
+            <div style = {{paddingBottom: 15, background: "#F6F6F6"}}></div>
+
+            <MenuItem style = {{background: "#FFFFFF", borderRadius: 20, color:"#2E0057"}} component = 'a' href = 'announcements'>
+            <Image src = {Announcements} alt = "Error" width = {30} height= {30}/>
+            <div style = {{paddingRight: 8, background: "#F6F6F6"}}></div>
                Announcements </MenuItem>
-            <MenuItem component = 'a' href = 'group-chat'> 
-              <IconButton color = "secondary"> 
-                  <ForumIcon> fontSize = "small" </ForumIcon>
-              </IconButton>
+            <div style = {{paddingBottom: 15, background: "#F6F6F6"}}></div>
+
+            <MenuItem style = {{background: "#FFFFFF", borderRadius: 20, color:"#2E0057"}} component = 'a' href = 'group-chat'> 
+            <Image src = {Groupchat} alt = "Error" width = {30} height= {30}/>
+            <div style = {{paddingRight: 8, background: "#F6F6F6"}}></div>
             Groupchat </MenuItem>
-            <MenuItem component = 'a' href = 'my-profile'>  
-              <IconButton color = "secondary"> 
-                <AccountCircleIcon>fontSize= "small" </AccountCircleIcon> 
-              </IconButton>
+            <div style = {{paddingBottom: 15, background: "#F6F6F6"}}></div>
+
+            <MenuItem style = {{background: "#FFFFFF", borderRadius: 20, color:"#2E0057"}} component = 'a' href = 'my-profile'>  
+            <Image src = {Profile} alt = "Error" width = {30} height= {30}/>
+            <div style = {{paddingRight: 8, background: "#F6F6F6"}}></div>
             Profile</MenuItem>
         </MenuList>
+
+         <MenuList style= {{paddingTop: 75, alignItems: "center",
+        justifyContent: "center",display: "flex",color:"#2E0057"}}>  
+          <MenuItem component = 'a' href = '' >  
+              <Image src = {Logout} alt = "Error" width = {30} height= {30}/>
+              <div style = {{paddingRight: 8, background: "#F6F6F6"}}></div> 
+              Logout 
+            </MenuItem>
+        </MenuList>
       </div>
+      <div style = {{background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",
+      width: "80%", 
+      display: "flex", 
+      alignItems: "center",
+      justifyContent: "center"
+    }}>  
+      </div> 
   </Stack>
   ); 
 };
@@ -45,52 +82,3 @@ const SideNav = () => {
 
 export default SideNav;
 
-
-// export default function sidebar() {
-//   const [open, setOpen] = React.useState(false);
-//   const anchorRef = React.useRef(null);
-
-//   // const handleToggle = () => {
-//   //   setOpen((prevOpen) => !prevOpen);
-//   // };
-
-//   const handleClose = (event) => {
-//     if (anchorRef.current && anchorRef.current.contains(event.target)) {
-//       return;
-//     }
-
-//     setOpen(false);
-//   };
-
-//   // function handleListKeyDown(event) {
-//   //   if (event.key === 'Tab') {
-//   //     event.preventDefault();
-//   //     setOpen(false);
-//   //   } else if (event.key === 'Escape') {
-//   //     setOpen(false);
-//   //   }
-//   // }
-
-//   // return focus to the button when we transitioned from !open -> open
-//   const prevOpen = React.useRef(open);
-//   React.useEffect(() => {
-//     if (prevOpen.current === true && open === false) {
-//       anchorRef.current.focus();
-//     }
-
-//     prevOpen.current = open;
-//   }, [open]);
-
-//   return (
-//     <Stack direction="row" spacing={2}>
-//       <Paper>
-//       <MenuList>
-//           <MenuItem>Calendar</MenuItem>
-//           <MenuItem>Announcements</MenuItem>
-//           <MenuItem>Groupchat</MenuItem>
-//           <MenuItem>Profile</MenuItem>
-//         </MenuList>
-//       </Paper>
-//     </Stack>
-//   );
-// }
