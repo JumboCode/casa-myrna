@@ -47,7 +47,7 @@ const CalendarModalButton: FC = () => {
             <Modal
                 open={openModal}
                 onClose={closeModal}
-                hideBackdrop
+                sx={{ backgroundColor: "rgba(0, 0, 0, 0.20)", zIndex: 1, }}
             >
                 {/* todo: figure out the styling of the fonts */}
                 <Box sx={{
