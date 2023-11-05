@@ -125,6 +125,18 @@
   }
 }
 
+.hamburger{
+  display:none; 
+}
+
+@media screen and (max-width:768px){
+  .hamburger{
+      display: block or inline-block
+  }
+  .left{
+      display: none;
+  }
+}
 /* Mobile */
 @media (max-width: 700px) {
   .content {
