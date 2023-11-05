@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -11,22 +10,11 @@ import Grid from '@mui/material/Unstable_Grid2' ;
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-// import SvgIcon from '@mui/material/SvgIcon';
-// import Icon from '@mui/material/Icon';
 import PersonIcon from '@mui/icons-material/Person';
 const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
 const hoverColor = "#f6f6f6"; //variable for darker shade that happens when yu hover!
 const darkPurple = deepPurple[900];
-
-// const { palette } = createTheme();
-// const { augmentColor } = palette;
-// const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-// const theme = createTheme({
-//     palette: {
-//         green: createColor('#89B839'),
-//         purple: createColor('#57228F'),
-//     },
-// });
+import sidebar from "./components/sidebar"; 
 
 const BoxSx = () => {
   return (
@@ -118,8 +106,6 @@ const BoxSx = () => {
                     <Button  sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
                 </Grid>
             </Grid>
-            
-        {/* </div> */}
         </Grid>
     </Box>
   );
