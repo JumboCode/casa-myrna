@@ -15,6 +15,7 @@ import Hamburger from "app/images/hamburger.png";
 
 const SideNav = () => {
   return(
+
   <Stack direction="row" spacing={2}>
       <div className = "sidenav" style= {{
         background:"#F6F6F6",
@@ -23,12 +24,11 @@ const SideNav = () => {
         alignItems: "center",
         justifyContent: "center"
       }}>
-        <MenuList>
-          <MenuItem component = 'a' href = '' >  
-          <Image src = {Hamburger} alt = "Error" width = {20} height= {20}/>
-          </MenuItem>
-        </MenuList>
-      
+            <MenuList>
+              <MenuItem component = 'a' href = ''>  
+                <Image src = {Hamburger} alt = "Error" width = {20} height= {20} /> 
+              </MenuItem>
+          </MenuList>
 
       <div style = {{paddingTop: 55, display: "flex",alignItems: "center",
         justifyContent: "center"}}><Image src = {Logo} alt = "Error" width = {160} height= {160} /> </div>
