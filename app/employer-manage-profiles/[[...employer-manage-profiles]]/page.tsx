@@ -1,5 +1,5 @@
-import profileList from "../../components/profileList"
+import manageProfiles from "../../components/manage-profiles"
 
 export default function Page() {
-  return profileList({firstName: "N", lastName: "P", role: "volunteer", imageUrl: "image"});
+  return manageProfiles();
 }
