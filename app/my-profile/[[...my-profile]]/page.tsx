@@ -1,3 +1,4 @@
+'use client'
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -14,10 +15,13 @@ import Typography from '@mui/material/Typography';
 // import SvgIcon from '@mui/material/SvgIcon';
 // import Icon from '@mui/material/Icon';
 import PersonIcon from '@mui/icons-material/Person';
+
 const color = grey[300]; //establishes where on the grey scale so we can use it later!
 const hoverColor = grey[300]; //variable for darker shade that happens when yu hover!
 const darkPurple = deepPurple[900];
 const saveChangesGreen = lightGreen[300];
+
+
 export default function BoxSx() {
   return (
     <Box
