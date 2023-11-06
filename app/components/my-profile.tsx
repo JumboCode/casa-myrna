@@ -14,7 +14,6 @@ import PersonIcon from '@mui/icons-material/Person';
 const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
 const hoverColor = "#f6f6f6"; //variable for darker shade that happens when yu hover!
 const darkPurple = deepPurple[900];
-import sidebar from "./components/sidebar"; 
 
 const BoxSx = () => {
   return (
@@ -30,9 +29,9 @@ const BoxSx = () => {
         margin: '2%'
       }}
     >
-        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-center' columns={12}  margin={4}>
+        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={4}>
            <Grid container spacing={4} direction='column' justifyContent='center' alignItems='center'>
-                <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='20%'>
+                <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='15%'>
                     <Typography variant="h4" textAlign={'center'} justifyContent={'center'} sx={{fontWeight: 'bold'}}>
                         My Profile
                     </Typography>
@@ -41,7 +40,7 @@ const BoxSx = () => {
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
-                    <Button variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: "#57228F", color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none'}}>
+                    <Button variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: "#57228F", color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none', paddingRight: '10%'}}>
                         Upload Picture
                     </Button>
                 </Grid>
