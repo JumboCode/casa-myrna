@@ -12,7 +12,7 @@ import sidebar from "../../components/sidebar";
 
 
 
-export default function Employer({firstName, lastName, role, imageUrl}){
+export default function Employer({firstName, lastName, role, imageUrl} : {firstName: string, lastName: string, role: string, imageUrl: string}){
   return (
    
     <Box
