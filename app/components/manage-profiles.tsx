@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2' ;
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import profileList from "./profileList"
 
@@ -33,9 +34,11 @@ const BoxSx = () => {
 
               {/* Search Bar */}
               <Grid container spacing={2} columns={4}>
+                {/* Actual Search Bar */}
                 <Grid item xs={3}>
                   <TextField fullWidth defaultValue="Search" InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="filled-basic" label="" variant="standard"/>
                 </Grid>
+                {/* Search Button */}
                 <Grid item xs={1}>
                   <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">search</Button>
                 </Grid>
