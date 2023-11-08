@@ -8,6 +8,8 @@ import Select from '@mui/material/Select';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import profileList from "./profileList"
+import Image from "next/image";
+import Add from "app/images/9.png";
 
 const BoxSx = () => {
   return (
@@ -66,14 +68,14 @@ const BoxSx = () => {
             {/* Right side of header */}
             <Grid item xs={6}>
               {/* Add new employee */}
-              <Grid container paddingBottom='16%'>
-                <Button fullWidth variant="outlined" sx={{ padding: '5%', borderRadius: '25px', textIndent: '10px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none'}}>
-                    Add New Employee
+              <Grid container paddingBottom='18%'>
+                <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ flexGrow: 1 }}>Add New Employee</div>
+                  <Image src={Add} alt="Error" width={30} height={30} />
                 </Button>
               </Grid>
 
               {/* Select filters */}
-              {/* MUI Multiple values: https://mui.com/material-ui/react-autocomplete/#multiple-values */}
               <Grid container spacing={2} columns={3}>
                 <Grid item xs={2}>
                   <Select
