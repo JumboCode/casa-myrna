@@ -14,18 +14,18 @@ import IconButton from '@mui/material/IconButton';
 const profileList = ({firstName, lastName, role, imageUrl} : {firstName: string, lastName: string, role: string, imageUrl: string}) => {
   return (
    
-    <Box
-    sx={{
-      display: 'flex',
-      bgcolor: 'silver',
-      boxShadow: 1,
-      borderRadius: 4,
-      height: '650px',
-      minWidth: 250,
+    // <Box
+    // sx={{
+    //   display: 'flex',
+    //   bgcolor: 'silver',
+    //   boxShadow: 1,
+    //   borderRadius: 4,
+    //   height: '650px',
+    //   minWidth: 250,
      
-      p:5,
-      justifyContent: 'flex-end',
-    }}>
+    //   p:5,
+    //   justifyContent: 'flex-end',
+    // }}>
     
     <Box
      
@@ -68,7 +68,7 @@ const profileList = ({firstName, lastName, role, imageUrl} : {firstName: string,
 
             
         </Stack> </Box>
-  </Box>
+  // </Box>
   )
 }
 
