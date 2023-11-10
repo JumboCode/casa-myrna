@@ -30,7 +30,7 @@ model User {
 model Shift {
   shiftID       Int    @id @default(autoincrement()) 
   backupUserID  Int
-  primaryUserID Int 
+  primaryUserID Int
   primaryuser   User  @relation("PrimaryUserShift", fields: [primaryUserID], references: [id]) 
   backupuser    User  @relation("BackUpUserShift", fields: [backupUserID], references: [id])
   
