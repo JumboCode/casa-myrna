@@ -24,8 +24,10 @@ export async function GET(req: NextRequest)
                       }
                
                 /* There might be a better way to write the following control flow */
+                
+                let shifts = null
                 if (primaryUserID_numeric && status) {
-                        const shifts = await prisma.shift.findMany({
+                         shifts = await prisma.shift.findMany({
                                 where: {
                                         AND: [
                                                 { primaryUserID: primaryUserID_numeric },
@@ -34,16 +36,15 @@ export async function GET(req: NextRequest)
                                 }
                         })
                 } else if (primaryUserID_numeric) {
-                        const shifts = await prisma.shift.findMany({
+                        shifts = await prisma.shift.findMany({
                                 where: {
                                         AND: [
                                                 { primaryUserID: primaryUserID_numeric }
                                         ]
                                 }
                         })
-
                 } else if ( status) {
-                        const shifts = await prisma.shift.findMany({
+                        shifts = await prisma.shift.findMany({
                                 where: {
                                         AND: [
                                                 { status: status }
@@ -55,19 +56,44 @@ export async function GET(req: NextRequest)
                                 status: 400,
                               })
                 }
-                
                 if (!shifts) {
                         return new Response('Error, Shift not found', {
                                 status: 404,
                         })
                 }
-                return ReportingObserver.json(shifts)
+                return new Response(JSON.stringify(shifts))
         } catch {
                 return new Response('Error: An unexpected error occured', {
                         status: 500,
                       })
         }
 }
+
+
+/* 
+ * GETs a shift from the database
+ * Expects an integer id and a status to be provided as a query parameter 
+ */
+export async function POST(req: NextRequest)
+{
+        try {
+                let data = await req.json();
+                data = {
+                ...data,
+                "date": new Date(data.date),
+                "from": new Date(data.from),
+                "to": new Date(data.to),
+                "created_at": new Date(data.created_at)
+                };
+                const shift = await prisma.shift.create({data});
+                return new Response(JSON.stringify(shift))
+        } catch {
+                return new Response('Error: An unexpected error occured', {
+                        status: 500,
+                      })
+        }
+}
+
 
 
 /* 
