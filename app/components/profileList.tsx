@@ -8,27 +8,9 @@ import { Transform } from '@mui/icons-material';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 
-
-
-
 const profileList = ({firstName, lastName, role, imageUrl} : {firstName: string, lastName: string, role: string, imageUrl: string}) => {
   return (
-   
-    <Box
-    sx={{
-      display: 'flex',
-      bgcolor: 'silver',
-      boxShadow: 1,
-      borderRadius: 4,
-      height: '650px',
-      minWidth: 250,
-     
-      p:5,
-      justifyContent: 'flex-end',
-    }}>
-    
-    <Box
-     
+  <Box
     sx={{
       bgcolor: 'background.paper',
       boxShadow: 1,
@@ -64,13 +46,10 @@ const profileList = ({firstName, lastName, role, imageUrl} : {firstName: string,
             <CreateIcon />
           </IconButton>
 
-            </Stack>
-
-            
-        </Stack> </Box>
+            </Stack>  
+        </Stack> 
   </Box>
   )
 }
 
 export default profileList;
-
