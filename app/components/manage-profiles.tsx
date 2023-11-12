@@ -1,6 +1,8 @@
 import * as React from 'react';
+
+// Material-UI components
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2' ;
+import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,9 +11,16 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import profileList from "./profileList"
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import InputBase from '@mui/material/InputBase';
+
+// Custom components and images
+import profileList from "./profileList";
 import Image from "next/image";
 import Add from "app/images/9.png";
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 const BoxSx = () => {
   return (
@@ -19,11 +28,9 @@ const BoxSx = () => {
       sx={{
         display: 'flex',
         minHeight: '90vh',
-        // justifyContent: 'center',
-        // alignItems: 'flex-start',
-        flexDirection: 'column', // Change flex direction to column
-        justifyContent: 'flex-start', // Align items at the start
-        alignItems: 'center', // Center items horizontally
+        flexDirection: 'column', 
+        justifyContent: 'flex-start',
+        alignItems: 'center', 
         borderRadius: '5%',
         backgroundColor: '#f6f6f6',
         fontFamily: 'default',
@@ -47,11 +54,26 @@ const BoxSx = () => {
                   <Grid container spacing={3} columns={4}>
                     {/* Actual Search Bar */}
                     <Grid item xs={3}>
-                      <TextField fullWidth InputProps={{readOnly: true }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px', padding:'4px'}} id="filled-basic" label="" variant="standard"/>
+                      <InputBase 
+                        fullWidth
+                        variant="outlined"
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <SearchIcon />
+                          </InputAdornment>
+                        }
+                        sx={{
+                          backgroundColor: '#FFFFFF',
+                          borderRadius: '10px',
+                          padding: '3px',
+                          paddingLeft: '20px',
+                          paddingRight: '10px',
+                        }}
+                      />
                     </Grid>
                     {/* Search Button */}
                     <Grid item xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">search</Button>
+                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">search</Button>
                     </Grid>
                   </Grid>
 
@@ -61,7 +83,23 @@ const BoxSx = () => {
                       applied filters:
                     </Grid>
                     <Grid item xs={10}>
-                      <TextField defaultValue="All" InputProps={{ readOnly: true }} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} id="filled-basic" label="" variant="standard" />
+                      <TextField
+                        defaultValue="    All"
+                        InputProps={{
+                          readOnly: true,
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <ClearIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{
+                          backgroundColor: '#FFFFFF',
+                          borderRadius: '10px',
+                          width: '70%',
+                        }}
+                        variant="standard"
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
