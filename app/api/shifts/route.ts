@@ -14,53 +14,33 @@ export async function GET(req: NextRequest)
                 const searchParams = req.nextUrl.searchParams
                 const primaryUserID = searchParams.get('primaryUserID')
                 const status = searchParams.get('status')
-                
-                
                 const primaryUserID_numeric = primaryUserID ? parseInt(primaryUserID as string, 10): null;
-                if (primaryUserID_numeric && (isNaN(primaryUserID_numeric))) {
+                console.log(primaryUserID_numeric)
+                if (isNaN(primaryUserID_numeric as number)) {
                         return new Response('Error: Please specify an integer primary user id', {
                           status: 400,
                         })
                       }
-               
-                /* There might be a better way to write the following control flow */
-                
-                let shifts = null
-                if (primaryUserID_numeric && status) {
-                         shifts = await prisma.shift.findMany({
-                                where: {
-                                        AND: [
-                                                { primaryUserID: primaryUserID_numeric },
-                                                { status: status }
-                                        ]
-                                }
-                        })
+
+                let queryFilters = null
+                if (primaryUserID_numeric && status){
+                        queryFilters = {
+                                AND: [
+                                        { primaryUserID: primaryUserID_numeric},
+                                        { status: status }
+                                ]
+                        }
                 } else if (primaryUserID_numeric) {
-                        shifts = await prisma.shift.findMany({
-                                where: {
-                                        AND: [
-                                                { primaryUserID: primaryUserID_numeric }
-                                        ]
-                                }
-                        })
-                } else if ( status) {
-                        shifts = await prisma.shift.findMany({
-                                where: {
-                                        AND: [
-                                                { status: status }
-                                        ]
-                                }
-                        })
+                        queryFilters = {primaryUserID: primaryUserID_numeric}
+                } else if (status) {
+                        queryFilters = { status: status }
                 } else {
-                    return new Response('Error: Include a prumary==', {
-                                status: 400,
-                              })
-                }
-                if (!shifts) {
-                        return new Response('Error, Shift not found', {
-                                status: 404,
-                        })
-                }
+                        let error_msg = "Error: Include a primaryUserID and/or \
+                                         status as query parameters"
+                        return new Response(error_msg, {status: 400,})  
+                } 
+        
+                let shifts = await prisma.shift.findMany({where: queryFilters})
                 return new Response(JSON.stringify(shifts))
         } catch {
                 return new Response('Error: An unexpected error occured', {
@@ -71,8 +51,9 @@ export async function GET(req: NextRequest)
 
 
 /* 
- * GETs a shift from the database
- * Expects an integer id and a status to be provided as a query parameter 
+ * Inserts a new shift into the database
+ * Expects the request body to be json with fields corresponding to the fields 
+ * of the Shift model
  */
 export async function POST(req: NextRequest)
 {
