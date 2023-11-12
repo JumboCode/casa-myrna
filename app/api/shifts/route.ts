@@ -78,7 +78,7 @@ export async function POST(req: NextRequest)
 /* 
  * Upserts a new shift into the database
  * Expects the request body to be json with fields corresponding to the fields 
- * of the Shift model
+ * of the Shift model. Also requires shiftID as a query param
  */
 export async function PUT(req: NextRequest)
 {
@@ -117,6 +117,41 @@ export async function PUT(req: NextRequest)
         }
 }
 
+
+
+/* 
+ * DELETEs a shift from the database
+ * Expects an integer id to be provided as a query parameter 
+ */
+export async function DELETE(req: NextRequest) {
+        try {
+          const searchParams = req.nextUrl.searchParams
+          let idString = searchParams.get('shiftID')
+          let idNum = parseInt(idString as string, 10) // 10 = base 10 
+      
+          if ((isNaN(idNum))) {
+            return new Response('Error: Please specify an integer user id', {
+              status: 400,
+            })
+          }
+      
+          let shift = await prisma.shift.delete({
+            where: {
+              shiftID: idNum,
+            },
+          })
+          return Response.json(shift)
+       } catch (error) {
+           if (error instanceof Prisma.PrismaClientKnownRequestError && 
+               error.code === 'P2025') {
+            return new Response('Error: Shift not found', {
+              status: 400,
+            })
+          } else {
+              return new Response('Error: An unexpected error occured', {status: 500,})
+          }
+          }   
+       }
 
 
 
