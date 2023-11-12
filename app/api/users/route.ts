@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 /* 
  * GETs a user from the database
- * Expects an integer id to be provided as a path parameter 
+ * Expects an integer id to be provided as a query parameter 
  */
 export async function GET(req: NextRequest) {
   try {
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
 /* 
  * Upserts a user into the database
- * Expects an integer id to be provided as a path parameter 
+ * Expects an integer id to be provided as a query parameter 
  * Expects the request body to be json with the fields username, firstName, 
  * lastName, pronouns, role, and created_at, with these fields corresponding 
  * to the fields in the user model in schema.prisma
@@ -107,7 +107,7 @@ export async function PUT(req: NextRequest) {
 
 /* 
  * DELETEs a user from the database
- * Expects an integer id to be provided as a path parameter 
+ * Expects an integer id to be provided as a query parameter 
  */
 export async function DELETE(req: NextRequest) {
   try {
