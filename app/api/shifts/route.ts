@@ -121,7 +121,7 @@ export async function PUT(req: NextRequest)
 
 /* 
  * DELETEs a shift from the database
- * Expects an integer id to be provided as a query parameter 
+ * Expects an integer shiftID to be provided as a query parameter 
  */
 export async function DELETE(req: NextRequest) {
         try {
