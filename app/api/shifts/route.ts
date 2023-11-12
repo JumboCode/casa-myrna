@@ -75,6 +75,49 @@ export async function POST(req: NextRequest)
         }
 }
 
+/* 
+ * Upserts a new shift into the database
+ * Expects the request body to be json with fields corresponding to the fields 
+ * of the Shift model
+ */
+export async function PUT(req: NextRequest)
+{
+        try {
+                const searchParams = req.nextUrl.searchParams
+                const shiftID = searchParams.get('shiftID')
+                const shiftIDNumeric = shiftID ? parseInt(shiftID, 10): null;
+                console.log(shiftIDNumeric)
+                if (!shiftIDNumeric){
+                        return new Response('Error: An shiftID must be provided as a query parameter', {status: 500,})
+                }
+
+                let data = await req.json();
+                data = {
+                ...data,
+                "shiftID": shiftIDNumeric,
+                "date": new Date(data.date),
+                "from": new Date(data.from),
+                "to": new Date(data.to),
+                "created_at": new Date(data.created_at)
+                };
+    
+                const shift = await prisma.shift.upsert({
+                        where: {shiftID: shiftIDNumeric },
+                        update: data,
+                        create: data
+                      })
+
+                return new Response(JSON.stringify(shift))
+        } catch (error) {
+                if (error instanceof Prisma.PrismaClientValidationError) {
+                        return new Response('Error: ' + error.message, {status: 400,})
+                } else {
+                        return new Response('Error: An unexpected error occured', {status: 500,})
+                }
+        }
+}
+
+
 
 
 
