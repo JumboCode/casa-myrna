@@ -58,7 +58,7 @@ const HamburgerBarMobile: FC = ({ }) => {
             DisplayName: "Profile",
             Link: "/"
         },
-    ]; /* todo: assign types for type safety */
+    ]; 
 
     return (<div style={{
         background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",

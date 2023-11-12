@@ -12,35 +12,9 @@ import Image from "next/image";
 import Logo from "app/images/1.png";
 import Hamburger from "app/images/hamburger.png";
 import HamburgerBarMobile from './HamburgerBarMobile';
+
 /* note for the future: set a width breakpoint at ~1000px width */
-
 const SideNav = () => {
-  /* source: https://stackoverflow.com/questions/36862334/get-viewport-window-height-in-reactjs */ 
-  // function getWindowDimensions() {
-  //   const { innerWidth: width, innerHeight: height } = window;
-  //   return {
-  //     width,
-  //     height
-  //   };
-  // }
-  
-  // function useWindowDimensions () {
-  //   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-  
-  //   useEffect(() => {
-  //     function handleResize() {
-  //       setWindowDimensions(getWindowDimensions());
-  //     }
-  
-  //     window.addEventListener('resize', handleResize);
-  //     return () => window.removeEventListener('resize', handleResize);
-  //   }, []);
-  
-  //   return windowDimensions;
-  // }
-
-  // const { height, width } = useWindowDimensions(); 
-
   return (
     <>
       {/* todo: refactor existing code and tell them in a PR reflection that we only considered mobile view */}
