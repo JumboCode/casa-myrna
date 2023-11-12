@@ -7,10 +7,10 @@ const prisma = new PrismaClient()
  * GETs a user from the database
  * Expects an integer id to be provided as a path parameter 
  */
-export async function GET(req: Request,
-  { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
   try {
-    let idString = params.id
+    const searchParams = req.nextUrl.searchParams
+    let idString = searchParams.get('id')
     let idNum = parseInt(idString as string, 10) // 10 = base 10 
 
     if ((isNaN(idNum))) {
@@ -69,10 +69,10 @@ export async function POST(req: Request) {
  * lastName, pronouns, role, and created_at, with these fields corresponding 
  * to the fields in the user model in schema.prisma
  */
-export async function PUT(req: Request,
-  { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest) {
   try {
-    let idString = params.id
+    const searchParams = req.nextUrl.searchParams
+    let idString = searchParams.get('id')
     let idNum = parseInt(idString as string, 10) // 10 = base 10 
     if ((isNaN(idNum))) {
       return new Response('Error: Please specify an integer user id', {
@@ -109,10 +109,10 @@ export async function PUT(req: Request,
  * DELETEs a user from the database
  * Expects an integer id to be provided as a path parameter 
  */
-export async function DELETE(req: Request,
-  { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest) {
   try {
-    let idString = params.id
+    const searchParams = req.nextUrl.searchParams
+    let idString = searchParams.get('id')
     let idNum = parseInt(idString as string, 10) // 10 = base 10 
 
     if ((isNaN(idNum))) {

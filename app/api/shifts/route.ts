@@ -77,6 +77,7 @@ export async function POST(req: NextRequest)
 
 
 
+
 /* 
  * Create a shift and insert into the database
  * Expects the request body to be json with shiftID, backupUserID, primaryUserID,
