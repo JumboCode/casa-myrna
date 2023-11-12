@@ -19,8 +19,11 @@ const BoxSx = () => {
       sx={{
         display: 'flex',
         minHeight: '90vh',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
+        // justifyContent: 'center',
+        // alignItems: 'flex-start',
+        flexDirection: 'column', // Change flex direction to column
+        justifyContent: 'flex-start', // Align items at the start
+        alignItems: 'center', // Center items horizontally
         borderRadius: '5%',
         backgroundColor: '#f6f6f6',
         fontFamily: 'default',
@@ -101,9 +104,9 @@ const BoxSx = () => {
         </Stack>
 
         {/* Pagination */}
-        <div sx={{display:'flex', justifyContent:'center'}}>
-          <Pagination count={10} variant="outlined" color="secondary" /> 
-        </div>
+        <Stack spacing={2} alignItems="center">
+          <Pagination count={10} color="secondary" /> 
+        </Stack>
       </Stack>
   </Box>);
 }
