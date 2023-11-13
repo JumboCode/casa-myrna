@@ -18,7 +18,7 @@ const SideNav = () => {
   return (
     <>
       {/* todo: refactor existing code and tell them in a PR reflection that we only considered mobile view */}
-      {(true) ? ( 
+      {(false) ? ( 
         <HamburgerBarMobile />
       ) : (
         <Stack direction="row" spacing={2}>
