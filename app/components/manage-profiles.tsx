@@ -10,6 +10,7 @@ import Select from '@mui/material/Select';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
+import usePagination from '@mui/material/usePagination';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -21,8 +22,75 @@ import Image from "next/image";
 import Add from "app/images/9.png";
 import ClearIcon from '@mui/icons-material/Clear';
 
+interface profileData {
+  firstName: string;
+  lastName: string;
+  role: string;
+  image: string;
+}
+
+interface NameListProps {
+  people: profileData[];
+  itemsPerPage: number;
+}
+
+const NameList: React.FC<NameListProps> = ({ people }) => (
+  <div>
+
+    {people.map((person, index) => (
+        <li key={index}>
+          {/* {person.firstName} {person.lastName} - {person.role} */}
+          <br /> {/* Add a line break between the two lines */}
+          {profileList({
+            firstName: person.firstName,
+            lastName: person.lastName,
+            role: person.role,
+            imageUrl: person.image,
+          })}
+        </li>
+      ))}
+
+  </div>
+);
+
+// List of Employees
+const peopleArray: profileData[] = [
+  { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
+  { firstName: 'Naomi', lastName: 'Gillis', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Jiyoon', lastName: 'Choi', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Pamela ', lastName: 'Melgar', role: 'Volunteer', image: 'jane.jpg' },
+  { firstName: 'Bill', lastName: 'Soronzonbold', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Asli', lastName: 'Kocak', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Carly', lastName: 'Seigel', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'David', lastName: 'Chen', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Elizabeth', lastName: 'Foster', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Sean', lastName: 'Reilly', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Yara', lastName: 'Hamdan', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
+  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' }
+  // Add more people as needed
+];
+
 
 const BoxSx = () => {
+  // Items Per Page (Pagination)
+  const itemsPerPage = 5;
+  
+  // Defining Items
+  // const { items: currentPagePeople, page, pageCount } = usePagination({
+  //   count: peopleArray.length,
+  //   itemsPerPage: itemsPerPage,
+  // });
+
   return (
     <Box
       sx={{
@@ -138,12 +206,12 @@ const BoxSx = () => {
           </Grid>
 
           {/* Profile List */}
-          {profileList({firstName: "N", lastName: "P", role: "volunteer", imageUrl: "image"})}
+          <NameList people={peopleArray} itemsPerPage={itemsPerPage}/>
         </Stack>
 
         {/* Pagination */}
-        <Stack spacing={2} alignItems="center">
-          <Pagination count={10} color="secondary" /> 
+        <Stack spacing={2} alignItems="center" paddingBottom='5%'>
+          <Pagination color="secondary" />
         </Stack>
       </Stack>
   </Box>);
