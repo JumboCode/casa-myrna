@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import React, { useState } from 'react';
 
 // Material-UI components
 import Box from '@mui/material/Box';
@@ -37,20 +36,23 @@ interface NameListProps {
 
 const NameList: React.FC<NameListProps> = ({ people }) => (
   <div>
-    {people.map((person, index) => (
-      <li key={index}>
-        {/* {person.firstName} {person.lastName} - {person.role} */}
-        <br /> {/* Add a line break between the two lines */}
-        {profileList({
-          firstName: person.firstName,
-          lastName: person.lastName,
-          role: person.role,
-          imageUrl: person.image,
-        })}
-      </li>
-    ))}
+    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+      {people.map((person, index) => (
+        <li key={index}>
+          {/* {person.firstName} {person.lastName} - {person.role} */}
+          <br /> {/* Add a line break between the two lines */}
+          {profileList({
+            firstName: person.firstName,
+            lastName: person.lastName,
+            role: person.role,
+            imageUrl: person.image,
+          })}
+        </li>
+      ))}
+    </ul>
   </div>
 );
+
 
 // List of Employees
 const peopleArray: profileData[] = [
@@ -120,7 +122,7 @@ const BoxSx = () => {
         marginRight: '5%'
       }}
     >
-      <Stack spacing={35}>
+      <Stack spacing={10}>
         {/* Header content */}
         <Stack spacing={2}>
           <Grid container spacing={3} columns={20} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} margin={10} paddingTop='5%'>
@@ -219,7 +221,6 @@ const BoxSx = () => {
           </Grid>
 
           {/* Profile List */}
-          {/* <NameList people={peopleArray} itemsPerPage={itemsPerPage}/> */}
           <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
 
@@ -227,16 +228,6 @@ const BoxSx = () => {
         <Stack spacing={2} alignItems="center" paddingBottom='5%'>
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
-        {/* <Stack spacing={2} alignItems="center" paddingBottom='5%'> */}
-          
-        {/* <Pagination color="secondary" /> */}
-
-                    {/* <Pagination color="secondary" 
-                    nPages={10}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage} />
-                    const pageNumbers = [...Array(nPages + 1).keys()].slice(1); */}
-        {/* </Stack> */}
       </Stack>
   </Box>);
 }
