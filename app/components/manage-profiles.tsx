@@ -1,4 +1,5 @@
 import * as React from 'react';
+// import React, { useState } from 'react';
 
 // Material-UI components
 import Box from '@mui/material/Box';
@@ -36,20 +37,18 @@ interface NameListProps {
 
 const NameList: React.FC<NameListProps> = ({ people }) => (
   <div>
-
     {people.map((person, index) => (
-        <li key={index}>
-          {/* {person.firstName} {person.lastName} - {person.role} */}
-          <br /> {/* Add a line break between the two lines */}
-          {profileList({
-            firstName: person.firstName,
-            lastName: person.lastName,
-            role: person.role,
-            imageUrl: person.image,
-          })}
-        </li>
-      ))}
-
+      <li key={index}>
+        {/* {person.firstName} {person.lastName} - {person.role} */}
+        <br /> {/* Add a line break between the two lines */}
+        {profileList({
+          firstName: person.firstName,
+          lastName: person.lastName,
+          role: person.role,
+          imageUrl: person.image,
+        })}
+      </li>
+    ))}
   </div>
 );
 
@@ -83,13 +82,27 @@ const peopleArray: profileData[] = [
 
 const BoxSx = () => {
   // Items Per Page (Pagination)
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   
-  // Defining Items
-  // const { items: currentPagePeople, page, pageCount } = usePagination({
-  //   count: peopleArray.length,
-  //   itemsPerPage: itemsPerPage,
-  // });
+  // Move setActivePage to the outer scope
+  const [activePage, setActivePage] = React.useState(1);
+
+  const usePagination = (people, page = 1, perPage = 5) => {
+    const totalPages = Math.ceil(people.length / perPage);
+    const offset = perPage * (page - 1);
+    const paginatedItems = people.slice(offset, perPage * page);
+
+    return {
+      nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
+      previousPage: () => setActivePage(p => p > 1 ? p - 1 : p),
+      totalPages,
+      totalItems: people.length,
+      items: paginatedItems,
+    };
+  };
+
+  const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
+
 
   return (
     <Box
@@ -206,13 +219,24 @@ const BoxSx = () => {
           </Grid>
 
           {/* Profile List */}
-          <NameList people={peopleArray} itemsPerPage={itemsPerPage}/>
+          {/* <NameList people={peopleArray} itemsPerPage={itemsPerPage}/> */}
+          <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
 
         {/* Pagination */}
         <Stack spacing={2} alignItems="center" paddingBottom='5%'>
-          <Pagination color="secondary" />
+          <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
+        {/* <Stack spacing={2} alignItems="center" paddingBottom='5%'> */}
+          
+        {/* <Pagination color="secondary" /> */}
+
+                    {/* <Pagination color="secondary" 
+                    nPages={10}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage} />
+                    const pageNumbers = [...Array(nPages + 1).keys()].slice(1); */}
+        {/* </Stack> */}
       </Stack>
   </Box>);
 }
