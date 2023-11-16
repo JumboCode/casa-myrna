@@ -25,10 +25,10 @@ const announcements = ({senderName, senderEmail, messageTitle, imageUrl, date} :
       borderRadius: 2,
       width: '95%',
       height: '40px',
-     // justifyContent: 'center',
+      justifyContent: 'space-around',
 
     }}> 
-        <Stack direction="row" spacing={20}>
+        <Stack justifyContent= 'space-around' direction="row" spacing={20}>
         
         
             <Stack direction="row" spacing={3} alignItems={'center'}>
@@ -63,4 +63,7 @@ const announcements = ({senderName, senderEmail, messageTitle, imageUrl, date} :
 }
 
 export default announcements;
+
+
+
 
