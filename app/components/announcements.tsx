@@ -7,22 +7,25 @@ import Button from '@mui/material/Button';
 import { Transform } from '@mui/icons-material';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
+//import useMediaQuery from '@mui/material/useMediaQuery'; 
 
 
 
 
 const announcements = ({senderName, senderEmail, messageTitle, imageUrl, date} : {senderName: string, senderEmail: string, messageTitle: string, imageUrl: string, date: string}) => {
+  // const Desktop = useMediaQuery('(min-width:1200px)'); 
+  // const Mobile = useMediaQuery('(min-width:800px)');
   return (
-   
+
     <Box
      
     sx={{
       bgcolor: 'background.paper',
       boxShadow: 1,
       borderRadius: 2,
-      width: '1000px',
-      height: '40px'
-    //   justifyContent: 'center'
+      width: '95%',
+      height: '40px',
+     // justifyContent: 'center',
 
     }}> 
         <Stack direction="row" spacing={20}>
