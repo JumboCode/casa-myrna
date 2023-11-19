@@ -48,13 +48,19 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 800,
-  height: 400,
+  width:  {
+        lg: 800,
+        xs: '80%'
+  },
+  height: {
+        lg: 400,
+        xs: '70%'
+  },
   bgcolor: "#f6f6f6",
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  borderRadius: '50px',
+  borderRadius: '35px',
  
 };
 
@@ -64,70 +70,97 @@ export default function Home() {
     const handleClose = () => setOpen(false);
     return (
         <div>
-        <Button onClick={handleOpen}>View Announcement</Button>
+        <Button variant='contained' sx={{position: 'absolute' as 'absolute',top: '50%', left: '50%',}} onClick={handleOpen}>View Announcement</Button>
         <Modal
         open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        onClose={handleClose}>
+
+        {/* Gray Modal Box */}
         <Box sx={style}>
-            <Box sx={{width: '50px', height: '50px', position: 'absolute', right: '5%'}}>
-            <button
-              onClick={() => {
-              handleClose();
-               }}
-           ><CloseOutlinedIcon />
-           </button>
+
+            {/* Button Box */}
+            <Box sx={{width: 50, height: 50, position: 'absolute', right: '5%', fill:'none'}}>
+                <button
+                    onClick={() => {
+                    handleClose();
+                    }}>
+                    <CloseOutlinedIcon color="secondary" />
+                </button>
             </Box>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            This is the Announcements Title
-          </Typography>
-          <Box
-            sx={{
-                display: 'flex',
-                minHeight: "350px",
-                borderRadius: '20px', //makes rounded corners
-                backgroundColor: '#ffffff', //color is variable established above! (grey!)
-                fontFamily: 'default',
-                margin: '2%',
-                
-            }}>
-        <Grid sx= {{display: 'flex'}}>
-          <Grid sx={{width: 50, height: 50, ml: 5, mt: 3}}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-          </Grid>
-          <Grid sx={{mt: 2, ml: 5, direction: 'column'}}>
-              <Grid sx ={{justifyContent: 'center'}}>
-                <Typography id="modal-modal-description" sx={{alignItems:'flex-start', mb: 1}}>
-                    Sender Name
-                </Typography> 
-              </Grid>
-              <Grid>
-                <Typography id="modal-modal-description">
-                    To: All Groups
-                </Typography> 
-              </Grid>
-          </Grid>
-          <Grid>
-          <Divider variant='fullWidth'/>
-          </Grid>
-          <Grid sx={{ml: 45, mt: 2, mr: 2, justifyContent: 'flex-end', direction: 'column', alignItems: 'flex-end'}}>
-              <Grid>
-                <Typography id="modal-modal-description" sx={{justifyContent: 'flex-end'}}>
-                    12 November 2023
-                </Typography> 
-              </Grid>
-              <Grid>
-                <Typography id="modal-modal-description" sx={{justifyContent: 'flex-end'}}>
-                    6:06 PM
-                </Typography> 
-              </Grid>
-        </Grid>    
-      </Grid>                 
-    </Box>
-            
+            <Box sx={{paddingLeft: 2, paddingRight: 6}}>
+                <Typography sx={{ fontSize: {lg:'36px', xs:'22px'}}}>
+                    This is the Announcement Title:
+                </Typography>
+            </Box>
+            {/* White Box */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    minHeight: '80%',
+                    borderRadius: '20px', //makes rounded corners
+                    backgroundColor: '#ffffff', //white inner box color
+                    fontFamily: 'default',
+                    margin: '2%',
+                    justifyContent: 'flex-center',
+                    
+                }}>
+                <Box>
+                <Grid>
+                    <Grid container sx= {{display: 'flex', p:2.5}}>
+                        {/* Grid column 0 */}
+                        <Grid container>
+                            <Avatar sx={{width: {xs:40, lg:50}, height: {xs:40, lg:50}}}alt="Bemy Sharp" src="/static/images/avatar/1.jpg" />
+                        </Grid>
+
+                        {/* Grid column 1 */}
+                        <Grid container sx={{width:{xs: '40%',lg:'30%'}, direction: 'column', ml: '2%'}}>
+                            <Grid sx={{width: '100%', justifyContent: 'flex-start'}}>
+                                <Typography sx={{ fontSize: {lg:'18px', xs:'14px'}}}>
+                                    Sender Name
+                                </Typography> 
+                            </Grid>
+                            <Grid sx={{justifyContent: 'flex-start'}}>
+                                <Typography sx={{ fontSize: {lg:'18px', xs:'12px'}}}>
+                                    To: <i>All Groups</i>
+                                </Typography> 
+                            </Grid>
+                        </Grid>
+                        
+                        {/* Grid column 2 */}
+                        <Grid sx={{width: {xs: '40%',lg:'60%'}, direction: 'column'}}>
+                            <Grid container sx={{justifyContent: 'flex-end'}}>
+                                {/* Date */}
+                                <Typography sx={{ fontSize: {lg:'16px', xs:'10px'}}}>
+                                    12 November Sun
+                                </Typography> 
+                            </Grid>
+                            <Grid container sx={{justifyContent: 'flex-end'}}>
+                                {/* Time */}
+                                <Typography sx={{ fontSize: {lg:'16px', xs:'10px'}}}>
+                                    6:00 PM
+                                </Typography> 
+                            </Grid>
+                        </Grid>
+                        </Grid>
+
+                        <Grid>
+                            <Divider sx={{direction:'row', mx:'3%', orientation: 'horizontal'}} />  
+                        </Grid> 
+                        <Grid sx={{mt:3, ml: 3, mr: 3, maxWidth: {xs: '90%'}}}>
+                            <Typography sx={{justifyContent: 'center'}}>
+                            Lorem Epsum FFolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+                            dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                             Lorem Epsum FFolor sit amet,
+                            </Typography> 
+                        </Grid> 
+
+                </Grid>                                
+                </Box>
+                {/* <Box> hello</Box> */}
+            </Box>
         </Box>
       </Modal>
-        </div>
+    </div>
     )
 }
