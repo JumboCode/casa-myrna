@@ -5,135 +5,86 @@ import { PrismaClient, Prisma } from '@prisma/client'
 const prisma = new PrismaClient()
 
 /* 
- * GETs a user from the database
- * Expects an integer id to be provided as a query parameter 
+ * GETs a list of users from the database. Users can be filtered by their 
+ * emails and usernames
+ * Expects a username to be provided as a query parameter 
  */
 export async function GET(req: NextRequest) {
 
     const searchParams = req.nextUrl.searchParams
-    let idString = searchParams.get('username')
-    // let idNum = parseInt(idString as string, 10) // 10 = base 10 
-    if (!idString) {
-        return new Response('Error: Please specify a username', {
-        status: 400,
-      })
+    let username = searchParams.get('username')
+    let email = searchParams.get('emailAddress')
+    let queryFilters: { [key: string]: any } = {}
+    if (username){
+      queryFilters["username"] = [username]
     }
-
+    if (email){
+      queryFilters["emailAddress"] = [email]
+    }
     try {
-      const user = await clerkClient.users.getUserList({
-        username: [idString],
-      });
-      return Response.json(user[0])
+      const users = await clerkClient.users.getUserList(queryFilters);
+      return Response.json(users)
     } catch {
       return new Response('Error: user not found', {
         status: 404,
       })
     }
-  
-
-//     if ((isNaN(idNum))) {
-//       return new Response('Error: Please specify an integer user id', {
-//         status: 400,
-//       })
-//     }
-
-//     const user = await prisma.user.findUnique({
-//       where: {
-//         id: idNum,
-//       },
-//     })
-
-//     if (!user) {
-//       return new Response('Error: User not found', {
-//         status: 404,
-//       })
-//     }
-//     return Response.json(user)
-//  } catch {
-//      return new Response('Error: An unexpected error occured', {
-//        status: 500,
-//      })
-//  }
 }
 
 /* 
  * Inserts a new user into the database
+ * Expects the request body to be json with the fields username, password,
+ * firstName, lastName, pronouns, role, emailAddress & phoneNumber
+ */
+export async function POST(req: Request) {
+  try {
+    let data = await req.json();
+    if (!('username' in data && 'password' in data && 'firstName' in data &&
+          'lastName' in data && 'pronouns' in data && 'emailAddress' in data &&
+          'phoneNumber' in data && 'role' in data)){
+      return new Response('Error: Missing required field', {
+        status: 404,
+      })
+    } 
+
+    const user = await clerkClient.users.createUser({
+      // emailAddress: data.emailAddress,
+      // phoneNumber: data.phoneNumber,
+      username: data.username,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      publicMetadata: {pronouns: data.pronouns, role: data.role}
+    });
+    return new Response(JSON.stringify(user))
+  } catch (error){
+      return new Response('Error: An unexpected error occured', {status: 500,})
+    }
+  }
+
+/* 
+ * Upserts a user into the database
+ * Expects an integer id to be provided as a query parameter 
  * Expects the request body to be json with the fields username, firstName, 
  * lastName, pronouns, role, and created_at, with these fields corresponding 
  * to the fields in the user model in schema.prisma
  */
-export async function POST(req: Request) {
-  // try {
-    // let data = await req.json();
-    // data = {
-    //   ...data,
-    //   "created_at": new Date(data.created_at)
-    // };
-    // let data = {
-    //   "externalId?": "a"
-    // }
-    const user = await clerkClient.users.createUser({
-      emailAddress: ['user@example.com'],
-      
-      // externalId: '123456',
-      username: 'newuser1235',
-      password: 'aStrongPassword',
-      firstName: 'John',
-      lastName: 'Doe',
-      // phoneNumber: ['+12025550108'],
-    });
-    return new Response(JSON.stringify(user))
-  // } catch (error){
-  //   if (error instanceof Prisma.PrismaClientValidationError) {
-  //     return new Response('Error: ' + error.message, {status: 400,})
-  //   } else {
-  //     return new Response('Error: An unexpected error occured', {status: 500,})
-  //   }
-  // }
-}
-
-// /* 
-//  * Upserts a user into the database
-//  * Expects an integer id to be provided as a query parameter 
-//  * Expects the request body to be json with the fields username, firstName, 
-//  * lastName, pronouns, role, and created_at, with these fields corresponding 
-//  * to the fields in the user model in schema.prisma
-//  */
-// export async function PUT(req: NextRequest) {
-//   try {
-//     const searchParams = req.nextUrl.searchParams
-//     let idString = searchParams.get('id')
-//     let idNum = parseInt(idString as string, 10) // 10 = base 10 
-//     if ((isNaN(idNum))) {
-//       return new Response('Error: Please specify an integer user id', {
-//         status: 400,
-//       })
-//     }
-
-//     let userData = await req.json();
-//     userData = {
-//       ...userData,
-//       "id": idNum,
-//       "created_at": new Date(userData.created_at)
-//     };
-
-//     const user = await prisma.user.upsert({
-//       where: {
-//         id: userData.id,
-//       },
-//       update: userData,
-//       create: userData
-//     })
-//     return new Response(JSON.stringify(user))
-//  } catch (error){
-//      if (error instanceof Prisma.PrismaClientValidationError) {
-//        return new Response('Error: ' + error.message, {status: 400,})
-//      } else {
-//        return new Response('Error: An unexpected error occured', {status: 500,})
-//      }
-//   }
-// }
-
+export async function PUT(req: NextRequest) {
+    const searchParams = req.nextUrl.searchParams
+    let idString = searchParams.get('id')
+    if (!idString) {
+      return new Response('Error: Please specify a Clerk User ID', {
+      status: 400,
+    })
+  }
+    try {
+      let data = await req.json();
+      const user = await clerkClient.users.updateUser(idString, data);
+      return new Response(JSON.stringify(user))
+    } catch {
+      return new Response('Error: An unexpected error occured', {status: 500,})
+    }
+  }
 
 // /* 
 //  * DELETEs a user from the database
