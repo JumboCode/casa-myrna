@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2' ;
+import Divider from '@mui/material/Divider';
 
 
 const color = "#f6f6f6"; 
@@ -90,18 +92,40 @@ export default function Home() {
                 margin: '2%',
                 
             }}>
-                <Stack direction="row" spacing={5}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 50, height: 50, ml: 5, mt: 3}} />
-
-                    <Typography id="modal-modal-description" sx={{ mt: 5 }}>
+        <Grid sx= {{display: 'flex'}}>
+          <Grid sx={{width: 50, height: 50, ml: 5, mt: 3}}>
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          </Grid>
+          <Grid sx={{mt: 2, ml: 5, direction: 'column'}}>
+              <Grid sx ={{justifyContent: 'center'}}>
+                <Typography id="modal-modal-description" sx={{alignItems:'flex-start', mb: 1}}>
                     Sender Name
-                    </Typography>   
-                <Grid justifyContent= 'flex-end'></Grid>
-                    <Typography id="modal-modal-description" sx={{ mt: 2}} >
-                        12 November 2023
-                    </Typography>
-                </Stack>                
-            </Box>
+                </Typography> 
+              </Grid>
+              <Grid>
+                <Typography id="modal-modal-description">
+                    To: All Groups
+                </Typography> 
+              </Grid>
+          </Grid>
+          <Grid>
+          <Divider variant='fullWidth'/>
+          </Grid>
+          <Grid sx={{ml: 45, mt: 2, mr: 2, justifyContent: 'flex-end', direction: 'column', alignItems: 'flex-end'}}>
+              <Grid>
+                <Typography id="modal-modal-description" sx={{justifyContent: 'flex-end'}}>
+                    12 November 2023
+                </Typography> 
+              </Grid>
+              <Grid>
+                <Typography id="modal-modal-description" sx={{justifyContent: 'flex-end'}}>
+                    6:06 PM
+                </Typography> 
+              </Grid>
+        </Grid>    
+      </Grid>                 
+    </Box>
+            
         </Box>
       </Modal>
         </div>
