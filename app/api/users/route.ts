@@ -63,11 +63,9 @@ export async function POST(req: Request) {
   }
 
 /* 
- * Upserts a user into the database
- * Expects an integer id to be provided as a query parameter 
- * Expects the request body to be json with the fields username, firstName, 
- * lastName, pronouns, role, and created_at, with these fields corresponding 
- * to the fields in the user model in schema.prisma
+ * Updates a user in the database
+ * Expects an Clerk id to be provided as a query parameter 
+ * Expects the request body to be json with the fields that should be updated
  */
 export async function PUT(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
@@ -86,37 +84,22 @@ export async function PUT(req: NextRequest) {
     }
   }
 
-// /* 
-//  * DELETEs a user from the database
-//  * Expects an integer id to be provided as a query parameter 
-//  */
-// export async function DELETE(req: NextRequest) {
-//   try {
-//     const searchParams = req.nextUrl.searchParams
-//     let idString = searchParams.get('id')
-//     let idNum = parseInt(idString as string, 10) // 10 = base 10 
-
-//     if ((isNaN(idNum))) {
-//       return new Response('Error: Please specify an integer user id', {
-//         status: 400,
-//       })
-//     }
-
-//     const user = await prisma.user.delete({
-//       where: {
-//         id: idNum,
-//       },
-//     })
-
-//     return Response.json(user)
-//  } catch (error) {
-//      if (error instanceof Prisma.PrismaClientKnownRequestError && 
-//          error.code === 'P2025') {
-//       return new Response('Error: Error: User not found', {
-//         status: 400,
-//       })
-//     } else {
-//         return new Response('Error: An unexpected error occured', {status: 500,})
-//     }
-//     }   
-//  }
+/* 
+ * DELETEs a user from the database
+ * Expects an Clerk user id to be provided as a query parameter 
+ */
+  export async function DELETE(req: NextRequest) {
+    const searchParams = req.nextUrl.searchParams
+    let idString = searchParams.get('id')
+    if (!idString) {
+      return new Response('Error: Please specify a Clerk User ID', {
+      status: 400,
+    })
+  }
+    try {
+      let user = await clerkClient.users.deleteUser(idString);
+      return new Response(JSON.stringify(user))
+    } catch {
+      return new Response('Error: User could not be found', {status: 500,})
+    }
+  }
