@@ -52,8 +52,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-
-
+      
 // List of Employees
 const peopleArray: profileData[] = [
   { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
