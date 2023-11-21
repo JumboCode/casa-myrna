@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -12,23 +11,25 @@ import Image from "next/image";
 import Logo from "app/images/1.png";
 import Hamburger from "app/images/hamburger.png";
 import HamburgerBarMobile from './HamburgerBarMobile';
+import { FC, ReactElement } from 'react';
+import "../globals.css"
 
-/* note for the future: set a width breakpoint at ~1000px width */
-const SideNav = () => {
+interface SidebarProps {
+  currentPageComponent: FC; // Update prop type to React Functional Component
+}
+
+const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
+  const CurrentComponent = currentPageComponent;
   return (
     <>
+    
       {/* todo: refactor existing code and tell them in a PR reflection that we only considered mobile view */}
       {(false) ? ( 
         <HamburgerBarMobile />
       ) : (
-        <Stack direction="row" spacing={2}>
-          <div className="sidenav" style={{
-            background: "#F6F6F6",
-            width: "20%",
-            height: "750px",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
+        
+        <Stack direction="row" spacing={0}>
+          <div className="sidenav">
             <MenuList>
               <MenuItem component='a' href=''>
                 <Image src={Hamburger} alt="Error" width={20} height={20} />
@@ -36,7 +37,8 @@ const SideNav = () => {
             </MenuList>
 
             <div style={{
-              paddingTop: 55, display: "flex", alignItems: "center",
+              display: "flex",
+              alignItems: "center",
               justifyContent: "center"
             }}><Image src={Logo} alt="Error" width={160} height={160} /> </div>
 
@@ -77,20 +79,16 @@ const SideNav = () => {
               </MenuItem>
             </MenuList>
           </div>
-          <div style={{
-            background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",
-            width: "80%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
+          <div className='sidebar'>
+            <CurrentComponent/>
           </div>
         </Stack>
       )}
+      
     </>
   )
 };
 
 
-export default SideNav;
+export default Sidebar;
 

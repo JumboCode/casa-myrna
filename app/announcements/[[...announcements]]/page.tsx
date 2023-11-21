@@ -3,7 +3,7 @@
 import { FC, useState } from 'react'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
-import SideNav from "@/app/components/sidebar"
+import SideNav from "@/app/components/Sidebar"
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -14,34 +14,7 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2' ;
 import Divider from '@mui/material/Divider';
-
-
 const color = "#f6f6f6"; 
-
-
-
-// import * as React from 'react';
-// import Box from '@mui/material/Box';
-
-// export default function BreakpointsAsObject() {
-//   return (
-//     <div>
-//       <Box
-//         sx={{
-//           width: {
-//             xs: 100, // theme.breakpoints.up('xs')
-//             sm: 200, // theme.breakpoints.up('sm')
-//             md: 300, // theme.breakpoints.up('md')
-//             lg: 400, // theme.breakpoints.up('lg')
-//             xl: 500, // theme.breakpoints.up('xl')
-//           },
-//         }}
-//       >
-//         This box has a responsive width.
-//       </Box>
-//     </div>
-//   );
-// }
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -64,7 +37,7 @@ const style = {
  
 };
 
-export default function Home() {
+const announcements: React.FC = ()  => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -164,3 +137,4 @@ export default function Home() {
     </div>
     )
 }
+export default announcements;

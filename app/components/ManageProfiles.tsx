@@ -7,20 +7,20 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
-import usePagination from '@mui/material/usePagination';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 
 // Custom components and images
-import profileList from "./profileList";
+import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "app/images/9.png";
 import ClearIcon from '@mui/icons-material/Clear';
+import { FC } from 'react';
+import theme from '../theme';
 
 interface profileData {
   firstName: string;
@@ -36,9 +36,9 @@ interface NameListProps {
 
 const NameList: React.FC<NameListProps> = ({ people }) => (
   <div>
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+    <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
       {people.map((person, index) => (
-        <li key={index}>
+        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
           {/* {person.firstName} {person.lastName} - {person.role} */}
           <br /> {/* Add a line break between the two lines */}
           {profileList({
@@ -81,14 +81,14 @@ const peopleArray: profileData[] = [
 ];
 
 
-const BoxSx = () => {
+const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
   
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1);
 
-  const usePagination = (people, page = 1, perPage = 5) => {
+  const usePagination = (people: profileData[], page = 1, perPage = 5) => {
     const totalPages = Math.ceil(people.length / perPage);
     const offset = perPage * (page - 1);
     const paginatedItems = people.slice(offset, perPage * page);
@@ -109,16 +109,11 @@ const BoxSx = () => {
     <Box
       sx={{
         display: 'flex',
-        minHeight: '90vh',
-        flexDirection: 'column', 
-        justifyContent: 'flex-start',
-        alignItems: 'center', 
-        borderRadius: '5%',
-        backgroundColor: '#f6f6f6',
-        fontFamily: 'default',
-        margin: '2%',
-        marginLeft: '5%',
-        marginRight: '5%'
+        minHeight: "87vh",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: '5vh', //makes rounded corners
+        backgroundColor: "#f6f6f6", //color is variable established above! (grey!)
       }}
     >
       <Stack spacing={10}>
@@ -126,19 +121,18 @@ const BoxSx = () => {
         <Stack spacing={2}>
           <Grid container spacing={3} columns={20} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} margin={10} paddingTop='5%'>
                 {/* Left side of header */}
-                <Grid item xs={14} paddingBottom='5%'>
+                <Grid xs={14}>
                   {/* Page Title */}
-                  <Typography variant="h4" sx={{fontWeight: 'bold', paddingBottom:'10%'}}>
+                  <Typography variant="h1" sx={{fontWeight: 'bold', paddingBottom:'10%'}}>
                       Manage Profiles
                   </Typography>
 
                   {/* Search Bar */}
                   <Grid container spacing={3} columns={4}>
                     {/* Actual Search Bar */}
-                    <Grid item xs={3}>
+                    <Grid xs={3}>
                       <InputBase 
                         fullWidth
-                        variant="outlined"
                         endAdornment={
                           <InputAdornment position="end">
                             <SearchIcon />
@@ -154,17 +148,17 @@ const BoxSx = () => {
                       />
                     </Grid>
                     {/* Search Button */}
-                    <Grid item xs={1}>
+                    <Grid xs={1}>
                       <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">search</Button>
                     </Grid>
                   </Grid>
 
                   {/* Applied filters */}
-                  <Grid container spacing={2} item xs={12} paddingTop='2%' alignItems="center">
-                    <Grid item xs={2}>
-                      applied filters:
+                  <Grid container spacing={2} xs={12} paddingTop='2%' alignItems="center">
+                    <Grid xs={2}>
+                      <Typography variant="body2">applied filters:</Typography>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid xs={10}>
                       <TextField
                         defaultValue="    All"
                         InputProps={{
@@ -187,34 +181,13 @@ const BoxSx = () => {
                 </Grid>
 
                 {/* Right side of header */}
-                <Grid item xs={6}>
+                <Grid xs={6}>
                   {/* Add new employee */}
-                  <Grid container paddingBottom='23%'>
+                  <Grid container sx={{paddingTop: "60%"}}>
                     <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
                       <div style={{ flexGrow: 1 }}>Add New Employee</div>
                       <Image src={Add} alt="Error" width={30} height={30} />
                     </Button>
-                  </Grid>
-
-                  {/* Select filters */}
-                  <Grid container spacing={2} columns={3}>
-                    <Grid item xs={2}>
-                      <Select
-                        fullWidth
-                        value="" // Set the initial value to an empty string
-                        displayEmpty // Display the selected value even when it's empty
-                        sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px'}}
-                      >
-                        <MenuItem value="" disabled>
-                          Select filters
-                        </MenuItem>
-                        {/* Add more MenuItem components with filter options here */}
-                      </Select>
-                    </Grid>
-                    {/* Filter button */}
-                    <Grid item xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">filter</Button>
-                    </Grid>
                   </Grid>
               </Grid>
           </Grid>
