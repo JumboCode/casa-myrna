@@ -11,6 +11,30 @@ import Image from 'next/image';
 import UploadImage from '../images/6.png';
 const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
 
+// const style = {
+//     position: 'absolute' as 'absolute',
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)',
+//     width:  {
+//           lg: 800,
+//           xs: '80%'
+//     },
+//     height: {
+//           lg: 400,
+//           xs: '70%'
+//     },
+//     border: '2px solid #000',
+//     boxShadow: 24,
+//     p: 4,
+//     display: 'flex',
+//     minHeight: "87vh",
+//     justifyContent: "center",
+//     alignItems:"center",
+//     borderRadius: '5vh', //makes rounded corners
+//     backgroundColor: color, //color is variable established above! (grey!)
+//   };
+
 const BoxSx: FC = () => {
     const theme = useTheme();
   return (
@@ -18,7 +42,7 @@ const BoxSx: FC = () => {
       sx={{
         display: 'flex',
         minHeight: "87vh",
-        justifyContent: "center",
+        justifyContent: "flex",
         alignItems:"center",
         borderRadius: '5vh', //makes rounded corners
         backgroundColor: color, //color is variable established above! (grey!)

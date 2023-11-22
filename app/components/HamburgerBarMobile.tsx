@@ -1,11 +1,3 @@
-/* 
- *  Authors: Carly Seigel and Bill Soronzonbold 
- *  Date   : 11/6/2023 
- * 
- *  File contains the mobile sidebar, used in the sidebar component
- *  
- */
-
 "use client"
 
 import MenuItem from '@mui/material/MenuItem';
@@ -21,8 +13,12 @@ import { FC, useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import CloseIcon from "app/images/closeIcon.svg";
 
-const HamburgerBarMobile: FC = ({ }) => {
+interface MobileBarProps {
+    currentPageComponent: FC; // Update prop type to React Functional Component
+  }
+const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const CurrentComponent = currentPageComponent;
 
     useEffect(() => {
         setShowMenu(false);
@@ -56,15 +52,13 @@ const HamburgerBarMobile: FC = ({ }) => {
             Name: "ProfileButton",
             Icon: Profile,
             DisplayName: "Profile",
-            Link: "/"
+            Link: "/my-profile"
         },
     ]; 
 
     return (<div style={{
-        background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",
         height: "100vh",
         width: "100%",
-
     }}>
         {(!showMenu) ? (
             <div style={{
@@ -136,11 +130,14 @@ const HamburgerBarMobile: FC = ({ }) => {
                 </MenuList>
             </>
         )}
+        <div className="mobileSidebar">
+                <CurrentComponent/>
+        </div>
         <div style={{
             height: "70px",
             position: "absolute",
-            left: 10, 
-            right: 10, 
+            left: 0, 
+            right: 0, 
             bottom: -1,
             background: "#5DAED7",
             display: "flex",

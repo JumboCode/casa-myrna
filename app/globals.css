@@ -15,6 +15,14 @@ body {
   margin-left: 40vh; 
 }
 
+.mobileSidebar{
+  /* width: 160vh; */
+  padding: 3.5%;  
+  position: relative;
+  justify-content: center;
+  padding-bottom: 17.5%;
+}
+
 .sidenav{
   background-color: #F6F6F6;
   width: 40vh;
@@ -22,4 +30,14 @@ body {
   justify-content: center; 
   height: 100vh;
   position: fixed;
+}
+
+@media all and (max-width: 480px) {
+  .left-large {
+    /* margin-bottom: 3;
+    margin-left: -3;
+    margin-top: 0.0000001;  */
+    margin-left: -30;
+    font-size: 24px;
+  }
 }

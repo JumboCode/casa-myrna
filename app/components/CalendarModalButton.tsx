@@ -1,11 +1,3 @@
-/* 
- *      Calendar Page overview 
- * 
- *      Author:  Bill Soronzonbold 
- *      Date:    10/31/2023  
- *      comp(s): Calendar Modal Button and Calendar Modal
- */
-
 "use client"
 
 import { FC, useState } from 'react'
@@ -14,18 +6,7 @@ import "@/app/calendar/[[...calendar]]/calendar.css"
 import Modal from "@mui/material/Modal"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
-
-/* Theme required for styling the font for the Typography tags */
-declare module "@mui/material/styles" {
-    interface Theme {
-        status: {
-            danger: string;
-        },
-        fontFamily: [
-            "Montserrat"
-        ]
-    }
-}
+import Stack from '@mui/material/Stack';
 
 const CalendarModalButton: FC = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -47,7 +28,7 @@ const CalendarModalButton: FC = () => {
             <Modal
                 open={openModal}
                 onClose={closeModal}
-                sx={{ backgroundColor: "rgba(0, 0, 0, 0.20)", zIndex: 1, }}
+                //sx={{ backgroundColor: "rgba(0, 0, 0, 0.20)", zIndex: 1, }}
             >
                 {/* todo: figure out the styling of the fonts */}
                 <Box sx={{
@@ -55,30 +36,27 @@ const CalendarModalButton: FC = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    height: 350,
+                    width: "30%",
+                    height: "45%",
                     bgcolor: 'background.paper',
                     border: '1px solid #000',
                     borderRadius: '20px',
                     py: 10,
                     px: 15, 
                     "@media all and (max-width: 480px)": {
-                        width: 200,
-                        height: 600,
+                        height: "70%",
                         py: 5,
                         px: 10,
                     }
                 }}>
                     <Typography
                         variant="h4"
-                        className="little-space"
                         sx={{
                             mb: 6,
                             ml: -5,
                             mt: -6,  
                             "@media all and (max-width: 480px)": {
                                 mb: 3,
-                                ml: -3, 
                                 mt: 0.0000001, 
                             }
                         }}
@@ -86,8 +64,13 @@ const CalendarModalButton: FC = () => {
                     >
                         Shift Details
                     </Typography>
-
-                    {/* blueprint for the little inputs -> will change later */}
+                    <Stack direction="column" sx={{  
+                            "@media all and (max-width: 480px)": {
+                                alignItems: "center",
+                                marginLeft: 3,
+                                fontSize: "14px"
+                            }
+                        }}>
                     <div className="inline-input-representation">
                         <Typography variant="subtitle1" className="left-large">Start Time: </Typography>
                         <Typography className="text-with-border right">12 Oct Tuesday - 02.00 pm</Typography>
@@ -117,7 +100,7 @@ const CalendarModalButton: FC = () => {
                         <Typography variant="subtitle1" className="left-small"> Status: </Typography>
                         <Typography className="text-with-border green-btn"> Assigned </Typography>
                     </div>
-
+                    </Stack>
                     <Button
                         variant="contained"
                         color="secondary"

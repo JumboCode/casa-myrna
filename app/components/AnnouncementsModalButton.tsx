@@ -33,7 +33,6 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: '35px',
- 
 };
 
 const AnnouncementsModalButton: React.FC = ()  => {
