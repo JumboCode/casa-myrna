@@ -39,7 +39,6 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
       {people.map((person, index) => (
         <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
-          {/* {person.firstName} {person.lastName} - {person.role} */}
           <br /> {/* Add a line break between the two lines */}
           {profileList({
             firstName: person.firstName,
