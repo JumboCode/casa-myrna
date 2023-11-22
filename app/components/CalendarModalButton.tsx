@@ -7,6 +7,7 @@ import Modal from "@mui/material/Modal"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Stack from '@mui/material/Stack';
+import React from 'react';
 
 const CalendarModalButton: FC = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -64,6 +65,7 @@ const CalendarModalButton: FC = () => {
                     >
                         Shift Details
                     </Typography>
+                    
                     <Stack direction="column" sx={{  
                             "@media all and (max-width: 480px)": {
                                 alignItems: "center",

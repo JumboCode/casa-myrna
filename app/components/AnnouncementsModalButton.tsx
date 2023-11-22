@@ -1,19 +1,14 @@
 "use client"
-import { FC, useState } from 'react'
+
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-
-import SideNav from "./Sidebar"
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2' ;
 import Divider from '@mui/material/Divider';
-const color = "#f6f6f6"; 
 
 const style = {
   position: 'absolute' as 'absolute',
