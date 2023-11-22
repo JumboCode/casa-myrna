@@ -1,3 +1,4 @@
+"use client"
 import * as React from 'react';
 
 // Material-UI components
@@ -39,7 +40,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
       {people.map((person, index) => (
         <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
-          <br /> {/* Add a line break between the two lines */}
+          <br/> 
           {profileList({
             firstName: person.firstName,
             lastName: person.lastName,

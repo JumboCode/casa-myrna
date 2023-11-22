@@ -1,15 +1,9 @@
-/* 
- *      LoginForm.tsx
- * 
- *      Author:  Bill Soronzonbold 
- *      Date:    11/13/2023  
- *      
- *      Component that contains the login form
- */
+"use client"
 
-import { FC } from 'react'
+import { FC} from 'react'
 import { SignIn } from "@clerk/nextjs";
 import "../login/[[...login]]/login.css" 
+import React from 'react';
 
 const LoginForm: FC = ({ }) => {
     return <div style={{

@@ -8,7 +8,6 @@ import Groupchat from "app/images/4.png";
 import Profile from "app/images/7.png";
 import Logout from "app/images/5.png";
 import Image from "next/image";
-import Hamburger from "app/images/hamburger.png";
 import { FC, useState} from 'react'
 import Logo from "app/images/1.png";
 import { Stack } from '@mui/material';
@@ -25,16 +24,14 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
     return(
         <Stack direction="row" spacing={0}>
           <div className="sidenav">
-            <MenuList>
-              <MenuItem component='a' href=''>
-                <Image src={Hamburger} alt="Error" width={20} height={20} />
-              </MenuItem>
-            </MenuList>
-
+           {/* <br></br>
+           <br></br>
+           <br></br> */}
             <div style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              marginTop: "25%"
             }}><Image src={Logo} alt="Error" width={160} height={160} /> </div>
 
             <MenuList style={{ paddingTop: 100, paddingLeft: 8, paddingRight: 8 }}>

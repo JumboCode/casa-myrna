@@ -2,7 +2,7 @@
 
 import Sidebar from "../../components/Sidebar"; 
 import React, { useState, useEffect, ReactElement } from "react";
-import ManageProfiles from "../../components/ManageProfiles";
+import ManageProfiles from "../../components/manageProfiles";
 import "../../globals.css";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme';

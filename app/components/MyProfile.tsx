@@ -9,31 +9,6 @@ import { FC } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
 import UploadImage from '../images/6.png';
-const color = "#f6f6f6"; //establishes where on the grey scale so we can use it later!
-
-// const style = {
-//     position: 'absolute' as 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width:  {
-//           lg: 800,
-//           xs: '80%'
-//     },
-//     height: {
-//           lg: 400,
-//           xs: '70%'
-//     },
-//     border: '2px solid #000',
-//     boxShadow: 24,
-//     p: 4,
-//     display: 'flex',
-//     minHeight: "87vh",
-//     justifyContent: "center",
-//     alignItems:"center",
-//     borderRadius: '5vh', //makes rounded corners
-//     backgroundColor: color, //color is variable established above! (grey!)
-//   };
 
 const BoxSx: FC = () => {
     const theme = useTheme();
@@ -44,8 +19,8 @@ const BoxSx: FC = () => {
         minHeight: "87vh",
         justifyContent: "flex",
         alignItems:"center",
-        borderRadius: '5vh', //makes rounded corners
-        backgroundColor: color, //color is variable established above! (grey!)
+        borderRadius: '5vh',
+        backgroundColor: "#f6f6f6"
       }}
     >
         <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={4}>
