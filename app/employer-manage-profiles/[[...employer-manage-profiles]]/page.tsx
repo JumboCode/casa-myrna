@@ -6,9 +6,7 @@ import ManageProfiles from "../../components/ManageProfiles";
 import "../../globals.css";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme';
-interface MainProps {
-  currentPage: string; // Define prop type for currentPage
-}
+
 const employerManageProfiles: React.FC = ()  => {
   return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={ManageProfiles}/></ThemeProvider>)
 };

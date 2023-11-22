@@ -12,6 +12,7 @@ import Logo from "app/images/1.png";
 import Hamburger from "app/images/hamburger.png";
 import HamburgerBarMobile from './HamburgerBarMobile';
 import { FC, ReactElement } from 'react';
+import { SignOutButton } from "@clerk/nextjs";
 import "../globals.css"
 
 interface SidebarProps {
@@ -72,11 +73,13 @@ const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
               paddingTop: 75, alignItems: "center",
               justifyContent: "center", display: "flex", color: "#2E0057"
             }}>
-              <MenuItem component='a' href='' >
+              <SignOutButton>
+                <MenuItem component='a' href='' >
                 <Image src={Logout} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
                 Logout
               </MenuItem>
+              </SignOutButton>
             </MenuList>
           </div>
           <div className='sidebar'>
