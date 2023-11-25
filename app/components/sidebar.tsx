@@ -4,6 +4,8 @@ import HamburgerBarDesktop from "./HamburgerBarDesktop"
 import HamburgerBarMobile from './HamburgerBarMobile';
 import { FC, ReactElement } from 'react';
 import "../globals.css"
+import theme from '../theme';
+
 
 interface SidebarProps {
   currentPageComponent: FC;
