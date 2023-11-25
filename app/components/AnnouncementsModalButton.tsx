@@ -9,6 +9,7 @@ import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2' ;
 import Divider from '@mui/material/Divider';
+import theme from '../theme';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,7 +24,7 @@ const style = {
         lg: 400,
         xs: '70%'
   },
-  bgcolor: "#f6f6f6",
+  bgcolor: theme.palette.primary.main,
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,

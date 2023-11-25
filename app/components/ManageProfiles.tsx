@@ -6,8 +6,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -18,7 +16,7 @@ import InputBase from '@mui/material/InputBase';
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
-import Add from "app/images/9.png";
+import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC } from 'react';
 import theme from '../theme';
@@ -149,7 +147,7 @@ const BoxSx: FC = () => {
                     </Grid>
                     {/* Search Button */}
                     <Grid xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">search</Button>
+                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor: theme.palette.primary.main}, textTransform: 'none'}} variant="contained">search</Button>
                     </Grid>
                   </Grid>
 
@@ -184,7 +182,7 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container sx={{paddingTop: "60%"}}>
-                    <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor:"#57228F"}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
+                    <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
                       <div style={{ flexGrow: 1 }}>Add New Employee</div>
                       <Image src={Add} alt="Error" width={30} height={30} />
                     </Button>

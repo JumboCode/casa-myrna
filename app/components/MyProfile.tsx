@@ -23,10 +23,10 @@ const BoxSx: FC = () => {
         backgroundColor: "#f6f6f6"
       }}
     >
-        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={4}>
+        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 4, md: 5, lg: 12}}>
            <Grid container spacing={4} direction='column' justifyContent='center' alignItems='center'>
                 <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='15%'>
-                    <Typography variant="h1" textAlign={'center'} justifyContent={'center'}>
+                    <Typography variant="h1" textAlign={'center'} justifyContent={'center'} >
                         My Profile
                     </Typography>
                 </Grid>
@@ -40,8 +40,6 @@ const BoxSx: FC = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <Grid>
-            </Grid>
             {/* This is column 1 */}
             <Grid container spacing={4} direction='column' alignItems='flex-center' paddingTop='12%'>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
@@ -49,19 +47,12 @@ const BoxSx: FC = () => {
                         First Name
                     </Typography>
                     <TextField defaultValue="Jumbo" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
-                
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Last Name
                     </Typography>
                     <TextField defaultValue="Code" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
-                </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" >
-                        Username
-                    </Typography>
-                    <TextField defaultValue="Casa" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}   }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
@@ -72,7 +63,7 @@ const BoxSx: FC = () => {
             </Grid>
             {/* This is column 2 */}
             <Grid container spacing={4} direction='column' alignItems='flex-start' paddingTop='12%' paddingBottom='10%'>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
+                <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Pronouns
                     </Typography>
@@ -85,12 +76,6 @@ const BoxSx: FC = () => {
                         Role
                     </Typography>
                     <TextField defaultValue="Employee" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
-                </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" >
-                        Password
-                    </Typography>
-                    <TextField defaultValue="casa.myrna123" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4">
