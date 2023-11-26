@@ -1,40 +1,18 @@
 'use client'
 
-import sidebar from "./components/sidebar"; 
-import React, { useState, useEffect } from "react";
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
-import Hamburger from "app/images/hamburger.png";
-import Image from "next/image";
+import Sidebar from "./components/Sidebar"; 
+import React, { useState, useEffect, ReactElement } from "react";
+import "./globals.css";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
+import { Typography } from '@mui/material'
 
+interface MainProps {
+  currentPage: string; // Define prop type for currentPage
+}
 
-export default function Home(){
-
-  const [showButton, setShowButton] = useState(true);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setShowButton(false);
-      } else {
-        setShowButton(true);
-      }
-    };
-  
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  if (!showButton)
-  {
-    return (
-            <MenuList>
-            <MenuItem component = 'a' href = '' style = {{background: "#F6F6F6"}}>  
-              <Image src = {Hamburger} alt = "Error" width = {20} height= {20} /> 
-            </MenuItem>
-        </MenuList>
-        )  
-  }
-  return sidebar()  
+const Main: React.FC<MainProps> = ({ currentPage }): ReactElement => {
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Typography}/></ThemeProvider>)
 };
 
+export default Main;
