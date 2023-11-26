@@ -51,11 +51,12 @@ const CalendarModalButton: FC = () => {
                     }
                 }}>
                     <Typography
-                        variant="h4"
                         sx={{
                             mb: 6,
                             ml: -5,
                             mt: -6,  
+                            fontFamily: 'Montserrat',
+                            fontSize: 24,
                             "@media all and (max-width: 480px)": {
                                 mb: 3,
                                 mt: 0.0000001, 
