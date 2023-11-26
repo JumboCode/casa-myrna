@@ -1,7 +1,14 @@
-"use client"
+'use client'
 
-import manageProfiles from "../../components/manage-profiles"
+import Sidebar from "../../components/Sidebar"; 
+import React, { useState, useEffect, ReactElement } from "react";
+import ManageProfiles from "../../components/manageProfiles";
+import "../../globals.css";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../../theme';
 
-export default function Page() {
-  return manageProfiles();
-}
+const employerManageProfiles: React.FC = ()  => {
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={ManageProfiles}/></ThemeProvider>)
+};
+
+export default employerManageProfiles;
