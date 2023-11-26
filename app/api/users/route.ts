@@ -48,13 +48,12 @@ export async function POST(req: Request) {
     } 
 
     const user = await clerkClient.users.createUser({
-      // emailAddress: [data.emailAddress],
-      // phoneNumber: [data.phoneNumber],
+      emailAddress: [data.emailAddress],
       username: data.username,
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
-      publicMetadata: {pronouns: data.pronouns, role: data.role}
+      publicMetadata: {pronouns: data.pronouns, role: data.role, phoneNumber: data.phoneNumber}
     });
     return new Response(JSON.stringify(user))
   } catch (error){
