@@ -13,6 +13,8 @@
     "@clerk/nextjs": "^4.25.4",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fontsource/inter": "^5.0.15",
+    "@fontsource/montserrat": "^5.0.15",
     "@mui/icons-material": "^5.14.15",
     "@mui/material": "^5.14.15",
     "@prisma/client": "^5.4.1",
