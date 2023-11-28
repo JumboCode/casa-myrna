@@ -1,4 +1,4 @@
-"use client"
+  "use client"
 
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -12,7 +12,7 @@ import { FC, useState} from 'react'
 import Logo from "app/images/1.png";
 import { Stack } from '@mui/material';
 import React from 'react';
-import { SignOutButton } from '@clerk/nextjs';
+import { SignOutButton, useClerk } from '@clerk/nextjs';
 
 interface DesktopBarProps {
     currentPageComponent: FC; // Update prop type to React Functional Component
@@ -20,6 +20,7 @@ interface DesktopBarProps {
 const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const CurrentComponent = currentPageComponent;
+    const { signOut } = useClerk(); 
 
     return(
         <Stack direction="row" spacing={0}>
@@ -64,7 +65,9 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
               paddingTop: 75, alignItems: "center",
               justifyContent: "center", display: "flex", color: "#2E0057"
             }}>
-              <SignOutButton>
+              <SignOutButton
+                signOutCallback={() => signOut()}
+              >
                 <MenuItem component='a' href='' >
                 <Image src={Logout} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>

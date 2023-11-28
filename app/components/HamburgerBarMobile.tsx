@@ -9,16 +9,18 @@ import Profile from "app/images/7.png";
 import Logout from "app/images/5.png";
 import Image from "next/image";
 import Hamburger from "app/images/hamburger.png";
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import CloseIcon from "app/images/closeIcon.svg";
+import { SignOutButton, useClerk } from '@clerk/nextjs';
 
 interface MobileBarProps {
     currentPageComponent: FC; // Update prop type to React Functional Component
-  }
+}
 const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const CurrentComponent = currentPageComponent;
+    const { signOut } = useClerk();
 
     useEffect(() => {
         setShowMenu(false);
@@ -54,7 +56,7 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
             DisplayName: "Profile",
             Link: "/my-profile"
         },
-    ]; 
+    ];
 
     return (<div style={{
         height: "100vh",
@@ -106,38 +108,38 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
                         marginTop: 60,
                     }}>
                         {buttonList.map((button) => {
-                            return <MenuItem component="a" href={button.Link} 
-                                    style={{
-                                        background: "#FFFFFF",
-                                        marginBottom: 10,
-                                        width: "auto",
-                                        height: 60,
-                                        borderRadius: 20,
-                                        fontSize: 20,
-                                        boxShadow: "0px 5px rgba(128,128,128,0.3)",
-                                    }}
-                                    key={button.Name}
-                                >
-                                    <Image src={button.Icon} alt={button.Name} style={{
-                                        height: 35,
-                                        width: 35,
-                                        marginRight: 15,
-                                    }} />
-                                    {button.DisplayName}
-                                </MenuItem>
+                            return <MenuItem component="a" href={button.Link}
+                                style={{
+                                    background: "#FFFFFF",
+                                    marginBottom: 10,
+                                    width: "auto",
+                                    height: 60,
+                                    borderRadius: 20,
+                                    fontSize: 20,
+                                    boxShadow: "0px 5px rgba(128,128,128,0.3)",
+                                }}
+                                key={button.Name}
+                            >
+                                <Image src={button.Icon} alt={button.Name} style={{
+                                    height: 35,
+                                    width: 35,
+                                    marginRight: 15,
+                                }} />
+                                {button.DisplayName}
+                            </MenuItem>
                         })}
                     </div>
                 </MenuList>
             </>
         )}
         <div className="mobileSidebar">
-                <CurrentComponent/>
+            <CurrentComponent />
         </div>
         <div style={{
             height: "70px",
             position: "absolute",
-            left: 0, 
-            right: 0, 
+            left: 0,
+            right: 0,
             bottom: -1,
             background: "#5DAED7",
             display: "flex",
@@ -147,18 +149,23 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
             overflowX: "hidden",
             overflowY: "hidden",
         }}>
-            <Button style={{ width: "auto" }} onClick={() => {
-                alert("logout indicated");
-            }}>
-                <Image src={Logout} alt="logoutButton" style={{
-                    height: "35px",
-                    width: "35px",
-                    marginRight: 8,
-                }} />
-                <span style={{
-                    color: "#2E0057",
-                }}>Logout</span>
-            </Button>
+
+            <button style={{ background: "none", border: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <SignOutButton
+                    signOutCallback={() => { console.log('should print'); signOut()}}
+                >
+                    <>
+                        <Image src={Logout} alt="logoutButton" style={{
+                            height: "35px",
+                            width: "35px",
+                            marginRight: 8,
+                        }} />
+                        <span style={{
+                            color: "#2E0057",
+                        }}>Logout</span>
+                    </>
+                </SignOutButton>
+            </button>
         </div>
     </div>)
 }

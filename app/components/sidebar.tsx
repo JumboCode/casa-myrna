@@ -6,17 +6,18 @@ import { FC, ReactElement } from 'react';
 import "../globals.css"
 import theme from '../theme';
 
-
 interface SidebarProps {
   currentPageComponent: FC;
 }
 
 const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
   const CurrentComponent = currentPageComponent;
-  const isMobile: boolean = window.innerWidth < 768;
+
+  const isMobile: boolean = window.innerWidth > 768; 
+
   return (
     <>
-      {(isMobile) ? ( 
+      {(false) ? ( 
          <HamburgerBarMobile currentPageComponent={CurrentComponent}/>
       ) : (
         <HamburgerBarDesktop currentPageComponent={CurrentComponent}/>
