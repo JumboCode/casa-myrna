@@ -174,7 +174,7 @@ const BoxSx: FC = () => {
                     </Grid>
                     {/* Filter button */}
                     <Grid item xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">filter</Button>
+                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">sort</Button>
                     </Grid>
                   </Grid>
                 </Grid>
