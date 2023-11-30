@@ -158,7 +158,7 @@ const BoxSx: FC = () => {
                 {/* Right side of header */}
                 <Grid xs={6}>
                   {/* Select filters */}
-                  <Grid container spacing={2} columns={3} paddingTop={'48%'}>
+                  <Grid container spacing={2} columns={3} paddingTop={'47%'}>
                     <Grid item xs={2}>
                       <Select
                         fullWidth
