@@ -1,4 +1,3 @@
-"use client"
 import * as React from 'react';
 
 // Material-UI components
@@ -207,16 +206,18 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container sx={{paddingTop: "60%"}}>
-                    <Button fullWidth variant="outlined" sx={{ padding: '3%', bordersRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
+                    {/* <Button fullWidth variant="outlined" sx={{ padding: '3%', bordersRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
                       <div style={{ flexGrow: 1 }}>Add New Employees</div>
                       <Image src={Add} alt="Error" width={30} height={30} />
-                    </Button>
+                    </Button> */}
                     <Button
               fullWidth
               variant="outlined"
               sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': { borderColor: theme.palette.primary.main }, textTransform: 'none', display: 'flex', alignItems: 'center' }}
               onClick={() => { toggleModal () }}// Call the toggleModal function on button click
             >
+              <div style={{ flexGrow: 1 }}>Add New Employees</div>
+              <Image src={Add} alt="Error" width={30} height={30} />
             </Button>
                   </Grid>
               </Grid>
