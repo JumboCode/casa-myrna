@@ -13,14 +13,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import Modal from '@mui/material/Modal';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import theme from '../theme';
+
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC } from 'react';
-import theme from '../theme';
-import Modal from '@mui/material/Modal';
 
 interface profileData {
   firstName: string;
@@ -132,6 +136,7 @@ const BoxSx: FC = () => {
         alignItems: "center",
         borderRadius: '5vh', //makes rounded corners
         backgroundColor: "#f6f6f6", //color is variable established above! (grey!)
+        
       }}
     >
       <Stack spacing={10}>
@@ -202,8 +207,8 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container sx={{paddingTop: "60%"}}>
-                    <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
-                      <div style={{ flexGrow: 1 }}>Add New Employee</div>
+                    <Button fullWidth variant="outlined" sx={{ padding: '3%', bordersRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
+                      <div style={{ flexGrow: 1 }}>Add New Employees</div>
                       <Image src={Add} alt="Error" width={30} height={30} />
                     </Button>
                     <Button
@@ -212,13 +217,11 @@ const BoxSx: FC = () => {
               sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': { borderColor: theme.palette.primary.main }, textTransform: 'none', display: 'flex', alignItems: 'center' }}
               onClick={() => { toggleModal () }}// Call the toggleModal function on button click
             >
-              <div style={{ flexGrow: 1 }}>Add New Employee</div>
-              <Image src={Add} alt="Error" width={30} height={30} />
             </Button>
                   </Grid>
               </Grid>
-          </Grid>
-
+              </Grid>
+          
           {/* Profile List */}
           <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
@@ -246,7 +249,11 @@ const BoxSx: FC = () => {
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
       </Stack>
-  </Box>);
+  </Box>
+  )
 }
 
+
 export default BoxSx;
+
+
