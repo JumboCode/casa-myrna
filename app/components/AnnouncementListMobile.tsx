@@ -23,7 +23,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
-import ClearIcon from '@mui/icons-material/Clear';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { FC } from 'react';
 import theme from '../theme';
 
@@ -130,8 +130,9 @@ const BoxSx: FC = () => {
       <Stack spacing={2}>
 
         {/* Search Bar and Select filters */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+        {/* <Grid container spacing={2}> */}
+          {/* <Grid item xs={12} md={6}> */}
+          <Stack spacing={2} direction= 'row'>
             <InputBase
               fullWidth
               endAdornment={
@@ -145,23 +146,24 @@ const BoxSx: FC = () => {
                 padding: '3px',
                 paddingLeft: '20px',
                 paddingRight: '10px',
+                flex: 3,
               }}
             />
-          </Grid>
-          <Grid item xs={12} md={6}>
             <Select
               fullWidth
               value=""
               displayEmpty
-              sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px' }}
+              sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px', paddingTop: '20px', flex: 1 }}
             >
               <MenuItem value="" disabled>
-                New to old
+                {/* New */}
+                <InputAdornment position="end">
+                  <SwapVertIcon />
+                </InputAdornment>
               </MenuItem>
               {/* Add more MenuItem components with filter options here */}
             </Select>
-          </Grid>
-        </Grid>
+            </Stack>
       </Stack>
 
       {/* Profile List */}
