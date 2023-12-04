@@ -20,7 +20,6 @@ import InputBase from '@mui/material/InputBase';
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
-import ClearIcon from '@mui/icons-material/Clear';
 import { FC } from 'react';
 import theme from '../theme';
 
