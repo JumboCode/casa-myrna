@@ -7,11 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import { Typography } from '@mui/material'
 
-interface MainProps {
-  currentPage: string; // Define prop type for currentPage
-}
-
-const Main: React.FC<MainProps> = ({ currentPage }): ReactElement => {
+const Main = () => {
   return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Typography}/></ThemeProvider>)
 };
 
