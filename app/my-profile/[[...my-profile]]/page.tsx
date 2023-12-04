@@ -1,7 +1,14 @@
 'use client'
 
-import profile from "../../components/my-profile"
+import Sidebar from "../../components/Sidebar"; 
+import React, { useState, useEffect, ReactElement } from "react";
+import Profile from "../../components/MyProfile";
+import "../../globals.css";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../../theme';
 
-export default function Home(){
-  return profile();
-}
+const myProfile: React.FC = ()  => {
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Profile}/></ThemeProvider>)
+};
+
+export default myProfile;
