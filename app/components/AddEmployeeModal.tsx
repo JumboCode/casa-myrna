@@ -63,7 +63,7 @@ const AddEmployeeModal: React.FC = ()  => {
 return (
     <div>
         <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': { borderColor: theme.palette.primary.main }, textTransform: 'none', display: 'flex', alignItems: 'center' }}
-        onClick= {handleOpen}> <div style={{ flexGrow: 1 }}>Add New Employees</div>
+        onClick= {handleOpen}> <div style={{ width: '160px' }}>Add New Employees</div>
         <Image src={Add} alt="Error" width={30} height={30} />
         </Button>
         <Modal 
