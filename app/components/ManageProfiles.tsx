@@ -24,6 +24,7 @@ import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC } from 'react';
+import AddEmployeeModal  from './AddEmployeeModal'
 
 interface profileData {
   firstName: string;
@@ -54,7 +55,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-      
+    
 // List of Employees
 const peopleArray: profileData[] = [
   { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
@@ -108,20 +109,20 @@ const BoxSx: FC = () => {
 
   const ModalStyle = {
     display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 9999, // on top of everything else on the page
-  width: '400px',
-  height: '200px',
-  padding: '20px',
-  background: '#f6f6f6',
-  borderRadius: '8px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 9999, // on top of everything else on the page
+    width: '400px',
+    height: '200px',
+    padding: '20px',
+    background: '#f6f6f6',
+    borderRadius: '8px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
   };
   
-  const toggleModal = () => {
-    setModal(!modal);
-  };
+  // const toggleModal = () => {
+  //   setModal(!modal);
+  // };
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
 
@@ -206,45 +207,18 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container sx={{paddingTop: "60%"}}>
-                    {/* <Button fullWidth variant="outlined" sx={{ padding: '3%', bordersRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
-                      <div style={{ flexGrow: 1 }}>Add New Employees</div>
-                      <Image src={Add} alt="Error" width={30} height={30} />
-                    </Button> */}
-                    <Button
-              fullWidth
-              variant="outlined"
-              sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': { borderColor: theme.palette.primary.main }, textTransform: 'none', display: 'flex', alignItems: 'center' }}
-              onClick={() => { toggleModal () }}// Call the toggleModal function on button click
-            >
-              <div style={{ flexGrow: 1 }}>Add New Employees</div>
-              <Image src={Add} alt="Error" width={30} height={30} />
-            </Button>
-                  </Grid>
+                  <AddEmployeeModal/> 
               </Grid>
-              </Grid>
+            </Grid>
+         </Grid>
           
           {/* Profile List */}
           <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
-
         
-        {/* Modal */}
-        <div>
-        {/* {modal && ( */}
-        <Modal onClick={() => { toggleModal }} open={modal} onClose={toggleModal} >
-        <div>
-        <Box sx ={{ModalStyle}}/>
-
-        <Typography> Howdy! </Typography>
-        <Button onClick={toggleModal}>Close Modal</Button>
-        </div>
-        {/* </div>
-        </div> */}
-      </Modal>
         
-      </div>
-        
-
+       
+                  
         {/* Pagination */}
         <Stack spacing={2} alignItems="center" paddingBottom='5%'>
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
