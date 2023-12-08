@@ -2,10 +2,11 @@
 
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import Announcements from "../images/5.png"
+import Announcements from "app/images/2.png";
 import Calendar from "app/images/3.png";
 import Groupchat from "app/images/4.png";
 import Profile from "app/images/7.png";
+import Profiles from "app/images/8.png";
 import Logout from "app/images/5.png";
 import Image from "next/image";
 import { FC, useState} from 'react'
@@ -52,16 +53,16 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
                 <Image src={Groupchat} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
                 Groupchat </MenuItem>
-              <div style={{ paddingBottom: 15, background: "#F6F6F6" }}></div>
+               <div style={{ paddingBottom: 15, background: "#F6F6F6" }}></div>
 
               <MenuItem style={{ background: "#FFFFFF", borderRadius: 20, color: "#2E0057" }} component='a' href='my-profile'>
                 <Image src={Profile} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
                 Profile</MenuItem>
                 <div style={{ paddingBottom: 15, background: "#F6F6F6" }}></div>
-                
+
               <MenuItem style={{ background: "#FFFFFF", borderRadius: 20, color: "#2E0057" }} component='a' href='employer-manage-profiles'>
-                <Image src={Profile} alt="Error" width={30} height={30} />
+                <Image src={Profiles} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
                 Manage User Profiles</MenuItem>
             </MenuList>
