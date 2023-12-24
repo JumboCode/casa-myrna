@@ -1,27 +1,32 @@
 "use client"
-import * as React from 'react';
-import HamburgerBarDesktop from "./HamburgerBarDesktop"
+import { FC, ReactElement, useEffect, useState } from 'react';
+import "../globals.css";
+import HamburgerBarDesktop from "./HamburgerBarDesktop";
 import HamburgerBarMobile from './HamburgerBarMobile';
-import { FC, ReactElement } from 'react';
-import "../globals.css"
-import theme from '../theme';
-
 
 interface SidebarProps {
   currentPageComponent: FC;
 }
 
 const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
+
   const CurrentComponent = currentPageComponent;
-  const isMobile: boolean = window.innerWidth < 768;
+
+  /* abstracted the isMobile into a use effect because of the undefined error */
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, [])
+
   return (
     <>
-      {(isMobile) ? ( 
-         <HamburgerBarMobile currentPageComponent={CurrentComponent}/>
+      {(isMobile) ? (
+        <HamburgerBarMobile currentPageComponent={CurrentComponent} />
       ) : (
-        <HamburgerBarDesktop currentPageComponent={CurrentComponent}/>
+        <HamburgerBarDesktop currentPageComponent={CurrentComponent} />
       )}
-      
+
     </>
   )
 };
