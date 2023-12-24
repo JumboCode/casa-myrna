@@ -65,7 +65,7 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
               justifyContent: "center", display: "flex", color: "#2E0057"
             }}>
               <SignOutButton>
-                <MenuItem component='a' href='' >
+                <MenuItem component='a' href='/'>
                 <Image src={Logout} alt="Error" width={30} height={30} />
                 <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
                 Logout
