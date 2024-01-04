@@ -26,7 +26,7 @@ export default function BasicSelect() {
           onChange={handleChange}
           sx={{ borderRadius: '20px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
         >
-          <MenuItem value={10}>Cooridator</MenuItem>
+          <MenuItem value={10}>Coordinator</MenuItem>
           <MenuItem value={20}>Full-time Staff</MenuItem>
           <MenuItem value={30}>Part-time Staff</MenuItem>
           <MenuItem value={40}>Relief Staff</MenuItem>
