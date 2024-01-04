@@ -8,7 +8,7 @@ export default authMiddleware({
       publicRoutes: ["/login", "/sign-up"],
 
       afterAuth(auth, req, evt) {
-            console.log(auth.userId)
+
             if (!auth.userId && !auth.isPublicRoute) {
                   const loginUrl = new URL("/login", req.url);  
                   return NextResponse.redirect(loginUrl);

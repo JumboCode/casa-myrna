@@ -13,11 +13,18 @@ const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
   const CurrentComponent = currentPageComponent;
 
   /* abstracted the isMobile into a use effect because of the undefined error */
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setMobile] = useState(false);
+
+  const handleWindowSizeChange = () => {
+    setMobile(window.innerWidth <= 768);
+  }
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, [])
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    }
+  }, []);
 
   return (
     <>
