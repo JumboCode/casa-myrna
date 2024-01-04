@@ -15,11 +15,15 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
+import { useTheme } from '@mui/system';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { FC } from 'react';
 import theme from '../theme';
 
@@ -84,9 +88,12 @@ const peopleArray: profileData[] = [
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
-  
+
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const usePagination = (people: profileData[], page = 1, perPage = 5) => {
     const totalPages = Math.ceil(people.length / perPage);
@@ -94,101 +101,85 @@ const BoxSx: FC = () => {
     const paginatedItems = people.slice(offset, perPage * page);
 
     return {
-      nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
-      previousPage: () => setActivePage(p => p > 1 ? p - 1 : p),
+      nextPage: () => setActivePage((p) => (p < totalPages ? p + 1 : p)),
+      previousPage: () => setActivePage((p) => (p > 1 ? p - 1 : p)),
       totalPages,
       totalItems: people.length,
       items: paginatedItems,
     };
   };
 
-  const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
-
+  const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(
+    peopleArray,
+    activePage,
+    itemsPerPage
+  );
 
   return (
     <Box
       sx={{
         display: 'flex',
-        minHeight: "87vh",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: '5vh', //makes rounded corners
-        backgroundColor: "#f6f6f6", //color is variable established above! (grey!)
+        flexDirection: isMobile ? 'column' : 'row', // Adjust to column layout for mobile
+        minHeight: '87vh',
+        borderRadius: '5vh',
+        backgroundColor: '#f6f6f6',
+        padding: isMobile ? '20px' : '40px', // Add padding for better spacing
       }}
     >
-      <Stack spacing={10}>
-        {/* Header content */}
-        <Stack spacing={2}>
-          <Grid container spacing={3} columns={20} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} margin={10} paddingTop='5%'>
-                {/* Left side of header */}
-                <Grid xs={14}>
-                  {/* Page Title */}
-                  <Typography variant="h1" sx={{fontWeight: 'bold', paddingBottom:'10%'}}>
-                      Announcements
-                  </Typography>
+      {/* Header content */}
+      <Stack spacing={2}>
 
-                  {/* Search Bar */}
-                  <Grid container spacing={3} columns={4}>
-                    {/* Actual Search Bar */}
-                    <Grid xs={3}>
-                      <InputBase 
-                        fullWidth
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <SearchIcon />
-                          </InputAdornment>
-                        }
-                        sx={{
-                          backgroundColor: '#FFFFFF',
-                          borderRadius: '10px',
-                          padding: '3px',
-                          paddingLeft: '20px',
-                          paddingRight: '10px',
-                        }}
-                      />
-                    </Grid>
-                    {/* Search Button */}
-                    <Grid xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor: theme.palette.primary.main}, textTransform: 'none'}} variant="contained">search</Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                {/* Right side of header */}
-                <Grid xs={6}>
-                  {/* Select filters */}
-                  <Grid container spacing={2} columns={3} paddingTop={'47%'}>
-                    <Grid item xs={2}>
-                      <Select
-                        fullWidth
-                        value="" // Set the initial value to an empty string
-                        displayEmpty // Display the selected value even when it's empty
-                        sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px'}}
-                      >
-                        <MenuItem value="" disabled>
-                          New to old
-                        </MenuItem>
-                        {/* Add more MenuItem components with filter options here */}
-                      </Select>
-                    </Grid>
-                    {/* Filter button */}
-                    <Grid item xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">sort</Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-          </Grid>
-
-          {/* Profile List */}
-          <NameList people={items} itemsPerPage={itemsPerPage} />
-        </Stack>
-
-        {/* Pagination */}
-        <Stack spacing={2} alignItems="center" paddingBottom='5%'>
-          <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
-        </Stack>
+        {/* Search Bar and Select filters */}
+        {/* <Grid container spacing={2}> */}
+          {/* <Grid item xs={12} md={6}> */}
+          <Stack spacing={2} direction= 'row'>
+            <InputBase
+              fullWidth
+              endAdornment={
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+              sx={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '10px',
+                padding: '3px',
+                paddingLeft: '20px',
+                paddingRight: '10px',
+                flex: 3,
+              }}
+            />
+            <Select
+              fullWidth
+              value=""
+              displayEmpty
+              sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px', paddingTop: '20px', flex: 1 }}
+            >
+              <MenuItem value="" disabled>
+                {/* New */}
+                <InputAdornment position="end">
+                  <SwapVertIcon />
+                </InputAdornment>
+              </MenuItem>
+              {/* Add more MenuItem components with filter options here */}
+            </Select>
+            </Stack>
       </Stack>
-  </Box>);
-}
+
+      {/* Profile List */}
+      {/* <NameList people={items} itemsPerPage={itemsPerPage} /> */}
+
+      {/* Pagination */}
+      <Stack spacing={2} alignItems="center" marginTop="auto">
+        <Pagination
+          color="secondary"
+          count={totalPages}
+          page={activePage}
+          onChange={(event, value) => setActivePage(value)}
+        />
+      </Stack>
+    </Box>
+  );
+};
 
 export default BoxSx;
