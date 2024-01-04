@@ -6,52 +6,56 @@ const prisma = new PrismaClient()
 
 /* 
  * GETs a shift from the database
- * Expects an integer id and a status to be provided as a query parameter 
+ * A userID, status, and/or after/before times can be provided as query params 
+ * to filter results
  */
 export async function GET(req: NextRequest)
 {
-        try {
                 const searchParams = req.nextUrl.searchParams
-                const primaryUserID = searchParams.get('primaryUserID')
+                const userID = searchParams.get('userID')
                 const status = searchParams.get('status')
-                const primaryUserID_numeric = primaryUserID ? parseInt(primaryUserID as string, 10): null;
-                console.log(primaryUserID_numeric)
-                if (isNaN(primaryUserID_numeric as number)) {
+                const userID_numeric = userID ? parseInt(userID as string, 10): null;
+
+                const startBound = searchParams.get('after')  
+                const endBound = searchParams.get('before')
+                const startBoundDate = startBound ? new Date(startBound): null
+                const endBoundDate = endBound ? new Date(endBound): null
+
+                if (isNaN(userID_numeric as number)) {
                         return new Response('Error: Please specify an integer primary user id', {
                           status: 400,
                         })
-                      }
-
-                let queryFilters = null
-                if (primaryUserID_numeric && status){
-                        queryFilters = {
-                                AND: [
-                                        { primaryUserID: primaryUserID_numeric},
-                                        { status: status }
-                                ]
-                        }
-                } else if (primaryUserID_numeric) {
-                        queryFilters = {primaryUserID: primaryUserID_numeric}
-                } else if (status) {
-                        queryFilters = { status: status }
-                } else {
-                        let error_msg = "Error: Include a primaryUserID and/or \
-                                         status as query parameters"
-                        return new Response(error_msg, {status: 400,})  
-                } 
-        
-                let shifts = await prisma.shift.findMany({where: queryFilters})
+                } else if ((startBoundDate && isNaN(startBoundDate.getTime())) || 
+                           (endBoundDate && isNaN(endBoundDate.getTime()))) {
+                        return new Response('Error: after & before fields must be valid dates', {
+                                status: 400,
+                        })
+                }
+                
+                let queryFilters  = {
+                        AND: [{}]
+                }
+                if (userID_numeric){
+                        queryFilters.AND.push({ userID: userID_numeric})
+                }
+                if (status){
+                        queryFilters.AND.push({ status: status})
+                }
+                if (startBound){
+                        queryFilters.AND.push({from : {gte: startBoundDate,}})
+                }
+                if (endBound) {
+                        queryFilters.AND.push({to : {lte: endBoundDate,}})
+                }
+               
+                let shifts = await prisma.primaryShift.findMany({where: queryFilters})
                 return new Response(JSON.stringify(shifts))
-        } catch {
-                return new Response('Error: An unexpected error occured', {
-                        status: 500,
-                      })
-        }
+        
 }
 
 
 /* 
- * Inserts a new shift into the database
+ * Inserts a new primary shift into the database
  * Expects the request body to be json with fields corresponding to the fields 
  * of the Shift model
  */
@@ -66,7 +70,7 @@ export async function POST(req: NextRequest)
                 "to": new Date(data.to),
                 "created_at": new Date(data.created_at)
                 };
-                const shift = await prisma.shift.create({data});
+                const shift = await prisma.primaryShift.create({data});
                 return new Response(JSON.stringify(shift))
         } catch {
                 return new Response('Error: An unexpected error occured', {
@@ -86,7 +90,6 @@ export async function PUT(req: NextRequest)
                 const searchParams = req.nextUrl.searchParams
                 const shiftID = searchParams.get('shiftID')
                 const shiftIDNumeric = shiftID ? parseInt(shiftID, 10): null;
-                console.log(shiftIDNumeric)
                 if (!shiftIDNumeric){
                         return new Response('Error: An shiftID must be provided as a query parameter', {status: 500,})
                 }
@@ -94,15 +97,15 @@ export async function PUT(req: NextRequest)
                 let data = await req.json();
                 data = {
                 ...data,
-                "shiftID": shiftIDNumeric,
+                "primaryShiftID": shiftIDNumeric,
                 "date": new Date(data.date),
                 "from": new Date(data.from),
                 "to": new Date(data.to),
                 "created_at": new Date(data.created_at)
                 };
     
-                const shift = await prisma.shift.upsert({
-                        where: {shiftID: shiftIDNumeric },
+                const shift = await prisma.primaryShift.upsert({
+                        where: {primaryShiftID: shiftIDNumeric },
                         update: data,
                         create: data
                       })
@@ -120,7 +123,7 @@ export async function PUT(req: NextRequest)
 
 
 /* 
- * DELETEs a shift from the database
+ * DELETEs a primary shift from the database
  * Expects an integer shiftID to be provided as a query parameter 
  */
 export async function DELETE(req: NextRequest) {
@@ -130,14 +133,14 @@ export async function DELETE(req: NextRequest) {
           let idNum = parseInt(idString as string, 10) // 10 = base 10 
       
           if ((isNaN(idNum))) {
-            return new Response('Error: Please specify an integer user id', {
+            return new Response('Error: Please specify an integer shift id', {
               status: 400,
             })
           }
       
-          let shift = await prisma.shift.delete({
+          let shift = await prisma.primaryShift.delete({
             where: {
-              shiftID: idNum,
+              primaryShiftID: idNum,
             },
           })
           return Response.json(shift)
@@ -151,13 +154,5 @@ export async function DELETE(req: NextRequest) {
               return new Response('Error: An unexpected error occured', {status: 500,})
           }
           }   
-       }
+}
 
-
-
-
-/* 
- * Create a shift and insert into the database
- * Expects the request body to be json with shiftID, backupUserID, primaryUserID,
- * date, from, to
- */
