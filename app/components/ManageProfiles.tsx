@@ -1,4 +1,3 @@
-"use client"
 import * as React from 'react';
 
 // Material-UI components
@@ -13,13 +12,19 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import Modal from '@mui/material/Modal';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import theme from '../theme';
+
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC } from 'react';
-import theme from '../theme';
+import AddEmployeeModal  from './AddEmployeeModal'
 
 interface profileData {
   firstName: string;
@@ -50,7 +55,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-      
+    
 // List of Employees
 const peopleArray: profileData[] = [
   { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
@@ -82,7 +87,8 @@ const peopleArray: profileData[] = [
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
-  
+  const [modal, setModal] = React.useState(false);
+
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1);
 
@@ -90,6 +96,7 @@ const BoxSx: FC = () => {
     const totalPages = Math.ceil(people.length / perPage);
     const offset = perPage * (page - 1);
     const paginatedItems = people.slice(offset, perPage * page);
+
 
     return {
       nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
@@ -99,6 +106,23 @@ const BoxSx: FC = () => {
       items: paginatedItems,
     };
   };
+
+  const ModalStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 9999, // on top of everything else on the page
+    width: '400px',
+    height: '200px',
+    padding: '20px',
+    background: '#f6f6f6',
+    borderRadius: '8px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+  };
+  
+  // const toggleModal = () => {
+  //   setModal(!modal);
+  // };
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
 
@@ -112,6 +136,7 @@ const BoxSx: FC = () => {
         alignItems: "center",
         borderRadius: '5vh', //makes rounded corners
         backgroundColor: "#f6f6f6", //color is variable established above! (grey!)
+        
       }}
     >
       <Stack spacing={10}>
@@ -182,24 +207,28 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container sx={{paddingTop: "60%"}}>
-                    <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
-                      <div style={{ flexGrow: 1 }}>Add New Employee</div>
-                      <Image src={Add} alt="Error" width={30} height={30} />
-                    </Button>
-                  </Grid>
+                  <AddEmployeeModal/> 
               </Grid>
-          </Grid>
-
+            </Grid>
+         </Grid>
+          
           {/* Profile List */}
           <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
-
+        
+        
+       
+                  
         {/* Pagination */}
         <Stack spacing={2} alignItems="center" paddingBottom='5%'>
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
       </Stack>
-  </Box>);
+  </Box>
+  )
 }
 
+
 export default BoxSx;
+
+

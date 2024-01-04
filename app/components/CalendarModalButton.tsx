@@ -25,7 +25,7 @@ const CalendarModalButton: FC = () => {
                 }}
             >
                 Open Modal
-            </Button>
+                </Button>
             <Modal
                 open={openModal}
                 onClose={closeModal}
