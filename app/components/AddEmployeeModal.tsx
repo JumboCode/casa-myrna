@@ -38,7 +38,7 @@ const style = {
           xs: '70%'
     },
     bgcolor: "#f6f6f6",
-    border: '2px solid #000',
+    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     borderRadius: '35px',
