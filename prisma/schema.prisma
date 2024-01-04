@@ -13,34 +13,31 @@ enum Status {
   CANCELLED
 }
 
-// Represents registered users 
-model User {
-  id            Int   @id @default(autoincrement())
-  username      String
-  firstName     String
-  lastName      String
-  pronouns      String
-  role          String
-  created_at    DateTime
-  primaryShifts Shift[] @relation("PrimaryUserShift")
-  backupShifts  Shift[] @relation("BackUpUserShift")
+// Represents On Call shifts
+model primaryShift {
+  primaryShiftID       Int    @id @default(autoincrement()) 
+  userID               Int
+  onCallShiftID        Int    
+  date                 DateTime
+  from                 DateTime
+  to                   DateTime
+  status               Status  @default(PENDING)
+  message              String
+  phoneLine            Int
+  created_at           DateTime
+  onCallShift  onCallShift   @relation("onCallShift", fields: [onCallShiftID], references: [onCallShiftID]) 
+}
+ 
+model onCallShift {
+  onCallShiftID        Int    @id @default(autoincrement()) 
+  userID               Int
+  primaryShifts        primaryShift[] @relation("onCallShift")
+  date                 DateTime
+  from                 DateTime
+  to                   DateTime
+  status               Status  @default(PENDING)
+  message              String
+  phoneLine            Int
+  created_at           DateTime
 }
 
-// Represents work shifts
-model Shift {
-  shiftID       Int    @id @default(autoincrement()) 
-  backupUserID  Int
-  primaryUserID Int
-  primaryuser   User  @relation("PrimaryUserShift", fields: [primaryUserID], references: [id]) 
-  backupuser    User  @relation("BackUpUserShift", fields: [backupUserID], references: [id])
-  
-  
-  // TODO: add Date, Time & Status types when doing routes 
-  date          DateTime
-  from          DateTime
-  to            DateTime
-  status        Status  @default(PENDING)
-  message       String
-  phoneLine     Int
-  created_at    DateTime
-}
