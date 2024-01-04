@@ -13,6 +13,7 @@ import { FC, useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import CloseIcon from "app/images/closeIcon.svg";
 import { SignOutButton, useClerk } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation';
 
 interface MobileBarProps {
     currentPageComponent: FC; // Update prop type to React Functional Component
@@ -57,7 +58,8 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
         },
     ];
 
-    const { signOut } = useClerk();
+    /* used as work around for a rerouting issue */ 
+    const router = useRouter(); 
 
     return (<div style={{
         height: "100vh",
@@ -136,7 +138,8 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
         <div className="mobileSidebar">
             <CurrentComponent />
         </div>
-        <SignOutButton>
+        <SignOutButton 
+            signOutCallback={() => router.push("/login")}>
             <div style={{
                 height: "70px",
                 position: "absolute",
