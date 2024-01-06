@@ -15,6 +15,7 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
+import AddEmployeeModal from './AddEmployeeModal'
 
 // Custom components and images
 import profileList from "./ProfileList"
