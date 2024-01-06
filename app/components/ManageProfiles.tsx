@@ -6,6 +6,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -181,14 +184,35 @@ const BoxSx: FC = () => {
                 {/* Right side of header */}
                 <Grid xs={6}>
                   {/* Add new employee */}
-                  <Grid container sx={{paddingTop: "60%"}}>
-                    <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', display: 'flex', alignItems: 'center' }}>
-                      <div style={{ flexGrow: 1 }}>Add New Employee</div>
-                      <Image src={Add} alt="Error" width={30} height={30} />
-                    </Button>
+                  <Grid container>
+                     <AddEmployeeModal/> 
                   </Grid>
-              </Grid>
+
+                  {/* Select filters */}
+                  <Grid container spacing={2} columns={3} paddingTop={'23%'}>
+                    <Grid item xs={2}>
+                      <Select
+                        fullWidth
+                        value="" // Set the initial value to an empty string
+                        displayEmpty // Display the selected value even when it's empty
+                        sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px'}}
+                      >
+                        <MenuItem value="" disabled>
+                          Select filters
+                        </MenuItem>
+                        {/* Add more MenuItem components with filter options here */}
+                      </Select>
+                    </Grid>
+                    {/* Filter button */}
+                    <Grid item xs={1}>
+                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">filter</Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                
           </Grid>
+
 
           {/* Profile List */}
           <NameList people={items} itemsPerPage={itemsPerPage} />

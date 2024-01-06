@@ -8,6 +8,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme';
 
 const myProfile: React.FC = ()  => {
+
   return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Profile}/></ThemeProvider>)
 };
 
