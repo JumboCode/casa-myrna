@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import UploadImage from '../images/6.png';
 import Select from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
+import { profileData } from './types';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -35,6 +36,7 @@ const style = {
     p: 4,
     borderRadius: '35px',
   }; 
+
 const AddEmployeeModal: React.FC = ()  => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -42,11 +44,9 @@ const AddEmployeeModal: React.FC = ()  => {
     
 
     const initialFormData = {
-        username: '',
-        password: '',
         firstName: '',
         lastName: '',
-        email: '',
+        emailAddress: '',
         role: '',
         pronouns: '',
         phoneNumber:''
@@ -70,7 +70,6 @@ const AddEmployeeModal: React.FC = ()  => {
     
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
-      // Do something with the form data, e.g., send it to an API
       try {
         const response = await fetch('/api/users', {
           method: 'POST',
@@ -89,8 +88,6 @@ const AddEmployeeModal: React.FC = ()  => {
         // Handle success - maybe close the modal or show a success message
       } catch (error) {
         console.error('Error adding employee:', error);
-        // Handle error - show error message to the user
-        console.log(formData);
       }
       setFormData(initialFormData);
 
@@ -150,31 +147,6 @@ return (
                         InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
                         variant="standard"/>
                 </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" >
-                        Last Name
-                    </Typography>
-                    <TextField 
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                    variant="standard"/>
-                </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
-                    <Typography variant="h4" >
-                        Email
-                    </Typography>
-                    <TextField 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                    variant="standard"/>
-                </Grid>
-            </Grid>
-            {/* This is column 2 */}
-            <Grid container spacing={4} direction='column' alignItems='flex-start'  paddingBottom='13%'>
                 <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Pronouns
@@ -184,6 +156,32 @@ return (
                     value={formData.pronouns}
                     onChange={handleInputChange} 
                     InputProps={{disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Email
+                    </Typography>
+                    <TextField 
+                    name="emailAddress"
+                    value={formData.emailAddress}
+                    onChange={handleInputChange}
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
+                </Grid>
+            </Grid>
+            {/* This is column 2 */}
+            
+            <Grid container spacing={4} direction='column' alignItems='flex-start'  paddingBottom='13%'>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Last Name
+                    </Typography>
+                    <TextField 
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
                     variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
