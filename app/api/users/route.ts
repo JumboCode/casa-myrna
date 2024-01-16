@@ -4,6 +4,19 @@ import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 const prisma = new PrismaClient()
 
+interface ErrorResponse {
+  clerkError: boolean;
+  status: number;
+  errors: ErrorItem[];
+}
+
+interface ErrorItem {
+  code: string;
+  message: string;
+  longMessage: string;
+  meta: Record<string, any>; 
+}
+
 /* 
  * GETs a list of users from the database. Users can be filtered by their 
  * emails and usernames
@@ -39,7 +52,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: Request) {
   try {
     let data = await req.json();
-    if (!('username' in data && 'password' in data && 'firstName' in data &&
+    if (!('firstName' in data &&
           'lastName' in data && 'pronouns' in data && 'emailAddress' in data &&
           'phoneNumber' in data && 'role' in data)){
       return new Response('Error: Missing required field', {
@@ -49,15 +62,14 @@ export async function POST(req: Request) {
 
     const user = await clerkClient.users.createUser({
       emailAddress: [data.emailAddress],
-      username: data.username,
-      password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
       publicMetadata: {pronouns: data.pronouns, role: data.role, phoneNumber: data.phoneNumber}
     });
     return new Response(JSON.stringify(user))
   } catch (error){
-      return new Response('Error: An unexpected error occured', {status: 500,})
+      const errorMessage: string = JSON.parse(JSON.stringify(error)).errors[0].longMessage;
+      return new Response('Error: ' + errorMessage, {status: 500,})
     }
   }
 

@@ -16,21 +16,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 import AddEmployeeModal from './AddEmployeeModal'
+import { profileData } from './types';
 
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import theme from '../theme';
 
-interface profileData {
-  firstName: string;
-  lastName: string;
-  role: string;
-  image: string;
-}
+// interface profileData {
+//   firstName: string;
+//   lastName: string;
+//   role: string;
+//   image: string;
+// }
 
 interface NameListProps {
   people: profileData[];
@@ -54,41 +55,32 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-      
-// List of Employees
-const peopleArray: profileData[] = [
-  { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
-  { firstName: 'Naomi', lastName: 'Gillis', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Jiyoon', lastName: 'Choi', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Pamela ', lastName: 'Melgar', role: 'Volunteer', image: 'jane.jpg' },
-  { firstName: 'Bill', lastName: 'Soronzonbold', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Asli', lastName: 'Kocak', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Carly', lastName: 'Seigel', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'David', lastName: 'Chen', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Elizabeth', lastName: 'Foster', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Sean', lastName: 'Reilly', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Yara', lastName: 'Hamdan', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' }
-  // Add more people as needed
-];
-
 
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
   
   // Move setActivePage to the outer scope
-  const [activePage, setActivePage] = React.useState(1);
+  const [activePage, setActivePage] = React.useState(1); 
+  const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
+  
+  useEffect(() => {
+    const fetchPeopleData = async () => {
+      try {
+        const response = await fetch('api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch people data');
+        }
+
+        const data = await response.json();
+        setPeopleArray(data);
+      } catch (error) {
+        console.error('Error fetching people data:', error);
+      }
+    };
+
+    fetchPeopleData();
+  }, []);
 
   const usePagination = (people: profileData[], page = 1, perPage = 5) => {
     const totalPages = Math.ceil(people.length / perPage);
