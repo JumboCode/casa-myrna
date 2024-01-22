@@ -1,11 +1,3 @@
-/* 
- *  Authors: Carly Seigel and Bill Soronzonbold 
- *  Date   : 11/6/2023 
- * 
- *  File contains the mobile sidebar, used in the sidebar component
- *  
- */
-
 "use client"
 
 import MenuItem from '@mui/material/MenuItem';
@@ -20,9 +12,15 @@ import Hamburger from "app/images/hamburger.png";
 import { FC, useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import CloseIcon from "app/images/closeIcon.svg";
+import { SignOutButton, useClerk } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation';
 
-const HamburgerBarMobile: FC = ({ }) => {
+interface MobileBarProps {
+    currentPageComponent: FC; // Update prop type to React Functional Component
+}
+const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const CurrentComponent = currentPageComponent;
 
     useEffect(() => {
         setShowMenu(false);
@@ -56,15 +54,16 @@ const HamburgerBarMobile: FC = ({ }) => {
             Name: "ProfileButton",
             Icon: Profile,
             DisplayName: "Profile",
-            Link: "/"
+            Link: "/my-profile"
         },
-    ]; 
+    ];
+
+    /* used as work around for a rerouting issue */ 
+    const router = useRouter(); 
 
     return (<div style={{
-        background: "linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%), linear-gradient(180deg, #C3DC98 42.71%, rgba(108, 187, 227, 0.99) 96.72%, rgba(108, 187, 227, 0) 99.99%)",
         height: "100vh",
         width: "100%",
-
     }}>
         {(!showMenu) ? (
             <div style={{
@@ -112,46 +111,48 @@ const HamburgerBarMobile: FC = ({ }) => {
                         marginTop: 60,
                     }}>
                         {buttonList.map((button) => {
-                            return <MenuItem component="a" href={button.Link} 
-                                    style={{
-                                        background: "#FFFFFF",
-                                        marginBottom: 10,
-                                        width: "auto",
-                                        height: 60,
-                                        borderRadius: 20,
-                                        fontSize: 20,
-                                        boxShadow: "0px 5px rgba(128,128,128,0.3)",
-                                    }}
-                                    key={button.Name}
-                                >
-                                    <Image src={button.Icon} alt={button.Name} style={{
-                                        height: 35,
-                                        width: 35,
-                                        marginRight: 15,
-                                    }} />
-                                    {button.DisplayName}
-                                </MenuItem>
+                            return <MenuItem component="a" href={button.Link}
+                                style={{
+                                    background: "#FFFFFF",
+                                    marginBottom: 10,
+                                    width: "auto",
+                                    height: 60,
+                                    borderRadius: 20,
+                                    fontSize: 20,
+                                    boxShadow: "0px 5px rgba(128,128,128,0.3)",
+                                }}
+                                key={button.Name}
+                            >
+                                <Image src={button.Icon} alt={button.Name} style={{
+                                    height: 35,
+                                    width: 35,
+                                    marginRight: 15,
+                                }} />
+                                {button.DisplayName}
+                            </MenuItem>
                         })}
                     </div>
                 </MenuList>
             </>
         )}
-        <div style={{
-            height: "70px",
-            position: "absolute",
-            left: 10, 
-            right: 10, 
-            bottom: -1,
-            background: "#5DAED7",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "end",
-            paddingRight: 25,
-            overflowX: "hidden",
-            overflowY: "hidden",
-        }}>
-            <Button style={{ width: "auto" }} onClick={() => {
-                alert("logout indicated");
+        <div className="mobileSidebar">
+            <CurrentComponent />
+        </div>
+        <SignOutButton 
+            signOutCallback={() => router.push("/login")}>
+            <div style={{
+                height: "70px",
+                position: "absolute",
+                left: 0,
+                right: 0,
+                bottom: -1,
+                background: "#5DAED7",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "end",
+                paddingRight: 25,
+                overflowX: "hidden",
+                overflowY: "hidden",
             }}>
                 <Image src={Logout} alt="logoutButton" style={{
                     height: "35px",
@@ -160,9 +161,10 @@ const HamburgerBarMobile: FC = ({ }) => {
                 }} />
                 <span style={{
                     color: "#2E0057",
+                    fontFamily: "Inter",
                 }}>Logout</span>
-            </Button>
-        </div>
+            </div>
+        </SignOutButton>
     </div>)
 }
 

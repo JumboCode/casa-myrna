@@ -1,0 +1,120 @@
+/* 
+ *      login.css
+ * 
+ *      Author:  Bill Soronzonbold 
+ *      Date:    11/13/2023  
+ *      
+ *      Contains the styling for the login page 
+ */
+
+
+/* components that are not included in the design */ 
+.cl-internal-b3fm6y {
+    display: none; 
+}
+
+.cl-headerTitle {
+    display: none; 
+}
+
+.cl-headerSubtitle {
+    display: none;
+}
+
+.cl-card.cl-card.cl-signIn-start { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 60px; 
+}
+
+@media only screen and (max-width: 600px) {
+    /* div for input styling */
+    .cl-socialButtons {
+        width: 300px; 
+    }
+
+    /* overall white box */ 
+    .cl-card.cl-card.cl-signIn-start { 
+        width: 425px; 
+        height: 550px; 
+    }
+
+    /* image positioning */ 
+    .cl-logoImage { 
+        margin-top: 100px; 
+    }
+
+    /* input positioning */
+    .cl-socialButtonsBlockButton.cl-socialButtonsBlockButton__microsoft {
+        margin-top: 120px; 
+    }
+
+}
+
+@media only screen and (min-width: 601px) {
+    /* div for input styling */
+    .cl-socialButtons {
+        width: 450px; 
+    }
+
+    /* overall white box */ 
+    .cl-card.cl-card.cl-signIn-start {
+        width: 650px; 
+        height: 450px; 
+    }
+
+    /* image positioning */ 
+    .cl-logoImage { 
+        margin-top: 60px; 
+    }
+
+    /* input positioning */
+    .cl-socialButtonsBlockButton.cl-socialButtonsBlockButton__microsoft {
+        margin-top: 80px; 
+    }
+}
+
+/* image styling */ 
+.cl-logoImage {
+    height: 190px; 
+    width: 180px; 
+}
+
+/* input styling */
+.cl-socialButtonsBlockButton.cl-socialButtonsBlockButton__microsoft {
+    width: 100%; 
+    border-radius: 10px;
+    display: flex; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+/* content within the input styling */
+.cl-socialButtonsBlockButtonText.cl-socialButtonsBlockButtonText__microsoft {
+    color: "#4A1187";  
+    font-family: 'Inter';   
+    font-weight: 500; 
+    font-size: 16px; 
+    display: flex; 
+    margin-left: auto; 
+    margin-right: auto; 
+    letter-spacing: 0.25px;
+}
+
+/* footer styling */ 
+.cl-footerActionText {
+    font-family: 'Inter'; 
+    font-weight: 500; 
+    font-size: 16px; 
+    display: none; 
+}
+
+/* link styling */ 
+.cl-footerActionLink {
+    font-family: 'Inter'; 
+    font-weight: 500; 
+    font-size: 16px;
+    display: none;  
+}
+
