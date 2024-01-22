@@ -1,3 +1,4 @@
+"use client"
 import * as React from 'react';
 
 // Material-UI components
@@ -14,27 +15,23 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
-
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import Modal from '@mui/material/Modal';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import theme from '../theme';
+import AddEmployeeModal from './AddEmployeeModal'
+import { profileData } from './types';
 
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
-import { FC } from 'react';
-import AddEmployeeModal  from './AddEmployeeModal'
+import { FC, useEffect, useState } from 'react';
+import theme from '../theme';
 
-interface profileData {
-  firstName: string;
-  lastName: string;
-  role: string;
-  image: string;
-}
+// interface profileData {
+//   firstName: string;
+//   lastName: string;
+//   role: string;
+//   image: string;
+// }
 
 interface NameListProps {
   people: profileData[];
@@ -58,48 +55,37 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-    
-// List of Employees
-const peopleArray: profileData[] = [
-  { firstName: 'Maddie', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
-  { firstName: 'Naomi', lastName: 'Gillis', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Jiyoon', lastName: 'Choi', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Pamela ', lastName: 'Melgar', role: 'Volunteer', image: 'jane.jpg' },
-  { firstName: 'Bill', lastName: 'Soronzonbold', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Asli', lastName: 'Kocak', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Carly', lastName: 'Seigel', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'David', lastName: 'Chen', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Elizabeth', lastName: 'Foster', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Sean', lastName: 'Reilly', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Yara', lastName: 'Hamdan', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' }
-  // Add more people as needed
-];
-
 
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
-  const [modal, setModal] = React.useState(false);
-
+  
   // Move setActivePage to the outer scope
-  const [activePage, setActivePage] = React.useState(1);
+  const [activePage, setActivePage] = React.useState(1); 
+  const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
+  
+  useEffect(() => {
+    const fetchPeopleData = async () => {
+      try {
+        const response = await fetch('api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch people data');
+        }
+
+        const data = await response.json();
+        setPeopleArray(data);
+      } catch (error) {
+        console.error('Error fetching people data:', error);
+      }
+    };
+
+    fetchPeopleData();
+  }, []);
 
   const usePagination = (people: profileData[], page = 1, perPage = 5) => {
     const totalPages = Math.ceil(people.length / perPage);
     const offset = perPage * (page - 1);
     const paginatedItems = people.slice(offset, perPage * page);
-
 
     return {
       nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
@@ -109,23 +95,6 @@ const BoxSx: FC = () => {
       items: paginatedItems,
     };
   };
-
-  const ModalStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 9999, // on top of everything else on the page
-    width: '400px',
-    height: '200px',
-    padding: '20px',
-    background: '#f6f6f6',
-    borderRadius: '8px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
-  };
-  
-  // const toggleModal = () => {
-  //   setModal(!modal);
-  // };
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
 
@@ -139,7 +108,6 @@ const BoxSx: FC = () => {
         alignItems: "center",
         borderRadius: '5vh', //makes rounded corners
         backgroundColor: "#f6f6f6", //color is variable established above! (grey!)
-        
       }}
     >
       <Stack spacing={10}>
@@ -242,20 +210,13 @@ const BoxSx: FC = () => {
           {/* Profile List */}
           <NameList people={items} itemsPerPage={itemsPerPage} />
         </Stack>
-        
-        
-       
-                  
+
         {/* Pagination */}
         <Stack spacing={2} alignItems="center" paddingBottom='5%'>
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
       </Stack>
-  </Box>
-  )
+  </Box>);
 }
 
-
 export default BoxSx;
-
-
