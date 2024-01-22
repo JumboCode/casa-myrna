@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
+import { PrintTwoTone } from '@mui/icons-material'
 const prisma = new PrismaClient()
 
 
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest)
                 if (endBound) {
                         queryFilters.AND.push({to : {lte: endBoundDate,}})
                 }
-               
+
                 let shifts = await prisma.primaryShift.findMany({where: queryFilters})
                 return new Response(JSON.stringify(shifts))
         
