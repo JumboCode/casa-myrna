@@ -17,21 +17,27 @@ const profileList = ({ firstName, lastName, role, imageUrl }: { firstName: strin
         boxShadow: 1,
         borderRadius: 2,
         minWidth: '93vh',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
       }}
     >
-      <Stack direction="row" spacing={20} justifyContent={'space-around'} paddingLeft='2%' paddingRight='2%' alignItems="stretch">
-        <Stack direction="row" spacing={3} alignItems={'center'} flexGrow={1}>
+      <Stack direction="row" spacing={20} justifyContent={'space-around'} paddingLeft='2%' paddingRight='15%%' >
+        <Stack direction="row" spacing={3} alignItems={'start'} flexGrow={1}>
           <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 25, height: 25 }} />
-            <Typography variant="body2" textAlign="center">
-              {firstName}
+          <div>
+            <Typography variant="body2" align = "left">
+              {firstName} 
             </Typography>
-            <Typography variant="body2" textAlign="center" sx={{ flexGrow: 1 }}>
+          </div>
+          <div>
+          <Typography variant="body2" align = "left">
             {lastName}
             </Typography>
-            <Typography variant="body2" textAlign="center" sx={{ flexGrow: 1 }}>
+          </div>
+          <div>
+          <Typography variant="body2" align = "left" >
               {role}
             </Typography>
+          </div>
         </Stack>
         
         

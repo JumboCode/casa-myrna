@@ -43,9 +43,9 @@ interface NameListProps {
 
 const NameList: React.FC<NameListProps> = ({ people }) => (
   <div>
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
+    <ul style={{ listStyle: 'none', padding: 20, margin: 0, justifyContent: 'flex-start'}}>
       {people.map((person, index) => (
-        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
+        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily, textAlign: "left" }}>
           <br/> 
           {profileList({
             firstName: person.firstName,
