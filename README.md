@@ -1,4 +1,20 @@
 ## CASA-MYRNA
+## PR EXAMPLE
+Developer: Elizabeth Foster
+Dates: October 15th - October 15th
+Time spent: 1 hour
+
+Summary
+Update from "hello" to "hi" in page.tsx file
+
+Testing
+
+ - Before: Screenshot 2023-10-15 at 6 24 58 PM
+
+ - After: Screenshot 2023-10-15 at 7 06 18 PM
+
+Reflection
+Ran into some unexpected git branch errors, but they got resolved! Also learned about the .env.local file ( thank you Nishika for explaining <3 )
 ## Git Do's and Don'ts
 *DON'T 
   - UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
