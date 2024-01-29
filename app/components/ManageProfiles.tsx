@@ -21,7 +21,6 @@ import { profileData } from './types';
 // Custom components and images
 import profileList from "./ProfileList"
 import Image from "next/image";
-import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC, useEffect, useState } from 'react';
 import theme from '../theme';

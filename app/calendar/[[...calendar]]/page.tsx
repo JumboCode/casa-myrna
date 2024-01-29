@@ -9,6 +9,7 @@ import "../../globals.css";
 import theme from '../../theme';
 import { PrimaryShift } from '../../types/types'; 
 
+
 const Calendar: React.FC = () => {
   const [shiftArray, setShiftArray] = useState<PrimaryShift [] | null>(null);
   useEffect(() => { setShiftArray(null); }, [])
@@ -59,7 +60,7 @@ const Calendar: React.FC = () => {
   }
   
 
-  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={CalendarModalButton} />
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Cal} />
     <div className="post-btn">
       <button className="post-btn-retrieve" onClick={handler}>retrieve info</button>
       {(!shiftArray) ? (

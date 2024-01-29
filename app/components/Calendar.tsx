@@ -21,6 +21,7 @@ const MyCalendar = (props: { events: any; }) => {
         startAccessor="start"
         endAccessor="end"
         style={{ margin: '50px' }}
+        defaultView={'week'}
       />
     </div>
   );
