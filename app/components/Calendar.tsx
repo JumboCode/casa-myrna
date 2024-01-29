@@ -10,7 +10,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
-const MyCalendar = (props) => {
+const MyCalendar = (props: { events: any; }) => {
   const { events } = props; // Extract events from props
 
   return (
