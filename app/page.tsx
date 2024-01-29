@@ -7,15 +7,8 @@ import Sidebar from "./components/Sidebar";
 import "./globals.css";
 import theme from './theme';
 
-interface MainProps {
-  currentPage: string; // Define prop type for currentPage
-}
-
-const Main: React.FC<MainProps> = ({ currentPage }): ReactElement => {  
-
-  return (<ThemeProvider theme={theme}>
-      <Sidebar currentPageComponent={Typography}/> 
-    </ThemeProvider>)
+const Main = () => {
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Typography}/></ThemeProvider>)
 };
 
 export default Main;

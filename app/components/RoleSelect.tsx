@@ -6,9 +6,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import theme from '../theme';
 
+interface RoleSelectProps {
+  selectedValue: string;
+  handleSelectChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
+}
 
-
-export default function BasicSelect() {
+const RoleSelect: React.FC<RoleSelectProps> = ({ selectedValue, handleSelectChange }) => {
   const [role, setRole] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -35,3 +38,5 @@ export default function BasicSelect() {
     </Box>
   );
 };
+
+export default RoleSelect;

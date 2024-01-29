@@ -13,16 +13,9 @@ import Add from "../images/9.png"
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import UploadImage from '../images/6.png';
-import { Dropdown } from '@mui/base/Dropdown';
-import { Menu } from '@mui/base/Menu';
-import { MenuButton as BaseMenuButton } from '@mui/base/MenuButton';
-import { MenuItem as BaseMenuItem, menuItemClasses } from '@mui/base/MenuItem';
-import { styled } from '@mui/system';
 import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import RoleSelect from './RoleSelect'
-
+import { MenuItem } from '@mui/material';
+import { profileData } from './types';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -44,21 +37,61 @@ const style = {
     borderRadius: '35px',
   }; 
 
-   //function MenuSimple() {
-    const createHandleMenuClick = (menuItem: string) => () => {
-        return("");
-    }
-    //   return () => {
-    //     console.log(`Clicked on ${menuItem}`);
-    //   };
-//     };
-// }
 const AddEmployeeModal: React.FC = ()  => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
     
+
+    const initialFormData = {
+        firstName: '',
+        lastName: '',
+        emailAddress: '',
+        role: '',
+        pronouns: '',
+        phoneNumber:''
+      };
+    const [formData, setFormData] = useState(initialFormData);
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+    const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
+      const { name, value } = event.target;
+    
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+    };
+    
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
+      try {
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to add employee');
+        }
+  
+        const user = await response.json();
+        console.log('New user:', user);
+        // Handle success - maybe close the modal or show a success message
+      } catch (error) {
+        console.error('Error adding employee:', error);
+      }
+      setFormData(initialFormData);
+
+    };
 
 return (
     <div>
@@ -86,6 +119,7 @@ return (
                 </Typography>
             </Box>
             <Box>
+        <form onSubmit={handleSubmit}>
         <Grid container spacing={5} columnSpacing={{xs: 10, sm:80, md:5, lg:5}} justify-content='flex-start' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 2, md: 3, lg: 4}}>
            <Grid container spacing={4} direction='column' justifyContent='flex-start' alignItems='flex-start'>
                 <Grid xs={12} sm={12} md={12} lg={12} sx={{ justifyContent:'flex-start', alignItems:'flex-start', display: 'flex'}}>
@@ -106,58 +140,90 @@ return (
                    <Typography variant="h4">
                         First Name
                     </Typography>
-                    <TextField defaultValue="Jumbo" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField 
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange} 
+                        InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                        variant="standard"/>
                 </Grid>
-                <Grid xs ={12} sm={12} md={12} lg={12}>
+                <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
-                        Last Name
+                        Pronouns
                     </Typography>
-                    <TextField defaultValue="Code" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField
+                    name="pronouns"
+                    value={formData.pronouns}
+                    onChange={handleInputChange} 
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Email
                     </Typography>
-                    <TextField defaultValue="myrna@gmail.com" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField 
+                    name="emailAddress"
+                    value={formData.emailAddress}
+                    onChange={handleInputChange}
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
+            
             <Grid container spacing={4} direction='column' alignItems='flex-start'  paddingBottom='13%'>
-                <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
-                        Pronouns
+                        Last Name
                     </Typography>
-                    <TextField defaultValue="casa/myrna" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
-                    <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
-                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
+                    <TextField 
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4">
                        Role
                     </Typography>
-                    <RoleSelect/>                    
+                    <Select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleSelectChange}
+                        sx={{ borderRadius: '20px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
+                    >
+                    <MenuItem value={'Coordinator'}>Coordinator</MenuItem>
+                    <MenuItem value={'Full-time Staff'}>Full-time Staff</MenuItem>
+                    <MenuItem value={'Part-time Staff'}>Part-time Staff</MenuItem>
+                    <MenuItem value={'Relief Staff'}>Relief Staff</MenuItem>
+                </Select>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4">
                         Phone Number
                     </Typography>
-                    <TextField defaultValue="000-000-0000" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField 
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
+                    variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign ='center' paddingTop='15%' paddingRight='15%' paddingLeft='20%' sx = {{ display:'flex', justifyContent:'center'}}>
-                    <Button sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
+                    <Button type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
                 </Grid>
                 </Grid>    
-                </Grid>                            
+                </Grid> 
+                </form>                           
                 </Box>
            
             </Box>
             </Modal>
             </div> )
-    
-      
-  
-    
-}
+     
+};
 
 export default AddEmployeeModal
   
