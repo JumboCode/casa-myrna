@@ -109,3 +109,20 @@
 
 
 }
+
+.post-btn {
+    height: 100%; 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px; 
+}
+
+.post-btn-retrieve {
+    height: 50px; 
+    width: 150px; 
+    text-align: center;
+    font-size: 20px; 
+    background: red; 
+    border-radius: 5%;
+}
