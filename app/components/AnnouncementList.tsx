@@ -17,7 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 
 // Custom components and images
-import profileList from "./ProfileList"
+import ProfileList from "./ProfileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import { FC } from 'react';
@@ -41,7 +41,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
       {people.map((person, index) => (
         <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
           <br/> 
-          {profileList({
+          {ProfileList({
             firstName: person.firstName,
             lastName: person.lastName,
             role: person.role,
@@ -158,7 +158,7 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Select filters */}
                   <Grid container spacing={2} columns={3} paddingTop={'47%'}>
-                    <Grid item xs={2}>
+                    <Grid xs={2}>
                       <Select
                         fullWidth
                         value="" // Set the initial value to an empty string
@@ -172,7 +172,7 @@ const BoxSx: FC = () => {
                       </Select>
                     </Grid>
                     {/* Filter button */}
-                    <Grid item xs={1}>
+                    <Grid xs={1}>
                       <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">sort</Button>
                     </Grid>
                   </Grid>
