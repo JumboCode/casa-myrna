@@ -40,9 +40,9 @@ interface NameListProps {
 
 const NameList: React.FC<NameListProps> = ({ people }) => (
   <div>
-    <ul style={{ listStyle: 'none', padding: 20, margin: 0, justifyContent: 'flex-start'}}>
+    <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
       {people.map((person, index) => (
-        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily, textAlign: "left" }}>
+        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
           <br/> 
           {profileList({
             firstName: person.firstName,
@@ -55,34 +55,6 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
     </ul>
   </div>
 );
-
-    
-// List of Employees
-const peopleArray: profileData[] = [
-  { firstName: 'Maddiejahajhdfrajhfjhasjfdhsajhfdjshfjahsf', lastName: 'Rogers', role: 'Volunteer', image: 'nothing.jpg' },
-  { firstName: 'Naomi', lastName: 'Gillis', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Jiyoon', lastName: 'Choi', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Pamela ', lastName: 'Melgar', role: 'Volunteer', image: 'jane.jpg' },
-  { firstName: 'Bill', lastName: 'Soronzonbold', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Asli', lastName: 'Kocak', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Carly', lastName: 'Seigel', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'David', lastName: 'Chen', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Elizabeth', lastName: 'Foster', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Sean', lastName: 'Reilly', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Yara', lastName: 'Hamdan', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' },
-  { firstName: 'Eliana', lastName: 'Longoria', role: 'Designer', image: 'jane.jpg' }
-  // Add more people as needed
-];
 
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
@@ -211,7 +183,7 @@ const BoxSx: FC = () => {
 
                   {/* Select filters */}
                   <Grid container spacing={2} columns={3} paddingTop={'23%'}>
-                    <Grid  xs={2}>
+                    <Grid xs={2}>
                       <Select
                         fullWidth
                         value="" // Set the initial value to an empty string
@@ -225,7 +197,7 @@ const BoxSx: FC = () => {
                       </Select>
                     </Grid>
                     {/* Filter button */}
-                    <Grid  xs={1}>
+                    <Grid xs={1}>
                       <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">filter</Button>
                     </Grid>
                   </Grid>
