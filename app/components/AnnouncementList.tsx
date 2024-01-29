@@ -3,6 +3,7 @@ import { FC } from "react";
 
 const AnnouncementList: FC = () => {
   return (
+
     <div>
       {/* Pass arguments to Announcemnet Component*/}
       <div style={{ paddingBottom: 10 }}>
