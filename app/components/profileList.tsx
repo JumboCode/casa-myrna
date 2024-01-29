@@ -13,8 +13,10 @@ import { Grid } from '@mui/material';
 
 
 const ProfileList = ({ firstName, lastName, role, imageUrl }: { firstName: string; lastName: string; role: string; imageUrl: string }) => {
-  const truncate = (input: string, num: number) =>
-  input.length > num ? `${input.substring(0, num)}...` : input;
+  const truncate = (input: string | undefined, num: number): string => {
+    return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
+  };
+
   return (
     <Box
       sx={{
