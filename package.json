@@ -21,6 +21,7 @@
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18",
+    "react-big-calendar": "^1.8.6",
     "react-dom": "^18"
   },
   "devDependencies": {
@@ -29,7 +30,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
-    "prisma": "^5.4.2",
+    "prisma": "^5.5.2",
     "typescript": "^5"
   }
 }

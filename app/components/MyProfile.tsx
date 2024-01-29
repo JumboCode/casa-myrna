@@ -9,18 +9,22 @@ import { FC } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
 import UploadImage from '../images/6.png';
+import { auth } from '@clerk/nextjs';
+import { useUser } from "@clerk/nextjs";
+
 
 const BoxSx: FC = () => {
     const theme = useTheme();
+    const { isSignedIn, user, isLoaded } = useUser();
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: "flex",
         minHeight: "87vh",
         justifyContent: "flex",
-        alignItems:"center",
-        borderRadius: '5vh',
-        backgroundColor: "#f6f6f6"
+        alignItems: "center",
+        borderRadius: "5vh",
+        backgroundColor: "#f6f6f6",
       }}
     >
         <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 4, md: 5, lg: 12}}>
@@ -46,19 +50,19 @@ const BoxSx: FC = () => {
                    <Typography variant="h4">
                         First Name
                     </Typography>
-                    <TextField defaultValue="Jumbo" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField defaultValue={user?.firstName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Last Name
                     </Typography>
-                    <TextField defaultValue="Code" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField defaultValue={user?.lastName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Email
                     </Typography>
-                    <TextField defaultValue="myrna@gmail.com" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField defaultValue={user?.emailAddresses} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
@@ -67,7 +71,7 @@ const BoxSx: FC = () => {
                     <Typography variant="h4" >
                         Pronouns
                     </Typography>
-                    <TextField defaultValue="casa/myrna" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
+                    <TextField defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
                     <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
                         <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
                 </Grid>
@@ -75,13 +79,13 @@ const BoxSx: FC = () => {
                     <Typography variant="h4" >
                         Role
                     </Typography>
-                    <TextField defaultValue="Employee" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField defaultValue={user?.publicMetadata.role} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4">
                         Phone Number
                     </Typography>
-                    <TextField defaultValue="000-000-0000" InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                    <TextField defaultValue={user?.publicMetadata.phoneNumber} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%' sx = {{ display:'flex', justifyContent:'flex-end'}}>
                     <Button sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
@@ -90,6 +94,6 @@ const BoxSx: FC = () => {
         </Grid>
     </Box>
   );
-}
+};
 
 export default BoxSx;

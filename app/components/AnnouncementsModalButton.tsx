@@ -24,7 +24,7 @@ const style = {
         lg: 400,
         xs: '70%'
   },
-  bgcolor: theme.palette.primary.main,
+  bgcolor: "#f6f6f6",
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,

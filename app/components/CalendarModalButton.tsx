@@ -8,11 +8,110 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Stack from '@mui/material/Stack';
 import React from 'react';
+import { Grid, MenuItem, Select, TextField } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import theme from '../theme';
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width:  {
+          lg: 600,
+          xs: '80%'
+    },
+    height: {
+          lg: 300,
+          xs: '70%'
+    },
+    bgcolor: "#ffffff",
+    // border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: '35px',
 
+    typography: { 
+        h1: {
+          fontFamily: 'Montserrat',
+          fontSize: '32',
+          fontWeight: 'bold'
+        },
+        h4:{
+          fontFamily: 'Montserrat',
+          fontSize: '16',
+          fontWeight: 'bold'
+        },
+        body1:{
+          fontFamily: 'Montserrat',
+          fontSize: '16',
+          fontWeight: 'regular'
+        },
+        body2:{
+          fontFamily: 'Montserrat',
+          fontSize: '16',
+          fontWeight: 'regular'
+        }
+    }
+  }; 
 const CalendarModalButton: FC = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const showModal = () => setOpenModal(true);
     const closeModal = () => setOpenModal(false);
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    
+
+    const initialFormData = {
+        
+        phoneLine:'',
+        startTime:'',
+        endTime:'',
+        assignedEmployee:'',
+      };
+    const [formData, setFormData] = useState(initialFormData);
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+    const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
+      const { name, value } = event.target;
+    
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+    };
+    
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    //   e.preventDefault();
+    //   try {
+    //     const response = await fetch('/api/users', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(formData),
+    //     });
+  
+    //     if (!response.ok) {
+    //       throw new Error('Failed to add employee');
+    //     }
+  
+    //     const user = await response.json();
+    //     console.log('New user:', user);
+    //     // Handle success - maybe close the modal or show a success message
+    //   } catch (error) {
+    //     console.error('Error adding employee:', error);
+    //   }
+    //   setFormData(initialFormData);
+
+    };
 
     return (
         <>
@@ -20,116 +119,153 @@ const CalendarModalButton: FC = () => {
             <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => {
-                    showModal();
-                }}
+                onClick={handleOpen}
             >
                 Open Modal
             </Button>
-            <Modal
-                open={openModal}
-                onClose={closeModal}
-                //sx={{ backgroundColor: "rgba(0, 0, 0, 0.20)", zIndex: 1, }}
-            >
-                {/* todo: figure out the styling of the fonts */}
-                <Box sx={{
-                    position: 'absolute' as 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: "30%",
-                    height: "45%",
-                    bgcolor: 'background.paper',
-                    border: '1px solid #000',
-                    borderRadius: '20px',
-                    py: 10,
-                    px: 15, 
-                    "@media all and (max-width: 480px)": {
-                        height: "70%",
-                        py: 5,
-                        px: 10,
-                    }
-                }}>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            mb: 6,
-                            ml: -5,
-                            mt: -6,  
-                            "@media all and (max-width: 480px)": {
-                                mb: 3,
-                                mt: 0.0000001, 
-                            }
-                        }}
-
-                    >
-                        Shift Details
+            <Modal 
+            open={open}
+            onClose={handleClose}>
+        {/* Gray Modal Box */}
+        <Box sx={style}>
+            {/* Button Box */}
+            <Box sx={{width: 50, height: 50, position: 'absolute', right: '5%', fill:'none'}}>
+                <button 
+                    onClick={() => {
+                    handleClose();
+                    }}>
+                    <CloseOutlinedIcon color="secondary" />
+                </button>
+            </Box>
+            <Box sx={{paddingLeft: 2, paddingRight: 6}}>
+                <Typography sx={{ fontFamily: "Montserrat", fontSize: {lg:'36px', xs:'22px'}}}>
+                    Add Shift
+                </Typography>
+            </Box>
+            <Box>
+        <form onSubmit={handleSubmit}>
+        <Grid container spacing={5} columnSpacing={{xs: 10, sm:80, md:5, lg:5}} justify-content='flex-start' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 2, md: 3, lg: 4}}>
+            
+            <Grid container spacing={4}  direction='column' alignItems='flex-start'  paddingBottom='13%'>
+                <Grid container direction="row" justifyContent={'flex-end'} xs ={12} sm={12} md={12} lg={12}sx={{ marginLeft: '-130px' }}>
+                    <Typography variant="h4">
+                      Start Time: 
                     </Typography>
-                    
-                    <Stack direction="column" sx={{  
-                            "@media all and (max-width: 480px)": {
-                                alignItems: "center",
-                                marginLeft: 3,
-                                fontSize: "14px"
-                            }
-                        }}>
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-large">Start Time: </Typography>
-                        <Typography className="text-with-border right">12 Oct Tuesday - 02.00 pm</Typography>
-                    </div>
-
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-large">End Time: </Typography>
-                        <Typography className="text-with-border right">12 Oct Tuesday - 07.00 pm</Typography>
-                    </div>
-
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-small"> Assigned Employee: </Typography>
-                        <Typography className="text-with-border"> Employee Name </Typography>
-                    </div>
-
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-small"> On-Call Employee: </Typography>
-                        <Typography className="text-with-border"> Employee Name </Typography>
-                    </div>
-
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-small"> Phone Line: </Typography>
-                        <Typography className="text-with-border"> Phone # </Typography>
-                    </div>
-
-                    <div className="inline-input-representation">
-                        <Typography variant="subtitle1" className="left-small"> Status: </Typography>
-                        <Typography className="text-with-border green-btn"> Assigned </Typography>
-                    </div>
-                    </Stack>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                            alert("cancel shift indicated");
-                        }}
-                        className="center-btn"
-                        sx={{
-                            display: "center",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            m: "auto",
-                        }}
+                    <Button variant= 'outlined'sx={{borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}> Date</Button>
+                    <Select
+                        name="startTime"
+                        value={formData.startTime}
+                        onChange={handleSelectChange}
+                        sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
                     >
-                        Cancel Shift
-                    </Button>
-
-                    <button
-                        className="close-btn"
-                        onClick={() => {
-                            closeModal();
-                        }}
+                    <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
+                    <MenuItem value={'01:00 am'}>1:00 am</MenuItem>
+                    <MenuItem value={'02:00 am'}>2:00 am</MenuItem>
+                    <MenuItem value={'03:00 am'}>3:00 am</MenuItem>
+                    <MenuItem value={'04:00 am'}>4:00 am</MenuItem>
+                    <MenuItem value={'05:00 am'}>5:00 am</MenuItem>
+                    <MenuItem value={'06:00 am'}>6:00 am</MenuItem>
+                    <MenuItem value={'07:00 am'}>7:00 am</MenuItem>
+                    <MenuItem value={'08:00 am'}>8:00 am</MenuItem>
+                    <MenuItem value={'09:00 am'}>9:00 am</MenuItem>
+                    <MenuItem value={'10:00 am'}>10:00 am</MenuItem>
+                    <MenuItem value={'11:00 am'}>11:00 am</MenuItem>
+                    <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
+                    <MenuItem value={'01:00 pm'}>1:00 pm</MenuItem>
+                    <MenuItem value={'02:00 pm'}>2:00 pm</MenuItem>
+                    <MenuItem value={'03:00 pm'}>3:00 pm</MenuItem>
+                    <MenuItem value={'04:00 pm'}>4:00 pm</MenuItem>
+                    <MenuItem value={'05:00 pm'}>5:00 pm</MenuItem>
+                    <MenuItem value={'06:00 pm'}>6:00 pm</MenuItem>
+                    <MenuItem value={'07:00 pm'}>7:00 pm</MenuItem>
+                    <MenuItem value={'08:00 pm'}>8:00 pm</MenuItem>
+                    <MenuItem value={'09:00 pm'}>9:00 pm</MenuItem>
+                    <MenuItem value={'10:00 pm'}>10:00 pm</MenuItem>
+                    <MenuItem value={'11:00 pm'}>11:00 pm</MenuItem>
+                </Select>
+                </Grid>
+                <Grid container direction="row" xs ={12} sm={12} md={12} lg={12} sx={{ marginLeft: '-130px', justifyContent: 'flex-end' }}>
+                    <Typography variant="h4"sx={{marginRight: '7px' }}>
+                       End Time: 
+                    </Typography>
+                    <Button variant= 'outlined'sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}> Date</Button>
+                    <Select
+                        name="endTime"
+                        value={formData.endTime}
+                        onChange={handleSelectChange}
+                        sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
                     >
-                        <svg fill="#6F479A" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M300.188,246L484.14,62.04c5.06-5.064,7.852-11.82,7.86-19.024c0-7.208-2.792-13.972-7.86-19.028L468.02,7.872 c-5.068-5.076-11.824-7.856-19.036-7.856c-7.2,0-13.956,2.78-19.024,7.856L246.008,191.82L62.048,7.872 c-5.06-5.076-11.82-7.856-19.028-7.856c-7.2,0-13.96,2.78-19.02,7.856L7.872,23.988c-10.496,10.496-10.496,27.568,0,38.052 L191.828,246L7.872,429.952c-5.064,5.072-7.852,11.828-7.852,19.032c0,7.204,2.788,13.96,7.852,19.028l16.124,16.116 c5.06,5.072,11.824,7.856,19.02,7.856c7.208,0,13.968-2.784,19.028-7.856l183.96-183.952l183.952,183.952 c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116 c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z"></path> </g> </g> </g></svg>
-                    </button>
+                    <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
+                    <MenuItem value={'01:00 am'}>1:00 am</MenuItem>
+                    <MenuItem value={'02:00 am'}>2:00 am</MenuItem>
+                    <MenuItem value={'03:00 am'}>3:00 am</MenuItem>
+                    <MenuItem value={'04:00 am'}>4:00 am</MenuItem>
+                    <MenuItem value={'05:00 am'}>5:00 am</MenuItem>
+                    <MenuItem value={'06:00 am'}>6:00 am</MenuItem>
+                    <MenuItem value={'07:00 am'}>7:00 am</MenuItem>
+                    <MenuItem value={'08:00 am'}>8:00 am</MenuItem>
+                    <MenuItem value={'09:00 am'}>9:00 am</MenuItem>
+                    <MenuItem value={'10:00 am'}>10:00 am</MenuItem>
+                    <MenuItem value={'11:00 am'}>11:00 am</MenuItem>
+                    <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
+                    <MenuItem value={'01:00 pm'}>1:00 pm</MenuItem>
+                    <MenuItem value={'02:00 pm'}>2:00 pm</MenuItem>
+                    <MenuItem value={'03:00 pm'}>3:00 pm</MenuItem>
+                    <MenuItem value={'04:00 pm'}>4:00 pm</MenuItem>
+                    <MenuItem value={'05:00 pm'}>5:00 pm</MenuItem>
+                    <MenuItem value={'06:00 pm'}>6:00 pm</MenuItem>
+                    <MenuItem value={'07:00 pm'}>7:00 pm</MenuItem>
+                    <MenuItem value={'08:00 pm'}>8:00 pm</MenuItem>
+                    <MenuItem value={'09:00 pm'}>9:00 pm</MenuItem>
+                    <MenuItem value={'10:00 pm'}>10:00 pm</MenuItem>
+                    <MenuItem value={'11:00 pm'}>11:00 pm</MenuItem>
+
+                </Select>
+                </Grid>
+                <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginLeft: '-130px', justifyContent: 'flex-end' }}>
+                    <Typography variant="h4"sx={{marginRight: '114px' }}>
+                       Assigned Employee: 
+                    </Typography>
+                    <Select
+                        name="assignedEmployee"
+                        value={formData.assignedEmployee}
+                        onChange={handleSelectChange}
+                        sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
+                    >
+                    <MenuItem value={'Carly Seigel'}>Carly Seigel</MenuItem>
+                    <MenuItem value={'Eliana Longoria-Valenzuela'}>Eliana Longoria-Valenzuela</MenuItem>
+                </Select>
+                </Grid>
+                <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginLeft: '-130px', justifyContent: 'flex-end' }}>
+                    <Typography variant="h4" sx={{marginRight: '182px' }}>
+                       Phone Line: 
+                    </Typography>
+                        <Select
+                        name="phoneLine"
+                        value={formData.phoneLine}
+                        onChange={handleSelectChange}
+                        sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
+                    >
+                    <MenuItem value={'1'}>1</MenuItem>
+                    <MenuItem value={'2'}>2</MenuItem>
+                    <MenuItem value={'3'}>3</MenuItem>
+                    <MenuItem value={'4'}>4</MenuItem>
+                    <MenuItem value={'5'}>5</MenuItem>
+                    <MenuItem value={'6'}>6</MenuItem>
+
+                </Select>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign ='center' paddingTop='15%' paddingRight='15%' paddingLeft='20%' sx = {{ display:'flex', justifyContent:'center'}}>
+                <Button type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#2E0057"}, textTransform: 'none'}}variant="contained">Cancel Shift</Button>
+                    <Button type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Assign Shift</Button>
+                </Grid>
+                </Grid>    
+                </Grid> 
+                </form>                           
                 </Box>
-            </Modal >
+           
+            </Box>
+            </Modal>
         </>
     )
 
