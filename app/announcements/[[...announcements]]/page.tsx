@@ -1,5 +1,4 @@
 "use client";
-
 import Sidebar from "../../components/Sidebar";
 import React, { useState, useEffect, ReactElement } from "react";
 import AnnouncementsModalButton from "../../components/AnnouncementsModalButton";
