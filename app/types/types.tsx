@@ -2,7 +2,7 @@
  *  contains the shift type that is accessed from the backend 
  ****************/ 
 
-enum Status {
+export enum Status {
     PENDING,
     ACCEPTED,
     CANCELLED
@@ -20,5 +20,7 @@ type PrimaryShift = {
     phoneLine: number, 
     created_at: Date, 
 }
+
+type BackupShift = {}
 
 export type { PrimaryShift } 

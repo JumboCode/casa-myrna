@@ -7,6 +7,8 @@ import Select from '@mui/material/Select';
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { useState, useEffect } from 'react';
+import { PrimaryShift, Status } from '../types/types';
 
 const localizer = momentLocalizer(moment);
 
@@ -22,24 +24,56 @@ const MyCalendar = (props: { events: any; }) => {
         endAccessor="end"
         style={{ margin: '50px' }}
         defaultView={'week'}
+        eventPropGetter={() => {
+          const backgroundColor = 'green'
+          const opacity = .5
+          return { style: { backgroundColor, opacity } }
+        }}
       />
     </div>
   );
 };
 
 const calendar = () => {
-  const events = [
-    {
-      start: new Date(2024, 0, 22, 10, 0),
-      end: new Date(2024, 0, 22, 12, 0),
-      title: 'Meeting with Client',
-    },
-    {
-      start: new Date(2024, 0, 23, 14, 0),
-      end: new Date(2024, 0, 23, 16, 0),
-      title: 'Team Workshop',
-    },
-  ];
+
+  const [shiftInfo, setShiftInfo] = useState<PrimaryShift[] | null>(null); 
+ 
+  const today = new Date(); 
+  const firstDayOfWeek = new Date(today);
+  firstDayOfWeek.setDate(today.getDate() - today.getDay());
+  firstDayOfWeek.setHours(0, 0, 0);
+
+  const lastDayOfWeek = new Date(firstDayOfWeek);
+  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+  lastDayOfWeek.setHours(23, 59, 59);
+
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString); 
+        const data = await response.json(); 
+        setShiftInfo(data); 
+      } catch (e) {
+        throw new Error('Failed to fetch shift data'); 
+      }
+    })();
+  }, [])
+
+  const events = shiftInfo?.map((shift, _) => {
+    return {
+      start: new Date(shift.from), 
+      end: new Date(shift.to), 
+      title: shift.primaryShiftID.toString(), // we don't know what to assign this right now 
+      style: {
+        backgroundColor: (shift.status == Status.ACCEPTED ? 'green' : (shift.status == Status.CANCELLED ? 'gray' : 'orange'))  
+      }, 
+    }
+  });
+  
+  
+  if (events != undefined) {
+    console.log(typeof(events[0].start)); 
+  }
 
   return (
     <Box
