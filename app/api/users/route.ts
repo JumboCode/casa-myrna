@@ -114,3 +114,7 @@ export async function PUT(req: NextRequest) {
       return new Response('Error: User could not be found', {status: 500,})
     }
   }
+
+  export async function GETNAMES(req: NextRequest) {
+      
+  } 
