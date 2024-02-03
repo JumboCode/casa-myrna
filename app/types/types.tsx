@@ -3,9 +3,9 @@
  ****************/ 
 
 export enum Status {
-    PENDING,
-    ACCEPTED,
-    CANCELLED
+    PENDING = 'PENDING',
+    ACCEPTED = 'ACCEPTED',
+    CANCELLED = 'CANCELLED',
 }
 
 type PrimaryShift = {
@@ -21,6 +21,16 @@ type PrimaryShift = {
     created_at: Date, 
 }
 
+type Event = { 
+    start: Date, 
+    end: Date, 
+    title: String, 
+    style: {
+        opacity: number, 
+        backgroundColor: string, 
+    }
+}
+
 type BackupShift = {}
 
-export type { PrimaryShift } 
+export type { PrimaryShift, Event } 

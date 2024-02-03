@@ -8,26 +8,26 @@ import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState, useEffect } from 'react';
-import { PrimaryShift, Status } from '../types/types';
+import { PrimaryShift, Status, Event } from '../types/types';
+import { UserProfile, clerkClient } from "@clerk/nextjs" 
 
 const localizer = momentLocalizer(moment);
 
-const MyCalendar = (props: { events: any; }) => {
+const MyCalendar = (props: { events: PrimaryShift[]; }) => {
   const { events } = props; // Extract events from props
 
   return (
     <div style={{ height: '500px' }}>
       <Calendar
+        dayLayoutAlgorithm='no-overlap'
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ margin: '50px' }}
         defaultView={'week'}
-        eventPropGetter={() => {
-          const backgroundColor = 'green'
-          const opacity = .5
-          return { style: { backgroundColor, opacity } }
+        eventPropGetter={(event: Event) => {
+          return { style: event.style }
         }}
       />
     </div>
@@ -37,6 +37,7 @@ const MyCalendar = (props: { events: any; }) => {
 const calendar = () => {
 
   const [shiftInfo, setShiftInfo] = useState<PrimaryShift[] | null>(null); 
+
  
   const today = new Date(); 
   const firstDayOfWeek = new Date(today);
@@ -52,6 +53,7 @@ const calendar = () => {
       try {
         const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString); 
         const data = await response.json(); 
+        console.log(data)
         setShiftInfo(data); 
       } catch (e) {
         throw new Error('Failed to fetch shift data'); 
@@ -59,22 +61,39 @@ const calendar = () => {
     })();
   }, [])
 
-  const events = shiftInfo?.map((shift, _) => {
+  // const getNames = async (userID: number) => {
+  //   await clerkClient.users.getUser(userID.toString())
+  //     .then((user) => {
+  //       return user.firstName + user.lastName; 
+  //     })
+  //     .catch((err) => {
+  //       throw new Error("could not fetch the user's name from given id: " + userID, err); 
+  //     });
+  // }
+
+  const events = shiftInfo?.map((shift: PrimaryShift, _) => {
+
+    let background_color = 'green'; 
+    
+    if (shift.status.toString() === 'CANCELLED') {
+      background_color = 'gray'; 
+    } else if (shift.status.toString() === 'PENDING') {
+      background_color = 'orange'; 
+    }
+
+    // console.log(getNames(shift.userID))
+
     return {
       start: new Date(shift.from), 
       end: new Date(shift.to), 
       title: shift.primaryShiftID.toString(), // we don't know what to assign this right now 
       style: {
-        backgroundColor: (shift.status == Status.ACCEPTED ? 'green' : (shift.status == Status.CANCELLED ? 'gray' : 'orange'))  
+        opacity: .5,
+        backgroundColor: background_color, 
       }, 
     }
   });
   
-  
-  if (events != undefined) {
-    console.log(typeof(events[0].start)); 
-  }
-
   return (
     <Box
       sx={{
