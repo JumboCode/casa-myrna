@@ -19,7 +19,7 @@ import AddEmployeeModal from './AddEmployeeModal'
 import { profileData } from './types';
 
 // Custom components and images
-import profileList from "./ProfileList"
+import profileList from "./profileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';

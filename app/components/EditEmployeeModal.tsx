@@ -42,113 +42,131 @@ const style = {
       
 const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress }, { id }) => {
     const [open, setOpen] = useState(false);
-//     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
-
        
-        const [user, setUser] = useState({ firstName: '', lastName: '', email: '', role: '', pronouns: '', phoneNumber: '' });
-        const [error, setError] = useState('');
-        const [loading, setLoading] = useState(false);
-        const [idString, setidString] = useState({ id: ''});
-        
-        const fetchUserByEmail = async () => {
-            setOpen(true);
-            setLoading(true);
-            console.log(emailAddress)
+    const [user, setUser] = useState({ firstName: '', lastName: '', email: '', role: '', pronouns: '', phoneNumber: '' });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [idString, setidString] = useState({ id: ''});
+    
+    /* Fetches user data when 'edit' button is clicked for that user email passed into Modal */
+    const fetchUserByEmail = async () => {
+        setOpen(true);
+        setLoading(true);
+
         try {
-        const response = await fetch(`/api/users?emailAddress=${encodeURIComponent(emailAddress)}`, {
-        method: 'GET',
-        headers: {
-                'Content-Type': 'application/json',
-        },
-        });
+            const response = await fetch(`/api/users?emailAddress=${encodeURIComponent(emailAddress)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch user');
-        }
+            if (!response.ok) {
+                throw new Error('Failed to fetch user');
+            }
 
-        // const userData = await response.json();
-        const userDataArray = await response.json();
+            const userDataArray = await response.json();
 
-        // Since the response is an array, access the first element
-        const userObject = userDataArray[0];
-        
-        setidString({
+            /* Since the response is in array form, access the first element */
+            const userObject = userDataArray[0];
+    
+            setidString({
                 ...idString,
                 id: userObject.id
-        }
-                );
-        // console.log("test: ", idString.id)
-        setFormData({
-                ...formData, // Keep other form data intact
-                firstName: userObject.firstName, // Set the firstName after fetching
-                lastName: userObject.lastName, // Assuming you also have the last name from the fetched data
-                emailAddress: emailAddress,
-                role: userObject.publicMetadata.role,
-                pronouns: userObject.publicMetadata.pronouns,
-                phoneNumber: userObject.publicMetadata.phoneNumber
-                
-              });
-              console.log("test1: ", formData.firstName)
-        // setUser(userData);
+            });
 
+            /* Pre-fill the form for edit employee modal to fetched user data */
+            setFormData({
+                    ...formData, // Keep other form data intact
+                    firstName: userObject.firstName, // Set the firstName after fetching
+                    lastName: userObject.lastName, // Assuming you also have the last name from the fetched data
+                    emailAddress: emailAddress,
+                    role: userObject.publicMetadata.role,
+                    pronouns: userObject.publicMetadata.pronouns,
+                    phoneNumber: userObject.publicMetadata.phoneNumber
+                    
+            });
+
+            setUser({
+                    ...user, // Spread the existing user state
+                    firstName: userObject.firstName,
+            });
     
-        setUser({
-                ...user, // Spread the existing user state
-                firstName: userObject.firstName,
-                // ... any other user properties you want to update
-              });
-        
         } catch (error) {
                 setError('Error fetching user: ' + error.message);
         } finally {
                 setLoading(false);
         }
-        };
+    };
 
         
-
-        const initialFormData = {
-                firstName: '',
-                lastName: '',
-                emailAddress: '',
-                role: '',
-                pronouns: '',
-                phoneNumber:''
-        };
-
-        
-    
-
-    
+    /* Default initial form data, prior to updates */
+    const initialFormData = {
+            firstName: '',
+            lastName: '',
+            emailAddress: '',
+            role: '',
+            pronouns: '',
+            phoneNumber:''
+    };
+ 
+    /* This updates the submit form data with the fetched user data */
     const [formData, setFormData] = useState(initialFormData);
-    
 
-
-    
+    /* Handle input change */
     const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
     
+    /* Handle Select Change, e.g. role selection */
     const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
-      const { name, value } = event.target;
-    
+        const { name, value } = event.target;
         setFormData({
           ...formData,
           [name]: value,
         });
     };
+
+    /* Handle Deleting an employee */
+    const handleDelete = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        try {
+            
+            /* Delete user from the database with specified unique id*/
+            const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+  
+            if (!response.ok) {
+                throw new Error('Failed to delete employee');
+            }
+  
+            const user = await response.json();
+
+            /* Show a success message and reload the page immediately */
+            console.log("Employee was successfully deleted - refresh the page");
+            location.reload(); /* Reload page to see change was successful */
+        } catch (error) {
+            console.error('Error deleting employee:', error);
+        }
+    };
+
+    /* Creates data to send to the database in the proper format upon submission */
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        console.log("test2: ", formData.phoneNumber)
-        console.log("id", idString.id)
-      e.preventDefault();
-      try {
-        const finalFormData = {
+        e.preventDefault();
+        try {
+
+            /* Match specification of database, different from form data formatting */
+            const finalFormData = {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 emailAddress: formData.emailAddress,
@@ -157,26 +175,32 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress }, {
                     pronouns: formData.pronouns,
                     phoneNumber: formData.phoneNumber,
                 },
-        };
-        const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(finalFormData),
-        });
+            };
+            
+            /* Update the database with the new fields*/
+            const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalFormData),
+            });
   
-        if (!response.ok) {
-          throw new Error('Failed to add employee');
+            if (!response.ok) {
+                throw new Error('Failed to edit employee');
+            }
+  
+            const user = await response.json();
+
+            /* Close the modal and show a success message */
+            console.log("Employee was successfully added - refresh the page");
+            setOpen(false);
+            location.reload(); /* Reload page to see change was successful */
+        } catch (error) {
+            console.error('Error editing employee:', error);
         }
-  
-        const user = await response.json();
-        console.log('New user:', user);
-        // Handle success - maybe close the modal or show a success message
-      } catch (error) {
-        console.error('Error adding employee:', error);
-      }
-      setFormData(initialFormData);
+
+        setFormData(initialFormData);
 
     };
 
@@ -254,6 +278,9 @@ return (
                     onChange={handleInputChange}
                     InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
                     variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign ='center' paddingTop='15%' paddingRight='15%' paddingLeft='20%' sx = {{ display:'flex', justifyContent:'right'}}>
+                    <Button type="button" onClick={handleDelete} sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#2E0057"}, textTransform: 'none'}}variant="contained">Delete Employee</Button>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
