@@ -8,6 +8,7 @@ import Sidebar from "../../components/Sidebar";
 import "../../globals.css";
 import theme from '../../theme';
 import { PrimaryShift } from '../../types/types'; 
+import { Protect } from "@clerk/nextjs";
 
 
 const Calendar: React.FC = () => {
@@ -60,19 +61,21 @@ const Calendar: React.FC = () => {
   }
   
 
-  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Cal} />
-    <div className="post-btn">
-      <button className="post-btn-retrieve" onClick={handler}>retrieve info</button>
-      {(!shiftArray) ? (
-        <></>
-      ) : (
-        <div className="">
-          results here
-          {shiftArray.map((shift: PrimaryShift, index: number) => <li key={shift.primaryShiftID}>{shift.status}</li>)}
-        </div>
-      )}
-    </div>
-  </ThemeProvider>)
+  return (<Protect role="org:admin:employee" fallback={<p>Only an admin or employee can access this content.</p>}>
+          <ThemeProvider theme={theme}><Sidebar currentPageComponent={Cal} />
+            <div className="post-btn">
+              <button className="post-btn-retrieve" onClick={handler}>retrieve info</button>
+              {(!shiftArray) ? (
+                <></>
+              ) : (
+                <div className="">
+                  results here
+                  {shiftArray.map((shift: PrimaryShift, index: number) => <li key={shift.primaryShiftID}>{shift.status}</li>)}
+                </div>
+              )}
+            </div>
+          </ThemeProvider>
+          </Protect>)
 };
 
 export default Calendar;
