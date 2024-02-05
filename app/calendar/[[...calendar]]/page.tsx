@@ -1,12 +1,14 @@
 'use client'
 
 import { ThemeProvider } from '@mui/material/styles';
+import Cal from "../../components/Calendar";
 import React, { useState, useEffect } from "react";
 import CalendarModalButton from "../../components/CalendarModalButton";
 import Sidebar from "../../components/Sidebar";
 import "../../globals.css";
 import theme from '../../theme';
 import { PrimaryShift } from '../../types/types'; 
+
 
 const Calendar: React.FC = () => {
   const [shiftArray, setShiftArray] = useState<PrimaryShift [] | null>(null);
@@ -58,7 +60,7 @@ const Calendar: React.FC = () => {
   }
   
 
-  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={CalendarModalButton} />
+  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Cal} />
     <div className="post-btn">
       <button className="post-btn-retrieve" onClick={handler}>retrieve info</button>
       {(!shiftArray) ? (

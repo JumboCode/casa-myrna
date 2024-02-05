@@ -19,12 +19,12 @@ const BoxSx: FC = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: "flex",
         minHeight: "87vh",
         justifyContent: "flex",
-        alignItems:"center",
-        borderRadius: '5vh',
-        backgroundColor: "#f6f6f6"
+        alignItems: "center",
+        borderRadius: "5vh",
+        backgroundColor: "#f6f6f6",
       }}
     >
         <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 4, md: 5, lg: 12}}>
@@ -94,6 +94,6 @@ const BoxSx: FC = () => {
         </Grid>
     </Box>
   );
-}
+};
 
 export default BoxSx;
