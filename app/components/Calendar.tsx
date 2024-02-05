@@ -86,7 +86,7 @@ const calendar = () => {
     return {
       start: new Date(shift.from), 
       end: new Date(shift.to), 
-      title: shift.primaryShiftID.toString(), // we don't know what to assign this right now 
+      title: shift.firstName + " " + shift.lastName, // we don't know what to assign this right now 
       style: {
         opacity: .5,
         backgroundColor: background_color, 
