@@ -22,6 +22,8 @@ model primaryShift {
   from                 DateTime
   to                   DateTime
   status               Status  @default(PENDING)
+  firstName            String
+  lastName             String
   message              String
   phoneLine            Int
   created_at           DateTime

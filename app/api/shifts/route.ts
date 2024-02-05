@@ -51,7 +51,6 @@ export async function GET(req: NextRequest)
 
                 let shifts = await prisma.primaryShift.findMany({where: queryFilters})
                 return new Response(JSON.stringify(shifts))
-        
 }
 
 
