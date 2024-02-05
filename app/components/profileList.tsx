@@ -41,7 +41,10 @@ const ProfileList = ({ firstName, lastName, role, imageUrl }: { firstName: strin
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
-          <Button color="secondary"> edit </Button>
+          {/* Edit Employee modal here!! */}
+          {/* <Button color="secondary"> edit </Button> */}
+          
+          <EditEmployeeModal emailAddress={email} id={id}/>
           <IconButton color="secondary" aria-label="add and create">
             <CreateIcon />
           </IconButton>
