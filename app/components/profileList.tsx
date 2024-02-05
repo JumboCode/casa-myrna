@@ -8,9 +8,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
-import EditEmployeeModal from './EditEmployeeModal'
-const profileList = ({ firstName, lastName, role, imageUrl, email, id}: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string;}) => {
-  
+import { Grid } from '@mui/material';
+
+
+
+const ProfileList = ({ firstName, lastName, role, imageUrl }: { firstName: string; lastName: string; role: string; imageUrl: string }) => {
+  const truncate = (input: string | undefined, num: number): string => {
+    return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
+  };
+
   return (
     <Box
       sx={{
@@ -18,20 +24,20 @@ const profileList = ({ firstName, lastName, role, imageUrl, email, id}: { firstN
         boxShadow: 1,
         borderRadius: 2,
         minWidth: '93vh',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
       }}
     >
-      <Stack direction="row" spacing={20} justifyContent={'space-around'} paddingLeft='2%' paddingRight='2%' alignItems="stretch">
+      <Stack direction="row" spacing={20} justifyContent={'space-around'} paddingLeft='2%' paddingRight='15%%' >
         <Stack direction="row" spacing={3} alignItems={'center'} flexGrow={1}>
-          <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 25, height: 25 }} />
-            <Typography variant="body2" textAlign="center">
-              {firstName}
+          <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 25, height: 25 }}/>
+            <Typography variant="body2" align = "left" sx={{ width: 175, height: 25}}>
+              {truncate(firstName, 20)}
             </Typography>
-            <Typography variant="body2" textAlign="center" sx={{ flexGrow: 1 }}>
-            {lastName}
+          <Typography variant="body2" align = "left" sx={{ width: 175, height: 25}}>
+          {truncate(lastName, 20)}
             </Typography>
-            <Typography variant="body2" textAlign="center" sx={{ flexGrow: 1 }}>
-              {role}
+          <Typography variant="body2" align = "left" sx={{ width: 175, height: 25}}>
+          {truncate(role, 20)}
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
@@ -45,6 +51,13 @@ const profileList = ({ firstName, lastName, role, imageUrl, email, id}: { firstN
         </Stack>
       </Stack>
     </Box>
+
+
+
+
+
+
   );
 };
-export default profileList;
+
+export default ProfileList;

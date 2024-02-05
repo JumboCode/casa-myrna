@@ -21,7 +21,6 @@ import { profileData } from './types';
 // Custom components and images
 import profileList from "./profileList"
 import Image from "next/image";
-import Add from "../images/9.png"
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC, useEffect, useState } from 'react';
 import theme from '../theme';
@@ -195,7 +194,7 @@ const BoxSx: FC = () => {
 
                   {/* Select filters */}
                   <Grid container spacing={2} columns={3} paddingTop={'23%'}>
-                    <Grid item xs={2}>
+                    <Grid xs={2}>
                       <Select
                         fullWidth
                         value="" // Set the initial value to an empty string
@@ -209,7 +208,7 @@ const BoxSx: FC = () => {
                       </Select>
                     </Grid>
                     {/* Filter button */}
-                    <Grid item xs={1}>
+                    <Grid xs={1}>
                       <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">filter</Button>
                     </Grid>
                   </Grid>
