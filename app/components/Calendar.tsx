@@ -1,45 +1,41 @@
-import * as React from 'react';
+// big calendar related imports
+import React, { useState } from "react";
+import { render } from "react-dom";
+import { 
+  Calendar as BigCalendar, 
+  CalendarProps, 
+  momentLocalizer,
+  type View, Views } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
+
+// MUI imports
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import moment from 'moment';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
-const MyCalendar = (props: { events: any; }) => {
-  const { events } = props; // Extract events from props
+// Sample Events
+const myEventsList = [
+  // {
+  //   start: moment("2024-02-22T10:00:00"),  // February 22, 2024, 10:00 AM
+  //   end: moment("2024-02-22T11:00:00"),   // February 22, 2024, 12:00 PM
+  //   title: 'Meeting with Client',
+  // },
+  // {
+  //   start: moment("2024-02-23T14:00:00"),  // February 23, 2024, 2:00 PM
+  //   end: moment("2024-02-23T16:00:00"),   // February 23, 2024, 4:00 PM
+  //   title: 'Team Workshop',
+  // },
+];
 
-  return (
-    <div style={{ height: '500px' }}>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ margin: '50px' }}
-        defaultView={'week'}
-      />
-    </div>
-  );
-};
+// export default function Calendar(props: Omit<CalendarProps, "localizer">){
+export const Calendar: React.FC<{}> = ({}) => {
 
-const calendar = () => {
-  const events = [
-    {
-      start: new Date(2024, 0, 22, 10, 0),
-      end: new Date(2024, 0, 22, 12, 0),
-      title: 'Meeting with Client',
-    },
-    {
-      start: new Date(2024, 0, 23, 14, 0),
-      end: new Date(2024, 0, 23, 16, 0),
-      title: 'Team Workshop',
-    },
-  ];
+  const [view, setView] = useState(Views.WEEK as View);
 
   return (
     <Box
@@ -56,7 +52,7 @@ const calendar = () => {
         marginRight: '5%',
       }}
     >
-      <Grid container spacing={2} columns={20} paddingTop="2%">
+      <Grid container spacing={2} columns={20} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
           <Typography variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
@@ -75,12 +71,23 @@ const calendar = () => {
           </Select>
         </Grid>
       </Grid>
-
+      
+      {/* Calendar */}
       <Grid paddingBottom={'4%'}>
-        <MyCalendar events={events} />
+        <div style={{height: '500px',  margin: '6%'}}>
+          <BigCalendar
+            events={myEventsList}
+            startAccessor="start"
+            endAccessor="end"
+            defaultDate={moment().toDate()}
+            localizer={localizer}
+            defaultView={'month'}
+            views={['month', 'week', 'day']}
+          />
+        </div>
       </Grid>
     </Box>
   );
 };
 
-export default calendar;
+export default Calendar;
