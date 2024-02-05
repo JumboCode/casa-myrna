@@ -3,7 +3,7 @@
 import { Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React, { ReactElement } from "react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 import "./globals.css";
 import theme from './theme';
 

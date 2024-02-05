@@ -3,4 +3,6 @@ export interface profileData {
     lastName: string;
     role: string;
     image: string;
+    emailAddresses: [];
+    id: string;
   }
