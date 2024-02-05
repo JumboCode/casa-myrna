@@ -40,7 +40,7 @@ const style = {
         emailAddress: string;
       };
       
-const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress }, { id }) => {
+const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id }) => {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     
