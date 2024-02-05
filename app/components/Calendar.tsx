@@ -32,7 +32,8 @@ const myEventsList = [
   },
 ];
 
-export default function Calendar(props: Omit<CalendarProps, "localizer">){
+// export default function Calendar(props: Omit<CalendarProps, "localizer">){
+export const Calendar: React.FC<{}> = ({}) => {
 
   const [view, setView] = useState(Views.WEEK as View);
 
@@ -75,17 +76,18 @@ export default function Calendar(props: Omit<CalendarProps, "localizer">){
       <Grid paddingBottom={'4%'}>
         <div style={{height: '500px',  margin: '6%'}}>
           <BigCalendar
-            {...props}
             events={myEventsList}
             startAccessor="start"
             endAccessor="end"
             defaultDate={moment().toDate()}
             localizer={localizer}
-            // defaultView={'month'}
-            // views={['month', 'week', 'day']}
+            defaultView={'month'}
+            views={['month', 'week', 'day']}
           />
         </div>
       </Grid>
     </Box>
   );
 };
+
+export default Calendar;
