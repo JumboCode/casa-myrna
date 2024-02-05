@@ -17,7 +17,7 @@ const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { first
   const truncate = (input: string | undefined, num: number): string => {
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
-
+  
   return (
     <Box
       sx={{
