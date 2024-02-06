@@ -64,7 +64,6 @@ const BoxSx: FC = () => {
         }
 
         const data = await response.json();
-        console.log(data)
         setPeopleArray(data);
       } catch (error) {
         console.error('Error fetching people data:', error);
