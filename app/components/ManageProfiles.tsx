@@ -36,7 +36,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
           {profileList({
             firstName: person.firstName,
             lastName: person.lastName,
-            role: person.role,
+            publicMetadata: person.publicMetadata["role"],
             imageUrl: person.image,
             email: person.emailAddresses[0]?.emailAddress,
             id: person.id
@@ -47,10 +47,13 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
   </div>
 );
 
+
+
 const BoxSx: FC = () => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [activePage, setActivePage] = React.useState(1);
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string | null> ("All");
 
   useEffect(() => {
     const fetchPeopleData = async () => {
@@ -71,16 +74,21 @@ const BoxSx: FC = () => {
     fetchPeopleData();
   }, []);
 
+  const handleChange = (event: any) => {
+    setSelectedFilter(event.target.value)
+  };
+
   const usePagination = (people: profileData[], page = 1, perPage = 5) => {
     const filteredPeople = people.filter((person) =>
       [
         person.firstName,
         person.lastName,
-        person.role, // Check if 'role' property exists
+        person.publicMetadata["role"], // Check if 'role' property exists
         person.emailAddresses[0]?.emailAddress,
       ].some((value) =>
-        value?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      value?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) 
+      && (selectedFilter === "All" || person.publicMetadata["role"] === selectedFilter)
     );
 
     const totalPages = Math.ceil(filteredPeople.length / perPage);
@@ -149,32 +157,6 @@ const BoxSx: FC = () => {
                   <Button fullWidth sx={{ borderRadius: '15px', backgroundColor: "#89B839", '&:hover': { backgroundColor: theme.palette.primary.main }, textTransform: 'none' }} variant="contained">search</Button>
                 </Grid>
               </Grid>
-
-              {/* Applied filters */}
-              <Grid container spacing={2} xs={12} paddingTop='2%' alignItems="center">
-                <Grid xs={2}>
-                  <Typography variant="body2">applied filters:</Typography>
-                </Grid>
-                <Grid xs={10}>
-                  <TextField
-                    defaultValue="    All"
-                    InputProps={{
-                      readOnly: true,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <ClearIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{
-                      backgroundColor: '#FFFFFF',
-                      borderRadius: '10px',
-                      width: '70%',
-                    }}
-                    variant="standard"
-                  />
-                </Grid>
-              </Grid>
             </Grid>
 
             {/* Right side of header */}
@@ -188,17 +170,17 @@ const BoxSx: FC = () => {
                 <Grid xs={2}>
                   <Select
                     fullWidth
-                    value=""
+                    onChange={handleChange}
+                    defaultValue="All"
                     displayEmpty
                     sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', height: '38px' }}
                   >
-                    <MenuItem value="" disabled>
-                      Select filters
-                    </MenuItem>
+                    <MenuItem value="All"> All </MenuItem>
+                    <MenuItem value="Relief Staff"> Relief Staff </MenuItem>
+                    <MenuItem value="Management"> Management </MenuItem>
+                    <MenuItem value="Full-time Staff"> Full-time Staff </MenuItem>
+                    <MenuItem value="Part-time Staff"> Part-time Staff </MenuItem>
                   </Select>
-                </Grid>
-                <Grid xs={1}>
-                  <Button fullWidth sx={{ borderRadius: '15px', backgroundColor: "#89B839", '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">filter</Button>
                 </Grid>
               </Grid>
             </Grid>
