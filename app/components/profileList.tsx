@@ -15,7 +15,6 @@ import EditEmployeeModal from './EditEmployeeModal'
 
 const ProfileList = ({ firstName, lastName, publicMetadata, imageUrl, email, id }: { firstName: string; lastName: string; publicMetadata: string; imageUrl: string; email: string; id: string; }) => {
   const truncate = (input: string | undefined, num: number): string => {
-    console.log(input)
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
   
