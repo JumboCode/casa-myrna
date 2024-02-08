@@ -1,5 +1,6 @@
 // big calendar related imports
 import React, { useState } from "react";
+import Popper, { PopperPlacementType } from '@mui/material/Popper';
 import { render } from "react-dom";
 import { 
   Calendar as BigCalendar, 
@@ -31,6 +32,18 @@ const myEventsList = [
   //   title: 'Team Workshop',
   // },
 ];
+
+const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+const [open, setOpen] = React.useState(false);
+const [placement, setPlacement] = React.useState<PopperPlacementType>();
+
+const handleClick =
+    (newPlacement: PopperPlacementType) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+      setOpen((prev) => placement !== newPlacement || !prev);
+      setPlacement(newPlacement);
+    };
 
 // export default function Calendar(props: Omit<CalendarProps, "localizer">){
 export const Calendar: React.FC<{}> = ({}) => {
