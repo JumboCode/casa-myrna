@@ -1,5 +1,5 @@
 // big calendar related imports
-import React, { useState } from "react";
+import React, { useState, useMemo} from "react";
 import Popper, { PopperPlacementType } from '@mui/material/Popper';
 import { render } from "react-dom";
 import { 
@@ -17,6 +17,18 @@ import { Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
+import InputLabel from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 const localizer = momentLocalizer(moment);
 
 // Sample Events
@@ -33,22 +45,14 @@ const myEventsList = [
   // },
 ];
 
-const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-const [open, setOpen] = React.useState(false);
-const [placement, setPlacement] = React.useState<PopperPlacementType>();
+// const containsText = (text, searchText) => text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+const employeeOptions = ["Ana Quieros", "Anna Seifield", "Anne Brown", "Angel Ferrian"];
 
-const handleClick =
-    (newPlacement: PopperPlacementType) =>
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-      setOpen((prev) => placement !== newPlacement || !prev);
-      setPlacement(newPlacement);
-    };
 
-// export default function Calendar(props: Omit<CalendarProps, "localizer">){
 export const Calendar: React.FC<{}> = ({}) => {
 
   const [view, setView] = useState(Views.WEEK as View);
+
 
   return (
     <Box
@@ -73,15 +77,77 @@ export const Calendar: React.FC<{}> = ({}) => {
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
-          <Select
+            {/* Controls the width of the box Select Box */}
+            <FormControl sx={{ m: 1, minWidth: 200 }}>
+                <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
+                  <Select autoWidth={true} defaultValue="" id="grouped-select" label="Grouping">
+                      <Grid container direction='row' spacing={1} marginRight={2}>
+
+                          {/* EMPLOYEE NAME Column */}
+                          <Grid container direction='column' spacing={1}>
+                              <Grid sx={{ml:2}}>
+                                  <ListSubheader> <b>Employee Name</b></ListSubheader>
+                                  <Autocomplete
+                                    disablePortal
+                                    options={employeeOptions}
+                                    sx={{ width: 200 }}
+                                    renderInput={(params) => <TextField {...params} label="Employee Name" />}
+                                  />
+                              </Grid>
+                          </Grid>
+
+                          {/* EMPLOYEE TYPE Column */}
+                          <Grid container direction='column' spacing={1}>
+                              <Grid>
+                                  <ListSubheader> <b>Employee Type</b></ListSubheader>
+                                  <FormGroup sx={{px:2}}>
+                                      <FormControlLabel control={<Checkbox />} label="Part Time" />
+                                      <FormControlLabel control={<Checkbox />} label="Full Time" />
+                                      <FormControlLabel control={<Checkbox />} label="Manager" />
+                                  </FormGroup>
+                              </Grid>
+                          </Grid>
+
+                          {/* PHONE LINE Column */}
+                          <Grid container direction='column' spacing={1}>
+                              <Grid>
+                                  <ListSubheader> <b>Phone Line</b></ListSubheader>
+                                  <FormGroup sx={{px:2}}>
+                                      <FormControlLabel control={<Checkbox />} label="Line 1" />
+                                      <FormControlLabel control={<Checkbox />} label="Line 2" />
+                                      <FormControlLabel control={<Checkbox />} label="Line 3" />
+                                      <FormControlLabel control={<Checkbox />} label="On Call" />
+                                  </FormGroup>
+                              </Grid>
+                          </Grid>
+
+                          {/* SHIFT STATUS Column */}
+                          <Grid container direction='column' spacing={1}>
+                              <Grid>
+                                  <ListSubheader> <b>Shift Status</b></ListSubheader>
+                                  <FormGroup sx={{px:2}}>
+                                      <FormControlLabel control={<Checkbox />} label="Approved" />
+                                      <FormControlLabel control={<Checkbox />} label="Pending" />
+                                      <FormControlLabel control={<Checkbox />} label="Cancelled" />
+                                  </FormGroup>
+                              </Grid>
+                          </Grid>
+                          
+                      </Grid>
+                  </Select>
+            </FormControl>
+          {/* <Select
             value=""
             displayEmpty
             sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: '200px', height: '38px' }}
           >
-            <MenuItem value="" disabled>
+            <MenuItem value="">
               Choose filters
             </MenuItem>
-          </Select>
+            <MenuItem value="">
+              Choose me
+            </MenuItem>
+          </Select> */}
         </Grid>
       </Grid>
       
