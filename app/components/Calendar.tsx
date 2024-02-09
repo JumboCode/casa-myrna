@@ -88,9 +88,9 @@ export const Calendar: React.FC<{}> = ({}) => {
                               <Grid sx={{ml:2}}>
                                   <ListSubheader> <b>Employee Name</b></ListSubheader>
                                   <Autocomplete
-                                    disablePortal
+                                    
                                     options={employeeOptions}
-                                    sx={{ width: 200 }}
+                                    sx={{ width: 175 }}
                                     renderInput={(params) => <TextField {...params} label="Employee Name" />}
                                   />
                               </Grid>
@@ -100,7 +100,7 @@ export const Calendar: React.FC<{}> = ({}) => {
                           <Grid container direction='column' spacing={1}>
                               <Grid>
                                   <ListSubheader> <b>Employee Type</b></ListSubheader>
-                                  <FormGroup sx={{px:2}}>
+                                  <FormGroup sx={{px:1.5}}>
                                       <FormControlLabel control={<Checkbox />} label="Part Time" />
                                       <FormControlLabel control={<Checkbox />} label="Full Time" />
                                       <FormControlLabel control={<Checkbox />} label="Manager" />
@@ -112,7 +112,7 @@ export const Calendar: React.FC<{}> = ({}) => {
                           <Grid container direction='column' spacing={1}>
                               <Grid>
                                   <ListSubheader> <b>Phone Line</b></ListSubheader>
-                                  <FormGroup sx={{px:2}}>
+                                  <FormGroup sx={{px:1.5}}>
                                       <FormControlLabel control={<Checkbox />} label="Line 1" />
                                       <FormControlLabel control={<Checkbox />} label="Line 2" />
                                       <FormControlLabel control={<Checkbox />} label="Line 3" />
@@ -125,7 +125,7 @@ export const Calendar: React.FC<{}> = ({}) => {
                           <Grid container direction='column' spacing={1}>
                               <Grid>
                                   <ListSubheader> <b>Shift Status</b></ListSubheader>
-                                  <FormGroup sx={{px:2}}>
+                                  <FormGroup sx={{px:1.5}}>
                                       <FormControlLabel control={<Checkbox />} label="Approved" />
                                       <FormControlLabel control={<Checkbox />} label="Pending" />
                                       <FormControlLabel control={<Checkbox />} label="Cancelled" />
