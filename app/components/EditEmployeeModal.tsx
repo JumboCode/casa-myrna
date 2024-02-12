@@ -16,6 +16,14 @@ import UploadImage from '../images/6.png';
 import Select from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
 import { profileData } from './types';
+import DeleteConfirmModal from './DeleteConfirmModal';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import DialogActions from '@mui/joy/DialogActions';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DeleteForever from '@mui/icons-material/DeleteForever';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -40,16 +48,43 @@ const style = {
         emailAddress: string;
       };
       
-const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id }) => {
+const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress }) => {
+    
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
-    
+    const [openM, setOpenM] = useState(false);
        
     const [user, setUser] = useState({ firstName: '', lastName: '', email: '', role: '', pronouns: '', phoneNumber: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [idString, setidString] = useState({ id: ''});
     
+    const handleDelete = async (e: { preventDefault: () => void; }) => {
+        setOpenM(false);
+        e.preventDefault();
+        try {
+            
+            /* Delete user from the database with specified unique id*/
+            const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to delete employee');
+            }
+    
+            const user = await response.json();
+    
+            /* Show a success message and reload the page immediately */
+            console.log("Employee was successfully deleted - refresh the page");
+            location.reload(); /* Reload page to see change was successful */
+        } catch (error) {
+            console.error('Error deleting employee:', error);
+        }
+    };
     /* Fetches user data when 'edit' button is clicked for that user email passed into Modal */
     const fetchUserByEmail = async () => {
         setOpen(true);
@@ -133,32 +168,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
         });
     };
 
-    /* Handle Deleting an employee */
-    const handleDelete = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        try {
-            
-            /* Delete user from the database with specified unique id*/
-            const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-  
-            if (!response.ok) {
-                throw new Error('Failed to delete employee');
-            }
-  
-            const user = await response.json();
-
-            /* Show a success message and reload the page immediately */
-            console.log("Employee was successfully deleted - refresh the page");
-            location.reload(); /* Reload page to see change was successful */
-        } catch (error) {
-            console.error('Error deleting employee:', error);
-        }
-    };
+   
 
     /* Creates data to send to the database in the proper format upon submission */
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -280,7 +290,10 @@ return (
                     variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign ='center' paddingTop='15%' paddingRight='15%' paddingLeft='20%' sx = {{ display:'flex', justifyContent:'right'}}>
-                    <Button type="button" onClick={handleDelete} sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#2E0057"}, textTransform: 'none'}}variant="contained">Delete Employee</Button>
+                    {/* <DeleteConfirmModal idString = {idString.id}/> */}
+                    <Button type="button" onClick={() => setOpenM(true)} sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#2E0057"}, textTransform: 'none'}}variant="contained">Delete Employee
+                        
+                    </Button>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
@@ -334,6 +347,27 @@ return (
            
             </Box>
             </Modal>
+            {/* <Modal open={open} onClose={() => setOpenM(false)}>
+  
+                <ModalDialog >
+                <DialogTitle>
+                    <WarningRoundedIcon />
+                    Confirmation
+                </DialogTitle>
+                <Divider />
+                <DialogContent>
+                    Are you sure you want to delete the profile?
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" color="error" onClick={handleDelete}>
+                    Delete Profile
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={() => setOpenM(false)}>
+                    Cancel
+                    </Button>
+                </DialogActions>
+                </ModalDialog>
+            </Modal> */}
             </div> )
      
 };

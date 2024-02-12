@@ -11,11 +11,28 @@ import Image from 'next/image';
 import UploadImage from '../images/6.png';
 import { auth } from '@clerk/nextjs';
 import { useUser } from "@clerk/nextjs";
+import {useState} from 'react';
 
 
 const BoxSx: FC = () => {
     const theme = useTheme();
     const { isSignedIn, user, isLoaded } = useUser();
+    /* Default initial form data, prior to updates */
+    const initialFormData = {
+        pronouns: '',
+};
+
+/* This updates the submit form data with the fetched user data */
+const [formData, setFormData] = useState(initialFormData);
+
+/* Handle input change */
+const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData,
+        [name]: value,
+    });
+};
   return (
     <Box
       sx={{
@@ -71,7 +88,7 @@ const BoxSx: FC = () => {
                     <Typography variant="h4" >
                         Pronouns
                     </Typography>
-                    <TextField defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
+                    <TextField onChange={handleInputChange} defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: false, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
                     <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
                         <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
                 </Grid>
