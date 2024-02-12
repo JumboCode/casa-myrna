@@ -31,6 +31,7 @@ type Event = {
         opacity: number, 
         backgroundColor: string, 
     }
+    phoneLine: number, 
 }
 
 type BackupShift = {}
