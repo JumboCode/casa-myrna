@@ -9,28 +9,6 @@ import theme from "../../theme";
 import { Protect } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 
-// const employerManageProfiles: React.FC = () => {
-//     const { isSignedIn, user, isLoaded } = useUser();
-//   if (2 + 2 == 4) {
-//     return (
-//       <ThemeProvider theme={theme}>
-//         <Sidebar currentPageComponent={ManageProfiles} />
-//       </ThemeProvider>
-//     );
-//   } else {
-//     return (
-//       <Protect
-//         role="org:admin"
-//         fallback={<p>Only an admin can access this content.</p>}
-//       >
-//         <ThemeProvider theme={theme}>
-//           <Sidebar currentPageComponent={ManageProfiles} />
-//         </ThemeProvider>
-//       </Protect>
-//     );
-//   }
-// };
-
 const employerManageProfiles: React.FC = () => {
   const { isSignedIn, user, isLoaded } = useUser();
   if (user?.publicMetadata.role == "Coordinator") {
