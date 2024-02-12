@@ -9,10 +9,11 @@ import Button from '@mui/material/Button';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 import { Grid } from '@mui/material';
+import EditEmployeeModal from './EditEmployeeModal'
 
 
 
-const ProfileList = ({ firstName, lastName, role, imageUrl }: { firstName: string; lastName: string; role: string; imageUrl: string }) => {
+const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string; }) => {
   const truncate = (input: string | undefined, num: number): string => {
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
@@ -41,7 +42,10 @@ const ProfileList = ({ firstName, lastName, role, imageUrl }: { firstName: strin
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
-          <Button color="secondary"> edit </Button>
+          {/* Edit Employee modal here!! */}
+          {/* <Button color="secondary"> edit </Button> */}
+          
+          <EditEmployeeModal emailAddress={email} id={id}/>
           <IconButton color="secondary" aria-label="add and create">
             <CreateIcon />
           </IconButton>
