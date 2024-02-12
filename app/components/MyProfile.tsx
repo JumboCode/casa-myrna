@@ -11,6 +11,7 @@ import Image from 'next/image';
 import UploadImage from '../images/6.png';
 import { auth } from '@clerk/nextjs';
 import { useUser } from "@clerk/nextjs";
+import InputFileUpload from './UploadPic';
 
 
 const BoxSx: FC = () => {
@@ -38,10 +39,7 @@ const BoxSx: FC = () => {
                     <Avatar alt="Remy Sharp" sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
-                    <Button variant="outlined" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
-                        <Image src={UploadImage} alt="upload image" width={20} height={20} />
-                        Upload Picture
-                    </Button>
+                       <InputFileUpload/>
                 </Grid>
             </Grid>
             {/* This is column 1 */}
