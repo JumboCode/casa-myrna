@@ -52,18 +52,18 @@ export const Calendar: React.FC<{}> = ({}) => {
         marginRight: '5%',
       }}
     >
-      <Grid container spacing={2} columns={20} paddingTop="2%" marginRight='4%'>
+      <Grid container spacing={2} columns={{lg:20, xs:30}} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
-          <Typography variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
+          <Typography display={{xs: 'none', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
         </Grid>
 
-        <Grid xs={5} paddingTop="8%">
+        <Grid xs={5} paddingTop='8%'>
           <Select
             value=""
             displayEmpty
-            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: '200px', height: '38px' }}
+            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: {lg:'95%'}, height: {lg:'65%', xs:'35%'},}}
           >
             <MenuItem value="" disabled>
               Choose filters
