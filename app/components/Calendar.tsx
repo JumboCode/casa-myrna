@@ -30,7 +30,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import CalendarModalButton from "./CalendarModalButton";
 
+ 
 const localizer = momentLocalizer(moment);
 
 // Sample Events
@@ -113,8 +115,10 @@ export const Calendar: React.FC<{}> = ({}) => {
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
+            <CalendarModalButton/>
             {/* Controls the width of the box Select Box */}
-            <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <FormControl sx={{ m: 1, minWidth: 160 }}>
+
                 <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
                   {/* Menu props align the popup */}
                   <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}}>
