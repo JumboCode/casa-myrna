@@ -16,10 +16,17 @@ import {useState} from 'react';
 
 const BoxSx: FC = () => {
     const theme = useTheme();
+    
     const { isSignedIn, user, isLoaded } = useUser();
+    console.log(user?.id)
     /* Default initial form data, prior to updates */
     const initialFormData = {
+        firstName: '',
+        lastName: '',
+        emailAddress: '',
+        role: '',
         pronouns: '',
+        phoneNumber:''
 };
 
 /* This updates the submit form data with the fetched user data */
@@ -33,6 +40,53 @@ const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         [name]: value,
     });
 };
+const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    if (!user) {
+        console.error('User data is not loaded yet.');
+        return;
+      }
+      console.log(formData)
+    e.preventDefault();
+    try {
+
+        /* Match specification of database, different from form data formatting */
+        const finalFormData = {
+            publicMetadata: {
+                firstName: user?.firstName,
+                lastName: user?.lastName,
+                emailAddress: user?.emailAddresses,
+                role: user?.publicMetadata.role,
+                pronouns: formData.pronouns,
+                phoneNumber: user?.publicMetadata.phoneNumber,
+            },
+        };
+        
+        let uid = user?.emailAddresses
+        /* Update the database with the new fields*/
+        const response = await fetch(`/api/users?id=${user?.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(finalFormData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to edit employee');
+        }
+
+
+        /* Close the modal and show a success message */
+        console.log("Employee was successfully added - refresh the page");
+        location.reload(); /* Reload page to see change was successful */
+    } catch (error) {
+        console.error('Error editing employee:', error);
+    }
+
+    // setFormData(initialFormData);
+
+};
+
   return (
     <Box
       sx={{
@@ -44,6 +98,7 @@ const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         backgroundColor: "#f6f6f6",
       }}
     >
+        <form >
         <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 4, md: 5, lg: 12}}>
            <Grid container spacing={4} direction='column' justifyContent='center' alignItems='center'>
                 <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='15%'>
@@ -88,7 +143,7 @@ const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
                     <Typography variant="h4" >
                         Pronouns
                     </Typography>
-                    <TextField onChange={handleInputChange} defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: false, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
+                    <TextField name="pronouns" onChange={handleInputChange} defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: false, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
                     <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
                         <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
                 </Grid>
@@ -105,10 +160,11 @@ const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
                     <TextField defaultValue={user?.publicMetadata.phoneNumber} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%' sx = {{ display:'flex', justifyContent:'flex-end'}}>
-                    <Button sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
+                    <Button onClick={handleSubmit} sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
                 </Grid>
             </Grid>
         </Grid>
+        </form>
     </Box>
   );
 };
