@@ -52,10 +52,12 @@ const BoxSx: FC = () => {
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
-                        Last Name
+                        Pronouns
                     </Typography>
-                    <TextField defaultValue={user?.lastName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
-                </Grid>
+                        <TextField defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
+                        <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
+                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
+                      </Grid> 
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
                         Email
@@ -67,11 +69,11 @@ const BoxSx: FC = () => {
             <Grid container spacing={4} direction='column' alignItems='flex-start' paddingTop='12%' paddingBottom='10%'>
                 <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
-                        Pronouns
+                        Last Name
                     </Typography>
-                    <TextField defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
-                    <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
-                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
+                    <TextField defaultValue={user?.lastName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                     {/* <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
+                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button> */}
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
