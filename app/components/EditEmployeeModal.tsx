@@ -85,7 +85,8 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
                     emailAddress: emailAddress,
                     role: userObject.publicMetadata.role,
                     pronouns: userObject.publicMetadata.pronouns,
-                    phoneNumber: userObject.publicMetadata.phoneNumber
+                    phoneNumber: userObject.publicMetadata.phoneNumber,
+                    hasImgae: true
                     
             });
 
@@ -109,7 +110,8 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
             emailAddress: '',
             role: '',
             pronouns: '',
-            phoneNumber:''
+            phoneNumber:'',
+            hasImgae: false
     };
  
     /* This updates the submit form data with the fetched user data */
@@ -175,6 +177,8 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
                     pronouns: formData.pronouns,
                     phoneNumber: formData.phoneNumber,
                 },
+                
+                hasImgae: false
             };
             
             /* Update the database with the new fields*/

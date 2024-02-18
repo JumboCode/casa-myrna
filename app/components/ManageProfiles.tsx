@@ -47,7 +47,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
             firstName: person.firstName,
             lastName: person.lastName,
             role: person.role,
-            imageUrl: person.image,
+            imageUrl: person.imageUrl,
             email: person.emailAddresses[0].emailAddress,
             id: person.id
           })}
