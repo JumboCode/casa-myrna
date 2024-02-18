@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CreateIcon from '@mui/icons-material/Create';
-import IconButton from '@mui/material/IconButton';
+import IconButton from '@mui/icons-material/Create';
 import { Grid } from '@mui/material';
 import EditEmployeeModal from './EditEmployeeModal'
 
@@ -42,13 +42,7 @@ const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { first
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
-          {/* Edit Employee modal here!! */}
-          {/* <Button color="secondary"> edit </Button> */}
-          
           <EditEmployeeModal emailAddress={email} id={id}/>
-          <IconButton color="secondary" aria-label="add and create">
-            <CreateIcon />
-          </IconButton>
         </Stack>
       </Stack>
     </Box>
