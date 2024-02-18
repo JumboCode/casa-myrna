@@ -9,25 +9,58 @@ import { FC, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
-import { auth } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
+import Clerk from '@clerk/clerk-js';
+
 // import InputFileUpload from "./UploadPic";
 
 const BoxSx: FC = () => {
   const theme = useTheme();
   const { isSignedIn, user, isLoaded } = useUser();
 
+  if (!user) {
+    console.error('User data is not loaded yet.');
+    return;
+  }
   const [imageUrl, setImageUrl] = useState("");
+  
 
-  const handleImageChange = (event: any) => {
+
+// Add or update a profile image to a Clerk user
+async function uploadProfileImage(imageFile) {
+    const params = {
+      file: imageFile, 
+    };
+  
+    try {
+      // Call the setProfileImage function with the params
+      const result = await user.setProfileImage(params);
+  
+      // Handle the result
+      console.log('Profile image set successfully:', result);
+    } catch (error) {
+      // Handle any errors that occur during the image upload
+      console.error('Failed to set profile image:', error);
+    }
+  }
+
+const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+  
+      // Convert the onloadend handler into an async function
+      reader.onloadend = async () => {
         if (reader.result !== null) {
-          setImageUrl(reader.result as string);
+          const imageUrl = reader.result as string;
+          setImageUrl(imageUrl);
+            console.log("image: ", imageUrl)
+            console.log("user:", user)
+            uploadProfileImage(imageUrl)
         }
       };
+  
+      // Start reading the file as Data URL
       reader.readAsDataURL(file);
     }
   };
@@ -90,7 +123,7 @@ const BoxSx: FC = () => {
           >
             <Avatar
               alt="Remy Sharp"
-              src={imageUrl}
+              src={user.imageUrl}
               sx={{ width: 200, height: 200 }}
             />
           </Grid>
