@@ -1,20 +1,18 @@
 "use client"
 
-import { FC, useState } from 'react'
+// Import necessary dependencies and components
+import { FC, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import "@/app/calendar/[[...calendar]]/calendar.css"
-import Modal from "@mui/material/Modal"
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
-import Stack from '@mui/material/Stack';
-import React from 'react';
-import { Grid, MenuItem, Select, TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { Grid, MenuItem, Select } from '@mui/material';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { format, parse } from 'date-fns';
 import theme from '../theme';
-import { POST } from '../api/shifts/route.ts';
-
-// Date Picker
+// Add employee modal functionality imports
+import { POST } from '../api/shifts/route';
+import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -61,58 +59,98 @@ const style = {
         }
     }
   }; 
-const CalendarModalButton: FC = () => {
-    const [openModal, setOpenModal] = useState<boolean>(false);
-    const showModal = () => setOpenModal(true);
-    const closeModal = () => setOpenModal(false);
-    
 
+const initialFormData = {
+    startDate: '',
+    endDate: '',
+    startTime: '',
+    endTime: '',
+    assignedEmployee: '',
+    phoneLine: ''
+};
+
+const CalendarModalButton: FC = () => {
+    const prisma = new PrismaClient();
+    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    
-    const [startDate, setStartDate] = useState(new Date());
 
-    const initialFormData = {
-        
-        phoneLine:'',
-        startTime:'',
-        endTime:'',
-        assignedEmployee:'',
-      };
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
-    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+
+    // Handle form input change
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
-    const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
-      const { name, value } = event.target;
+
+    const formatDateAndTime = (date: Date, time: string): string => {
+        const formattedDate = date.toISOString().split('T')[0];
+        const [timeString, period] = time.split(' ');
     
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
+        let [hours, minutes] = timeString.split(':');
+        hours = parseInt(hours, 10);
+    
+        if (period.toLowerCase() === 'pm' && hours !== 12) {
+            hours += 12;
+        } else if (period.toLowerCase() === 'am' && hours === 12) {
+            hours = 0;
+        }
+    
+        const formattedTime = `${formattedDate}T${hours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00.000Z`;
+        return formattedTime;
     };
     
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    // Handle form submission (IN PROGRESS)
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const formattedStartDate = startDate.toISOString();
+        const formattedStartTime = formatDateAndTime(startDate, formData.startTime);
+        const formattedEndDate = endDate.toISOString();
+        const formattedEndTime = formatDateAndTime(endDate, formData.endTime);
+        const createdAt = new Date().toISOString();
+
+        const requestData = {
+            ...formData,
+            date: formattedStartDate,
+            from: formattedStartTime,
+            to: formattedEndTime,
+            created_at: createdAt
+        };
+
+        // See console to see the form data being sent to POST
+        console.log('Request Payload:', requestData);
+
         try {
-            const response = await POST('/api/shifts', formData);
-    
+            const response = await POST('/api/shifts/route', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            });
+
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
             }
-    
+
             const result = await response.json();
             console.log('Shift assigned successfully:', result);
+
+            // Reset form data after successful submission
+            setFormData(initialFormData);
+            handleClose();
         } catch (error) {
             console.error('Error assigning shift:', error);
         }
-        setFormData(initialFormData);
     };
+
+    useEffect(() => {
+        return () => prisma.$disconnect();
+      }, []);
 
     return (
         <>
@@ -156,21 +194,17 @@ const CalendarModalButton: FC = () => {
 
                         {/* Start Date */}
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <div component={['DatePicker']}>
-                                <DatePicker 
-                                    label="Start Date"
-                                    sx={{  marginRight: '10px',width: '180px' }}
-                                    // value={startDate} 
-                                    // onChange={(newValue) => setStartDate(newValue)} 
-                                    // renderInput={(params) => <TextField {...params} label="Start Date" />} 
+                            <DatePicker 
+                                label="Start Date"
+                                onChange={(newValue) => setStartDate(newValue)} 
+                                sx={{  marginRight: '10px',width: '180px' }}
                                 />
-                            </div>
                         </LocalizationProvider>
                         
                         <Select
                             name="startTime"
                             value={formData.startTime}
-                            onChange={handleSelectChange}
+                            onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                         <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
@@ -207,12 +241,8 @@ const CalendarModalButton: FC = () => {
                             <div component={['DatePicker']} >
                                 <DatePicker 
                                     label="End Date"
+                                    onChange={(newValue) => setEndDate(newValue)} 
                                     sx={{ marginRight: '10px',width: '180px' }}
-                                    // inputProps={{ size: 'small' }}
-                                    // style={{ height: '50%'}}
-                            //         value={endDate}
-                            //         onChange={(newValue) => setEndDate(newValue)}
-                            //         renderInput={(params) => <TextField {...params} label="End Date" />}
                                 />
                             </div>
                         </LocalizationProvider>
@@ -220,7 +250,7 @@ const CalendarModalButton: FC = () => {
                         <Select
                             name="endTime"
                             value={formData.endTime}
-                            onChange={handleSelectChange}
+                            onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                             <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
@@ -256,7 +286,7 @@ const CalendarModalButton: FC = () => {
                         <Select
                             name="assignedEmployee"
                             value={formData.assignedEmployee}
-                            onChange={handleSelectChange}
+                            onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                         <MenuItem value={'Carly Seigel'}>Carly Seigel</MenuItem>
@@ -270,7 +300,7 @@ const CalendarModalButton: FC = () => {
                             <Select
                             name="phoneLine"
                             value={formData.phoneLine}
-                            onChange={handleSelectChange}
+                            onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                             >
                             <MenuItem value={'1'}>1</MenuItem>
@@ -288,8 +318,7 @@ const CalendarModalButton: FC = () => {
                         </Grid>
                         {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
                         <Grid item xs={3}>
-                            {/* <Button input type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained" >Assign Shift</Button> */}
-                            <Button type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
+                            <Button type="submit" variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
                         </Grid>
                     </Grid>
                     </Grid>    
