@@ -1,60 +1,41 @@
 ## CASA-MYRNA
-## PR EXAMPLE
-Developer: Elizabeth Foster
-Dates: October 15th - October 15th
-Time spent: 1 hour
-
-Summary
-Update from "hello" to "hi" in page.tsx file
-
-Testing
-
- - Before: Screenshot 2023-10-15 at 6 24 58 PM
-
- - After: Screenshot 2023-10-15 at 7 06 18 PM
-
-Reflection
-Ran into some unexpected git branch errors, but they got resolved! Also learned about the .env.local file ( thank you Nishika for explaining <3 )
 ## Git Do's and Don'ts
-*DON'T
+*DON'T 
+  - UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
+  - don't push to dev directly, you should be working on a different branch as dev will be the branch we push our most up to date code to
+  - don't handle merge conflicts without Elizabeth or Nishika being present
+  - don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! reach out to Nishika if this does happen and she will help!
 
-UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
-don't push to dev directly, you should be working on a different branch as dev will be the branch we push our most up to date code to
-don't handle merge conflicts without Elizabeth or Nishika being present
-don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! reach out to Nishika if this does happen and she will help!
 *Do
-
-make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road.
-If you have just begun a coding session after a few days, run the following git commands:
-git pull  
-git checkout [curr_branch]
-git merge dev
-If you see on github that the current branch you're on is behind the dev branch:
-git checkout [curr_branch]
-git merge dev
-This will merge everything from the dev branch onto your current branch.
-If you have just finished editing a few files, and would only like to set a SINGLE file to the stage:
-git add [filename]
-If you would like to add all of the files you edited to the stage:
-git add .
-If you have added files to the stage and would like to commit them to the stage:
-git commit -m "[insert message here]"
-If you have made commits to your local branch and would like to push to github:
-git push
-
-## Our Tech Stack
-- [React](https://react.dev/) - frontend
-- [Typescript](https://www.typescriptlang.org/) - frontend/backend
-- [Next.js](https://nextjs.org/learn/foundations/about-nextjs/what-is-nextjs) - frontend/backend
-- [PostgreSQL](https://www.postgresql.org/about/) - database
-- [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma) - to communicate with database
-  ![image](https://github.com/JumboCode/casa-myrna/assets/87954052/baa1f6aa-dc7d-4681-9428-0ca3fd0b5b67)
-- [Clerk](https://clerk.com/docs?utm_source=www.google.com&utm_medium=referral&utm_campaign=none) - gives us components for login authentication 
-
-  
-## How does our tech stack flow with each other? (resources)
-- [Best Practices for a React/Next.js webapp](https://blogs.perficient.com/2023/04/25/best-practices-for-building-and-sustaining-a-clean-react-next-js-project/)
-- [Example guide on how our entire tech stack will interact with each other](https://vercel.com/guides/nextjs-prisma-postgres) (some of this is not relevant to our tech stack, like github authentication, vercel database hosting, etc.)
+  - make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road. 
+  - If you have just begun a coding session after a few days, run the following git commands:
+      ```git
+    git pull  
+    git checkout [curr_branch]
+    git merge dev
+    ```
+  - If you see on github that the current branch you're on is behind the dev branch:
+    ```git
+    git checkout [curr_branch]
+    git merge dev
+    ```
+    This will merge everything from the dev branch onto your current branch. 
+  - If you have just finished editing a few files, and would only like to set a SINGLE file to the stage:
+    ```git
+    git add [filename]
+    ```
+  - If you would like to add all of the files you edited to the stage:
+    ```git
+    git add .
+    ```
+  - If you have added files to the stage and would like to commit them to the stage:
+    ```git
+    git commit -m "[insert message here]"
+    ```
+  - If you have made commits to your local branch and would like to push to github:
+    ```git
+    git push
+    ```
 ## Code Conventions
   * We will not be accepting code without any comments!!
       - Functions should have a description of what it does
@@ -63,9 +44,9 @@ git push
   * Since you will be working on a separate branch from our dev branch, you will need to submit pull requests (PRs) along with your testing process.
   * Since you will be working on a separate branch from our dev branch, we will also be using a naming convention for the branches:
     ```
-    [frontend or backend]-[ticket#]-ticket-title
+    [frontend or backend]/[ticket#]-ticket-title
     ``` 
-      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend-45-creating-profile-page`
+      - For example, say I am a frontend developer working on ticket #45 whose title is "creating profile page", my branch will be named `frontend/45-creating-profile-page`
 
 ## WEB APP INFO
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
@@ -104,4 +85,3 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
