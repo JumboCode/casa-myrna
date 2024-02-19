@@ -16,24 +16,32 @@ Testing
 Reflection
 Ran into some unexpected git branch errors, but they got resolved! Also learned about the .env.local file ( thank you Nishika for explaining <3 )
 ## Git Do's and Don'ts
-Don't:
+*DON'T
 
-Avoid making direct changes to the "main" branch under any circumstances. Always prioritize working on the "dev" branch as your default.
-Refrain from pushing changes directly to the "dev" branch. It's essential to work on feature branches instead.
-After completing each task, create a pull request (PR) to merge your changes into the appropriate branch.
-Do:
+UNDER NO CIRCUMSTANCES mess with the branch named "main" => your default should be the dev branch
+don't push to dev directly, you should be working on a different branch as dev will be the branch we push our most up to date code to
+don't handle merge conflicts without Elizabeth or Nishika being present
+don't be afraid if you have made a git mistake!! ultimately, the whole purpose of git is to save our work consistently to prevent disasters, so more likely than not, any git mistakes can be fixed! reach out to Nishika if this does happen and she will help!
+*Do
 
-Commit your changes frequently. Regular commits help in saving your work consistently, making it easier to manage and resolve any potential issues or conflicts later on.
-When creating a new branch, follow these steps:
-Ensure you're on the "dev" branch by checking out to it.
-Pull the latest changes from the remote repository to stay up-to-date.
-Switch to the relevant branch ("frontend" or "backend").
-Merge the latest changes from the "dev" branch into your current local branch.
-Create a new branch with a descriptive name, typically including the ticket number and a brief title.
-Make necessary changes to the files.
-Add all edited files to the staging area using "git add .".
-Commit your changes with a descriptive message using "git commit -m".
-Push your changes to the remote repository using "git push".
+make git commits locally often! saving your work consistently with git will tremendously help if there are any issues/conflicts with code down the road.
+If you have just begun a coding session after a few days, run the following git commands:
+git pull  
+git checkout [curr_branch]
+git merge dev
+If you see on github that the current branch you're on is behind the dev branch:
+git checkout [curr_branch]
+git merge dev
+This will merge everything from the dev branch onto your current branch.
+If you have just finished editing a few files, and would only like to set a SINGLE file to the stage:
+git add [filename]
+If you would like to add all of the files you edited to the stage:
+git add .
+If you have added files to the stage and would like to commit them to the stage:
+git commit -m "[insert message here]"
+If you have made commits to your local branch and would like to push to github:
+git push
+
 ## Our Tech Stack
 - [React](https://react.dev/) - frontend
 - [Typescript](https://www.typescriptlang.org/) - frontend/backend
