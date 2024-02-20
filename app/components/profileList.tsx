@@ -10,10 +10,11 @@ import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 import { Grid } from '@mui/material';
 import EditEmployeeModal from './EditEmployeeModal'
-
+import { useUser } from "@clerk/nextjs";
 
 
 const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string; }) => {
+  const { isSignedIn, user, isLoaded } = useUser();
   const truncate = (input: string | undefined, num: number): string => {
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
