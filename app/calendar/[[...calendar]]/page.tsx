@@ -4,7 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import Cal from "../../components/Calendar";
 import React, { useState, useEffect } from "react";
 import CalendarModalButton from "../../components/CalendarModalButton";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "../../components/Sidebar";
 import "../../globals.css";
 import theme from "../../theme";
 import { PrimaryShift } from "../../types/types";
