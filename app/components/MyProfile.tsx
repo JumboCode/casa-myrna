@@ -10,7 +10,6 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
 import { useUser } from "@clerk/nextjs";
-import Clerk from '@clerk/clerk-js';
 
 // import InputFileUpload from "./UploadPic";
 
@@ -27,14 +26,14 @@ const BoxSx: FC = () => {
 
 
 // Add or update a profile image to a Clerk user
-async function uploadProfileImage(imageFile) {
+async function uploadProfileImage(imageFile: string) {
     const params = {
       file: imageFile, 
     };
   
     try {
       // Call the setProfileImage function with the params
-      const result = await user.setProfileImage(params);
+      const result = await user?.setProfileImage(params);
   
       // Handle the result
       console.log('Profile image set successfully:', result);
@@ -44,7 +43,7 @@ async function uploadProfileImage(imageFile) {
     }
   }
 
-const handleImageChange = async (event) => {
+const handleImageChange = async (event: { target: { files: any[]; }; }) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
