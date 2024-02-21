@@ -458,7 +458,7 @@ const calendar = () => {
             <FormControl sx={{ m: 1, minWidth: 200 }}>
                 <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
                   {/* Menu props align the popup */}
-                  <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: {lg:'95%'}, height: {lg:'65%', xs:'35%'},}}>
+                  <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: {lg:'95%', xs:'70%'}, height: {lg:'65%'},}}>
                       <Grid container direction='row' spacing={1} marginRight={2}>
 
                           {/* EMPLOYEE NAME Column */}
@@ -466,6 +466,7 @@ const calendar = () => {
                               <Grid sx={{ml:2}}>
                                   <ListSubheader> <b>Employee Name</b></ListSubheader>
                                   <Autocomplete
+                                    multiple
                                     options={employeeOptions}
                                     sx={{ width: 175 }}
                                     renderInput={(params) => <TextField {...params} label="Employee Name" />}
