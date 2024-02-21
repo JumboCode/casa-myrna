@@ -182,47 +182,7 @@ const handleImageChange = async (event) => {
             />
           </Grid>
           <Grid xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="h4">Last Name</Typography>
-            <TextField
-              defaultValue={user?.lastName}
-              InputProps={{
-                readOnly: true,
-                disableUnderline: true,
-                style: { paddingLeft: 8 },
-              }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
-              id="outlined-basic"
-              label=""
-              variant="standard"
-            />
-          </Grid>
-          <Grid xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="h4">Email</Typography>
-            <TextField
-              defaultValue={user?.emailAddresses}
-              InputProps={{
-                readOnly: true,
-                disableUnderline: true,
-                style: { paddingLeft: 8 },
-              }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
-              id="outlined-basic"
-              label=""
-              variant="standard"
-            />
-          </Grid>
-        </Grid>
-        {/* This is column 2 */}
-        <Grid
-          container
-          spacing={4}
-          direction="column"
-          alignItems="flex-start"
-          paddingTop="12%"
-          paddingBottom="10%"
-        >
-          <Grid direction="row" xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="h4">Pronouns</Typography>
+          <Typography variant="h4">Pronouns</Typography>
             <TextField
               defaultValue={user?.publicMetadata.pronouns}
               InputProps={{
@@ -254,6 +214,52 @@ const handleImageChange = async (event) => {
                 height={20}
               />
             </Button>
+          </Grid>
+          <Grid xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="h4">Email</Typography>
+            <TextField
+              defaultValue={user?.emailAddresses}
+              InputProps={{
+                readOnly: true,
+                disableUnderline: true,
+                style: { paddingLeft: 8 },
+              }}
+              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              id="outlined-basic"
+              label=""
+              variant="standard"
+            />
+          </Grid>
+        </Grid>
+        {/* This is column 2 */}
+        <Grid
+          container
+          spacing={4}
+          direction="column"
+          alignItems="flex-start"
+          paddingTop="12%"
+          paddingBottom="10%"
+        >
+          <Grid direction="row" xs={12} sm={12} md={12} lg={12}>
+          <Typography variant="h4">Last Name</Typography>
+            <TextField
+              defaultValue={user?.lastName}
+              InputProps={{
+                readOnly: true,
+                disableUnderline: true,
+                style: { paddingLeft: 8 },
+              }}
+              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              id="outlined-basic"
+              label=""
+              variant="standard"
+            />
+
+
+
+
+
+            
           </Grid>
           <Grid xs={12} sm={12} md={12} lg={12}>
             <Typography variant="h4">Role</Typography>
