@@ -446,9 +446,9 @@ const calendar = () => {
         marginRight: '5%',
       }}
     >
-      <Grid container spacing={2} columns={20} paddingTop="2%">
+      <Grid container spacing={2} columns={{lg:20, xs:30}} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
-          <Typography variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
+        <Typography display={{xs: 'none', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
         </Grid>
@@ -458,7 +458,7 @@ const calendar = () => {
             <FormControl sx={{ m: 1, minWidth: 200 }}>
                 <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
                   {/* Menu props align the popup */}
-                  <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}}>
+                  <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: {lg:'95%'}, height: {lg:'65%', xs:'35%'},}}>
                       <Grid container direction='row' spacing={1} marginRight={2}>
 
                           {/* EMPLOYEE NAME Column */}
