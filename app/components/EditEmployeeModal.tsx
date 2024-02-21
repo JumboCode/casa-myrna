@@ -211,22 +211,21 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
 return (
     <div>
         {/* visible Edit Button */}
-        <Button color="secondary" onClick={fetchUserByEmail} disabled={loading}> edit </Button>
-
+        <Button color="secondary" onClick={fetchUserByEmail} disabled={loading}>  <Image src={UploadImage} alt="upload image" width={20} height={20} /> </Button>
         <Modal 
             open={open}
             onClose={handleClose}>
         {/* Gray Modal Box */}
         <Box sx={style}>
             {/* Button Box */}
-            <Box sx={{width: 50, height: 50, position: 'absolute', right: '5%', fill:'none'}}>
+            {/* <Box sx={{width: 50, height: 50, position: 'absolute', right: '5%', fill:'none'}}>
                 <button 
                     onClick={() => {
                     handleClose();
                     }}>
                     <CloseOutlinedIcon color="secondary" />
-                </button>
-            </Box>
+                </button> */}
+            {/* </Box> */}
             <Box sx={{paddingLeft: 2, paddingRight: 6}}>
                 <Typography sx={{ fontSize: {lg:'36px', xs:'22px'}}}>
                     Edit Employee Profile
@@ -242,7 +241,7 @@ return (
                 <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
     
                     <Button variant="outlined" sx={{ textIndent: '2px' ,borderRadius: '20px',  borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
-                        <Image src={UploadImage} alt="upload image" width={17} height={17} />
+                <Image src={UploadImage} alt="upload image" width={17} height={17} />
                         delete photo
                     </Button>
                     

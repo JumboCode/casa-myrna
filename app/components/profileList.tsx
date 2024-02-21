@@ -13,12 +13,11 @@ import EditEmployeeModal from './EditEmployeeModal'
 import { useUser } from "@clerk/nextjs";
 
 
-const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string; }) => {
-  const { isSignedIn, user, isLoaded } = useUser();
+const ProfileList = ({ firstName, lastName, publicMetadata, imageUrl, email, id }: { firstName: string; lastName: string; publicMetadata: string; imageUrl: string; email: string; id: string; }) => {
   const truncate = (input: string | undefined, num: number): string => {
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
-
+  
   return (
     <Box
       sx={{
@@ -39,7 +38,7 @@ const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { first
           {truncate(lastName, 20)}
             </Typography>
           <Typography variant="body2" align = "left" sx={{ width: 175, height: 25}}>
-          {truncate(role, 20)}
+          {truncate(publicMetadata, 20)}
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
@@ -47,9 +46,7 @@ const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { first
           {/* <Button color="secondary"> edit </Button> */}
           
           <EditEmployeeModal emailAddress={email} id={id}/>
-          <IconButton color="secondary" aria-label="add and create">
-            <CreateIcon />
-          </IconButton>
+          
         </Stack>
       </Stack>
     </Box>
