@@ -46,7 +46,7 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
           {profileList({
             firstName: person.firstName,
             lastName: person.lastName,
-            role: person.role,
+            role: person.publicMetadata["role"],
             imageUrl: person.imageUrl,
             email: person.emailAddresses[0].emailAddress,
             id: person.id
