@@ -10,6 +10,7 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
 import { useUser } from "@clerk/nextjs";
+import InputFileUpload from './UploadPic';
 
 // import InputFileUpload from "./UploadPic";
 
@@ -75,87 +76,69 @@ const handleImageChange = async (event: { target: { files: any[]; }; }) => {
         backgroundColor: "#f6f6f6",
       }}
     >
-      <Grid
-        container
-        spacing={5}
-        columnSpacing={{ xs: 20, sm: 80, md: 5, lg: 5 }}
-        justify-content="space-between"
-        alignItems="flex-start"
-        columns={12}
-        margin={{ xs: 1, sm: 4, md: 5, lg: 12 }}
-      >
-        <Grid
-          container
-          spacing={4}
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid
-            container
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            justifyContent="center"
-            alignItems="flex-start"
-            paddingBottom="15%"
-          >
-            <Typography
-              variant="h1"
-              textAlign={"center"}
-              justifyContent={"center"}
-            >
-              My Profile
-            </Typography>
-          </Grid>
-          <Grid
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              display: "flex",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              src={user.imageUrl}
-              sx={{ width: 200, height: 200 }}
-            />
-          </Grid>
-          <Grid xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-              id="avatar-input"
-            />
-            <Button
-              sx={{
-                borderRadius: "20px",
-                textIndent: "10px",
-                borderColor: theme.palette.primary.main,
-                color: "#000000",
-                "&:hover": { borderColor: theme.palette.primary.main },
-                textTransform: "none",
-                paddingRight: "10%",
-              }}
-              component="label"
-              variant="outlined"
-            >
-              <Image
-                src={UploadImage}
-                alt="upload image"
-                width={20}
-                height={20}
-              />
-              <label htmlFor="avatar-input">Upload Picture</label>
-            </Button>
-          </Grid>
+        <Grid container spacing={5} columnSpacing={{xs: 20, sm:80, md:5, lg:5}} justify-content='space-between' alignItems='flex-start' columns={12}  margin={{xs: 1, sm: 4, md: 5, lg: 12}}>
+           <Grid container spacing={4} direction='column' justifyContent='center' alignItems='center'>
+                <Grid container xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='flex-start' paddingBottom='15%'>
+                    <Typography variant="h1" textAlign={'center'} justifyContent={'center'} >
+                        My Profile
+                    </Typography>
+                </Grid>
+                <Grid xs={12} sm={12} md={12} lg={12} sx={{ justifyContent:'center', alignItems:'center', display: 'flex'}}>
+                    <Avatar alt="Remy Sharp" sx={{ width: 200, height: 200 }} />
+                </Grid>
+                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                       <InputFileUpload/>
+                </Grid>
+            </Grid>
+            {/* This is column 1 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-center' paddingTop='12%'>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                   <Typography variant="h4">
+                        First Name
+                    </Typography>
+                    <TextField defaultValue={user?.firstName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Pronouns
+                    </Typography>
+                        <TextField defaultValue={user?.publicMetadata.pronouns} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}}} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"></TextField>
+                        <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
+                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button>
+                      </Grid> 
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Email
+                    </Typography>
+                    <TextField defaultValue={user?.emailAddresses} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                </Grid>
+            </Grid>
+            {/* This is column 2 */}
+            <Grid container spacing={4} direction='column' alignItems='flex-start' paddingTop='12%' paddingBottom='10%'>
+                <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Last Name
+                    </Typography>
+                    <TextField defaultValue={user?.lastName} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                     {/* <Button variant="text" sx={{ borderRadius: '20px', textIndent: '10px', borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
+                        <Image src={UploadImage} alt="upload image" width={20} height={20} /></Button> */}
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4" >
+                        Role
+                    </Typography>
+                    <TextField defaultValue={user?.publicMetadata.role} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12}>
+                    <Typography variant="h4">
+                        Phone Number
+                    </Typography>
+                    <TextField defaultValue={user?.publicMetadata.phoneNumber} InputProps={{readOnly: true, disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} id="outlined-basic" label="" variant="standard"/>
+                </Grid>
+                <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' paddingTop='20%' paddingRight='15%' sx = {{ display:'flex', justifyContent:'flex-end'}}>
+                    <Button sx={{paddingLeft:'10%', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
+                </Grid>
+            </Grid>
         </Grid>
         {/* This is column 1 */}
         <Grid
@@ -310,8 +293,7 @@ const handleImageChange = async (event: { target: { files: any[]; }; }) => {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
-    </Box>
+   </Box> 
   );
 };
 
