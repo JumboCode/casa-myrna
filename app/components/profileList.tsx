@@ -46,9 +46,7 @@ const ProfileList = ({ firstName, lastName, publicMetadata, imageUrl, email, id 
           {/* <Button color="secondary"> edit </Button> */}
           
           <EditEmployeeModal emailAddress={email} id={id}/>
-          <IconButton color="secondary" aria-label="add and create">
-            <CreateIcon />
-          </IconButton>
+          
         </Stack>
       </Stack>
     </Box>
