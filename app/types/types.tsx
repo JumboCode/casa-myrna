@@ -13,7 +13,7 @@ type PrimaryShift = {
     userID: number, 
     firstName: String,
     lastName: String, 
-    onCallShiftID: number,     
+    onCallShiftID: number,
     date: Date,
     from: Date, 
     to: Date,
@@ -31,9 +31,10 @@ type Event = {
         opacity: number, 
         backgroundColor: string, 
     }
-    phoneLine: number, 
 }
+
+type CalendarInfo = Event & PrimaryShift 
 
 type BackupShift = {}
 
-export type { PrimaryShift, Event } 
+export type { PrimaryShift, Event, CalendarInfo } 
