@@ -62,8 +62,13 @@ export async function GET(req: NextRequest)
  */
 export async function POST(req: NextRequest)
 {
-        try {
+
+        console.log("Greetings Globe")
+        // try {
+                console.log(typeof req)
                 let data = await req.json();
+                console.log("PRINTING DATA")
+                console.log(data)
                 data = {
                 ...data,
                 "date": new Date(data.date),
@@ -73,11 +78,11 @@ export async function POST(req: NextRequest)
                 };
                 const shift = await prisma.primaryShift.create({data});
                 return new Response(JSON.stringify(shift))
-        } catch {
-                return new Response('Error: An unexpected error occured', {
-                        status: 500,
-                      })
-        }
+        // } catch (error) {
+        //         return new Response('Error: An unexpected error occured', {
+        //                 status: 500,
+        //               })
+        // }
 }
 
 /* 
