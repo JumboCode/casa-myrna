@@ -11,7 +11,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { format, parse } from 'date-fns';
 import theme from '../theme';
 // Add employee modal functionality imports
-import { POST } from '../api/shifts/route';
+// import { POST } from '../api/shifts/route';
 import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -107,32 +107,59 @@ const CalendarModalButton: FC = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formattedStartDate = startDate.toISOString();
+        // const formattedStartDate = startDate.toISOString();
         const formattedStartTime = formatDateAndTime(startDate, formData.startTime);
-        const formattedEndDate = endDate.toISOString();
+        // const formattedEndDate = endDate.toISOString();
         const formattedEndTime = formatDateAndTime(endDate, formData.endTime);
         const createdAt = new Date().toISOString();
 
+        console.log("start date and time")
+        console.log(startDate)
+        // console.log(formattedStartDate)
+        console.log(formattedStartTime)
+
+        console.log("end date and time")
+        console.log(endDate)
+        // console.log(formattedEndDate)
+        console.log(formattedEndTime)
+
         const requestData = {
-            ...formData,
-            date: formattedStartDate,
+            // ...formData,
+            // firstName: 'Jiyoon',
+            // lastName: 'Choi',
+            phoneLine: 1,
+            date: startDate,
             from: formattedStartTime,
             to: formattedEndTime,
-            created_at: createdAt
+            created_at: createdAt,
+            userID: 2,
+            message: 'hello',
+            status: 'ACCEPTED',
+            onCallShiftID: 3
+            // date: formattedStartDate,
+            // from: formattedStartTime,
+            // to: formattedEndTime,
+            // created_at: createdAt,
+            // userID: 2,
+            // message: 'hello',
+            // status: 'ACCEPTED',
+            // onCallShiftID: 3
         };
 
         // See console to see the form data being sent to POST
         console.log('Request Payload:', requestData);
+        console.log("TESTING PRINT")
 
         try {
-            const response = await POST('/api/shifts/route', {
+            const response = await fetch('api/shifts', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(requestData),
             });
-
+            console.log('after retrieving response')
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
             }
