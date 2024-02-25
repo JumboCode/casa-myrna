@@ -69,6 +69,7 @@ const MyCalendar = (props: {}) => {
   const { isSignedIn, user, isLoaded } = useUser();
   if (user){ /* TODO: used for testing, remove */
     user.publicMetadata = {"role": "Coordinator"}
+    user.id = "user_2by4HDhqAyJiHrBRE8AsGF0f4bD"
   }
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
@@ -77,25 +78,23 @@ const MyCalendar = (props: {}) => {
 
 
   const [formData, setFormData] = useState<CalendarInfo | null>(null);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const showModal = () => setOpenModal(true);
-  const closeModal = () => setOpenModal(false);
   const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
 
 
   const [open, setOpen] = useState(false);
   const today = new Date();
-  const firstDayOfWeek = new Date(today);
-  firstDayOfWeek.setDate(today.getDate() - today.getDay());
-  firstDayOfWeek.setHours(0, 0, 0);
-
-  const lastDayOfWeek = new Date(firstDayOfWeek);
-  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-  lastDayOfWeek.setHours(23, 59, 59);
-
+  
   useEffect(() => {
     (async function () {
       try {
+        const firstDayOfWeek = new Date(today);
+        firstDayOfWeek.setDate(today.getDate() - today.getDay());
+        firstDayOfWeek.setHours(0, 0, 0);
+      
+        const lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+        lastDayOfWeek.setHours(23, 59, 59);
+
         const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString);
         const data = await response.json();
         setShiftInfo(data);
@@ -145,22 +144,14 @@ const MyCalendar = (props: {}) => {
   });
 
   const handleOpen = (e: CalendarInfo) => {
-    // console.log("TESTING 1");
     setOpen(true);
-    // setUpdateInfo(e);
     setFormData(e)
   };
 
   const handleClose = () => {setOpen(false);
                              setFormData(null)}
 
-  // const initialFormData = {
-  //   phoneLine: '',
-  //   startTime: '',
-  //   endTime: '',
-  //   assignedEmployee: '',
-  // };
-  // const [formData, setFormData] = useState(initialFormData);
+  /* Currently unused in form, but may be useful later */
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     if (formData){
@@ -170,6 +161,8 @@ const MyCalendar = (props: {}) => {
       });
     }
   };
+
+  /* Currently unused in form, but may be useful later */
   const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
     const { name, value } = event.target;
     if (formData){
@@ -181,7 +174,7 @@ const MyCalendar = (props: {}) => {
   };
 
   // TODO: any type is work around, change to actual type
-  const handleSubmit = async (e: any , modifiedData : any) => {
+  const handleSubmit = async (e: CalendarInfo, modifiedData : Partial<CalendarInfo>) => {
       Object.keys(modifiedData).forEach(key => {
         if (e.hasOwnProperty(key)) {
           e[key] = modifiedData[key];
@@ -203,54 +196,31 @@ const MyCalendar = (props: {}) => {
       });
     setFetchShiftsTrigger(prev => prev + 1);
     handleClose()
-    console.log(response); 
   }
 
+  /* Used to rdner different buttons on shift modal depending on shift status, user role and user id */
   const renderShiftButtons = () => {
-    console.log("In render shift buttons")
-    console.log(formData)
-    if (formData?.status === 'ACCEPTED'){
-        return <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': ''})}} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
-    } else if (formData?.status === 'CANCELLED'){
-        return <Button onClick={() => {handleSubmit(formData, {'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
+    if (formData?.status === 'ACCEPTED'){ /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
+        return <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+    } else if (formData?.status === 'CANCELLED'){ /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
+        return <Button onClick={() => {handleSubmit(formData, {'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
     } else if (formData?.status === 'PENDING'){
         if (user?.publicMetadata.role == 'Coordinator'){
           return <>
-                <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': ''})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Reject Request</Button>
+                <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Reject Request</Button>
                 <Button onClick={() => {handleSubmit(formData, {'status': Status.ACCEPTED})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Approve Request</Button>
                 </>
-        } 
+        } else if (user?.id == formData?.userID){
+            return <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Cancel Request</Button>
+        }
     }
-    
-    // {formData?.status === 'ACCEPTED' && <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED})}} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>}
-    // {formData?.status === 'CANCELLED' && <Button onClick={() => {handleSubmit(formData, {'status': Status.PENDING})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>}
-    // if (complexCondition1) return <ComponentForComplexCondition1 />;
-    // if (complexCondition2) return <ComponentForComplexCondition2 />;
-    // return <DefaultComponent />;
   };
-  
-  // const handleCancel = (newStatus : Status) => {
-  //   console.log(" IN HANDLE CANCEL")
-  //   if (formData){
-  //     console.log("IN form data conditional")
-  //     console.log(newStatus.toString())
-  //     setFormData({
-  //       ...formData,
-  //       ['status']: newStatus,
-  //       ['phoneLine']: 123
-  //       // ['status']: Status.CANCELLED,
-  //     }, () => {/*do something after the state has been updated*/});
-  //   }
-  //   console.log(formData)
-  //   handleSubmit(formData)
-  // }
 
   // TODO: end of modal logic - abstract away into a different component (CalendarModalButton)
   return (
     <div style={{ height: '500px' }}>
       <Calendar
         dayLayoutAlgorithm='no-overlap'
-        // selectable={true}
         onSelectEvent={(e: CalendarInfo) => {
           handleOpen(e);
         }}
@@ -315,13 +285,11 @@ const MyCalendar = (props: {}) => {
                   <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: -1, width:"100%" }}>
                     <Typography variant="h4" sx={{marginRight: "190px"}}>
                       Status: 
-                    </Typography> {/* TODO: fix border below */}
+                    </Typography> 
                     <Box sx={{ flex: 1, border: 1, borderColor:formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor, borderRadius: "5px", width: "100%", color: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor }}> <Typography sx={{display: "flex", alignItems: "center", justifyContent: "center"}}> {formData?.style.backgroundColor == "green" ? "Assigned" : (formData?.style.backgroundColor == "gray" ? "Cancelled" : "Pending")} </Typography> </Box>
                   </Grid>
                   <Grid xs={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign='center' paddingTop='5%'  sx={{ display: 'flex', justifyContent: 'center' }}>
                     {renderShiftButtons()}
-                    {/* {formData?.status === 'ACCEPTED' && <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED})}} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>}
-                    {formData?.status === 'CANCELLED' && <Button onClick={() => {handleSubmit(formData, {'status': Status.PENDING})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>} */}
                   </Grid>
                 </Grid>
               </Grid>
@@ -334,70 +302,6 @@ const MyCalendar = (props: {}) => {
 };
 
 const calendar = () => {
-
-  const [shiftInfo, setShiftInfo] = useState<CalendarInfo[] | null>(null);
-  const [updateInfo, setUpdateInfo] = useState<CalendarInfo | null>(null);
-
-  const today = new Date();
-  const firstDayOfWeek = new Date(today);
-  firstDayOfWeek.setDate(today.getDate() - today.getDay());
-  firstDayOfWeek.setHours(0, 0, 0);
-
-  const lastDayOfWeek = new Date(firstDayOfWeek);
-  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-  lastDayOfWeek.setHours(23, 59, 59);
-
-  // useEffect(() => {
-  //   (async function () {
-  //     try {
-  //       const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString);
-  //       const data = await response.json();
-  //       setShiftInfo(data);
-  //     } catch (e) {
-  //       throw new Error('Failed to fetch shift data');
-  //     }
-  //   })();
-  // }, [updateInfo])
-
-  // const events = shiftInfo?.map((shift: CalendarInfo, _) => {
-
-  //   let background_color = 'green';
-
-  //   if (shift.status.toString() === 'CANCELLED') {
-  //     background_color = 'gray';
-  //   } else if (shift.status.toString() === 'PENDING') {
-  //     background_color = 'orange';
-  //   }
-  //   return {
-  //     /*******************************************************
-  //      *        associated fields for PrimaryShiftInfo       *
-  //      ******************************************************/ 
-  //     primaryShiftID: shift.primaryShiftID,
-  //     userID:         shift.userID,
-  //     onCallShiftID:    shift.onCallShiftID,
-  //     from:           new Date(shift.from),
-  //     to:             new Date(shift.to), 
-  //     firstName:      shift.firstName,
-  //     lastName:       shift.lastName,
-  //     date:           new Date(shift.from).setHours(0,0,0,0), // TODO: confirm work 
-  //     status:         shift.status,
-  //     phoneLine:      shift.phoneLine, 
-  //     message:        shift.message,
-  //     created_at:     new Date(), 
-  
-  //     /*******************************************************
-  //      *            associated fields for Event              *
-  //      ******************************************************/
-  //     start:          new Date(shift.from),
-  //     end:            new Date(shift.to),
-  //     title:          shift.firstName + " " + shift.lastName, // we don't know what to assign this right now 
-  //     style: {
-  //       opacity: .5,
-  //       backgroundColor: background_color,
-  //     }
-  //   }
-  // });
-
   return (
     <Box
       sx={{
