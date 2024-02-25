@@ -16,7 +16,7 @@ enum Status {
 // Represents On Call shifts
 model primaryShift {
   primaryShiftID       Int    @id @default(autoincrement()) 
-  userID               Int
+  userID               String
   onCallShiftID        Int    
   date                 DateTime
   from                 DateTime
@@ -32,7 +32,7 @@ model primaryShift {
  
 model onCallShift {
   onCallShiftID        Int    @id @default(autoincrement()) 
-  userID               Int
+  userID               String
   primaryShifts        primaryShift[] @relation("onCallShift")
   date                 DateTime
   from                 DateTime
