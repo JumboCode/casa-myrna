@@ -10,7 +10,7 @@ export enum Status {
 
 type PrimaryShift = {
     primaryShiftID: number, 
-    userID: number, 
+    userID: String, 
     firstName: String,
     lastName: String, 
     onCallShiftID: number,
