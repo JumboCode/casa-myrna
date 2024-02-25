@@ -67,10 +67,6 @@ const localizer = momentLocalizer(moment);
 
 const MyCalendar = (props: {}) => {
   const { isSignedIn, user, isLoaded } = useUser();
-  if (user){ /* TODO: used for testing, remove */
-    user.publicMetadata = {"role": "Coordinator"}
-    user.id = "user_2by4HDhqAyJiHrBRE8AsGF0f4bD"
-  }
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
   const [shiftInfo, setShiftInfo] = useState<CalendarInfo[] | null>(null);
