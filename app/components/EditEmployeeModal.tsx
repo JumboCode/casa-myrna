@@ -16,6 +16,8 @@ import UploadImage from '../images/6.png';
 import Select from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
 import { profileData } from './types';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -49,6 +51,32 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [idString, setidString] = useState({ id: ''});
+
+    // Success Alert
+    const [openSnack, setOpenSnack] = React.useState(false);
+    const handleSnackClick = () => {
+        setOpenSnack(true);
+      };
+    const handleCloseSnack = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpenSnack(false);
+    };
+
+    // Success alert 2 for deleting:
+    const [openSnack2, setOpenSnack2] = React.useState(false);
+    const handleSnackClick2 = () => {
+        setOpenSnack2(true);
+      };
+    const handleCloseSnack2 = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpenSnack2(false);
+    };
     
     /* Fetches user data when 'edit' button is clicked for that user email passed into Modal */
     const fetchUserByEmail = async () => {
@@ -155,8 +183,10 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
             const user = await response.json();
 
             /* Show a success message and reload the page immediately */
-            console.log("Employee was successfully deleted - refresh the page");
-            location.reload(); /* Reload page to see change was successful */
+            // console.log("Employee was successfully deleted - refresh the page");
+            // location.reload(); /* Reload page to see change was successful */
+            handleSnackClick2();
+            setOpen(false);
         } catch (error) {
             console.error('Error deleting employee:', error);
         }
@@ -198,8 +228,9 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
 
             /* Close the modal and show a success message */
             console.log("Employee was successfully added - refresh the page");
+            handleSnackClick();
             setOpen(false);
-            location.reload(); /* Reload page to see change was successful */
+            // location.reload(); /* Reload page to see change was successful */
         } catch (error) {
             console.error('Error editing employee:', error);
         }
@@ -337,6 +368,29 @@ return (
            
             </Box>
             </Modal>
+            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+                <Alert
+                onClose={handleCloseSnack}
+                severity="success"
+                variant="filled"
+                sx={{ width: '100%' }}
+                >
+                Your changes were saved.
+                </Alert>
+            </Snackbar>
+
+
+            {/* Condense and modularize later.... */}
+            <Snackbar open={openSnack2} autoHideDuration={6000} onClose={handleCloseSnack2}>
+                <Alert
+                onClose={handleCloseSnack2}
+                severity="success"
+                variant="filled"
+                sx={{ width: '100%' }}
+                >
+                A profile was deleted.
+                </Alert>
+            </Snackbar>
             </div> )
      
 };
