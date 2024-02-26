@@ -15,11 +15,11 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
-import AddEmployeeModal from './AddEmployeeModal'
+import AddEmployeeModal from './AddEmployeeModal';
 import { profileData } from './types';
 
 // Custom components and images
-import profileList from "./ProfileList"
+import profileList from "./profileList"
 import Image from "next/image";
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC, useEffect, useState } from 'react';
@@ -46,8 +46,10 @@ const NameList: React.FC<NameListProps> = ({ people }) => (
           {profileList({
             firstName: person.firstName,
             lastName: person.lastName,
-            role: person.role,
-            imageUrl: person.image,
+            role: person.publicMetadata["role"],
+            imageUrl: person.imageUrl,
+            email: person.emailAddresses[0].emailAddress,
+            id: person.id
           })}
         </li>
       ))}
@@ -70,9 +72,14 @@ const BoxSx: FC = () => {
         if (!response.ok) {
           throw new Error('Failed to fetch people data');
         }
-
+        
         const data = await response.json();
         setPeopleArray(data);
+        // console.log('Email:', peopleArray[0].firstName);
+        // peopleArray.forEach(person => {
+        //   console.log('Email:', person.firstName);
+        // });
+        
       } catch (error) {
         console.error('Error fetching people data:', error);
       }
@@ -85,6 +92,7 @@ const BoxSx: FC = () => {
     const totalPages = Math.ceil(people.length / perPage);
     const offset = perPage * (page - 1);
     const paginatedItems = people.slice(offset, perPage * page);
+    
 
     return {
       nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
@@ -97,6 +105,11 @@ const BoxSx: FC = () => {
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
 
+  // peopleArray.forEach(person => {
+  //   console.log('p:', person.emailAddresses[0].emailAddress);
+
+  // }
+  // );
 
   return (
     <Box
@@ -215,7 +228,7 @@ const BoxSx: FC = () => {
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
       </Stack>
-  </Box>);
+  </Box> );
 }
 
 export default BoxSx;

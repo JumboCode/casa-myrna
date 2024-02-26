@@ -31,6 +31,7 @@ type Event = {
         opacity: number, 
         backgroundColor: string, 
     }
+      phoneLine: number, 
 }
 
 type CalendarInfo = Event & PrimaryShift 
@@ -38,3 +39,4 @@ type CalendarInfo = Event & PrimaryShift
 type BackupShift = {}
 
 export type { PrimaryShift, Event, CalendarInfo } 
+
