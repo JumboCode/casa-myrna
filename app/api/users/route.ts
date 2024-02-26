@@ -4,6 +4,7 @@ import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 const prisma = new PrismaClient()
 
+
 interface ErrorResponse {
   clerkError: boolean;
   status: number;
@@ -114,3 +115,7 @@ export async function PUT(req: NextRequest) {
       return new Response('Error: User could not be found', {status: 500,})
     }
   }
+
+  export async function GETNAMES(req: NextRequest) {
+      
+  } 
