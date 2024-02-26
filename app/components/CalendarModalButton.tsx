@@ -22,13 +22,13 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width:  {
-          lg: 600,
-          xs: '80%'
+    width: {
+        lg: 600,
+        xs: '80%'
     },
     height: {
-          lg: 450,
-          xs: '70%'
+        lg: 300,
+        xs: '70%'
     },
     bgcolor: "#ffffff",
     // border: '2px solid #000',
@@ -36,26 +36,26 @@ const style = {
     p: 4,
     borderRadius: '35px',
 
-    typography: { 
+    typography: {
         h1: {
-          fontFamily: 'Montserrat',
-          fontSize: '32',
-          fontWeight: 'bold'
+            fontFamily: 'Montserrat',
+            fontSize: '32',
+            fontWeight: 'bold'
         },
-        h4:{
-          fontFamily: 'Montserrat',
-          fontSize: '16',
-          fontWeight: 'bold'
+        h4: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'bold'
         },
-        body1:{
-          fontFamily: 'Montserrat',
-          fontSize: '16',
-          fontWeight: 'regular'
+        body1: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'regular'
         },
-        body2:{
-          fontFamily: 'Montserrat',
-          fontSize: '16',
-          fontWeight: 'regular'
+        body2: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'regular'
         }
     }
   }; 
@@ -76,8 +76,14 @@ const CalendarModalButton: FC = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+
+    const initialFormData = {
+
+        phoneLine: '',
+        startTime: '',
+        endTime: '',
+        assignedEmployee: '',
+    };
     const [formData, setFormData] = useState(initialFormData);
 
     // Handle form input change
