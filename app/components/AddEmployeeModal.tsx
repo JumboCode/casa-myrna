@@ -17,6 +17,9 @@ import Select from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
 import { profileData } from './types';
 
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -41,6 +44,19 @@ const AddEmployeeModal: React.FC = ()  => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    // Success Alert
+    const [openSnack, setOpenSnack] = React.useState(false);
+    const handleSnackClick = () => {
+        setOpenSnack(true);
+      };
+    const handleCloseSnack = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpenSnack(false);
+    };
     
 
     const initialFormData = {
@@ -85,6 +101,8 @@ const AddEmployeeModal: React.FC = ()  => {
   
         const user = await response.json();
         console.log('New user:', user);
+        handleSnackClick();
+        setOpen(false);
         // Handle success - maybe close the modal or show a success message
       } catch (error) {
         console.error('Error adding employee:', error);
@@ -221,6 +239,16 @@ return (
            
             </Box>
             </Modal>
+            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+                <Alert
+                onClose={handleCloseSnack}
+                severity="success"
+                variant="filled"
+                sx={{ width: '100%' }}
+                >
+                A profile was created.
+                </Alert>
+            </Snackbar>
             </div> )
      
 };

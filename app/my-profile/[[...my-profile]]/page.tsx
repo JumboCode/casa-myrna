@@ -1,6 +1,6 @@
 "use client";
 
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/sidebar";
 import React, { useState, useEffect, ReactElement } from "react";
 import Profile from "../../components/MyProfile";
 import "../../globals.css";
