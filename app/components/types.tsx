@@ -2,5 +2,7 @@ export interface profileData {
     firstName: string;
     lastName: string;
     role: string;
-    image: string;
+    imageUrl: string;
+    emailAddresses: [];
+    id: string;
   }
