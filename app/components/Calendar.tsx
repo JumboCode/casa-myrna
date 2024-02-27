@@ -309,6 +309,29 @@ const MyCalendar = (props: {}) => {
 };
 
 const calendar = () => {
+
+  const [filterState, setFilter] = React.useState({
+    partTime: false,
+    fullTime: false,
+    manager: false,
+    lineOne: false,
+    lineTwo: false,
+    lineThree: false,
+    onCall: false,
+    approved: false,
+    pending: false,
+    cancelled: false,
+  });
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter({
+      ...filterState,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
+  const {partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled} = filterState;
+
   return (
     <Box
       sx={{
@@ -332,15 +355,64 @@ const calendar = () => {
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
-          <Select
-            value=""
-            displayEmpty
-            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', width: '200px', height: '38px' }}
-          >
-            <MenuItem value="" disabled>
-              Choose filters
-            </MenuItem>
-          </Select>
+          <CalendarModalButton/>
+          <FormControl sx={{ m: 1, minWidth: 160 }}>
+            <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
+              {/* Menu props align the popup */}
+              <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}}>
+                  <Grid container direction='row' spacing={1} marginRight={2}>
+
+                      {/* EMPLOYEE NAME Column */}
+                      <Grid container direction='column' spacing={1}>
+                          <Grid sx={{ml:2}}>
+                              <ListSubheader> <b>Employee Name</b></ListSubheader>
+                              <Autocomplete
+                                options={employeeOptions}
+                                sx={{ width: 175 }}
+                                renderInput={(params) => <TextField {...params} label="Employee Name" />}
+                              />
+                          </Grid>
+                      </Grid>
+
+                      {/* EMPLOYEE TYPE Column */}
+                      <Grid container direction='column' spacing={1}>
+                          <Grid>
+                              <ListSubheader> <b>Employee Type</b></ListSubheader>
+                              <FormGroup sx={{px:1.5}}>
+                                  <FormControlLabel control={<Checkbox checked={partTime} onChange={handleFilterChange} name="partTime" />} label="Part Time" />
+                                  <FormControlLabel control={<Checkbox checked={fullTime} onChange={handleFilterChange} name="fullTime"/>} label="Full Time" />
+                                  <FormControlLabel control={<Checkbox checked={manager} onChange={handleFilterChange} name="manager" />} label="Manager" />
+                              </FormGroup>
+                          </Grid>
+                      </Grid>
+
+                      {/* PHONE LINE Column */}
+                      <Grid container direction='column' spacing={1}>
+                          <Grid>
+                              <ListSubheader> <b>Phone Line</b></ListSubheader>
+                              <FormGroup sx={{px:1.5}}>
+                                  <FormControlLabel control={<Checkbox checked={lineOne} onChange={handleFilterChange} name="lineOne"/>} label="Line 1" />
+                                  <FormControlLabel control={<Checkbox checked={lineTwo} onChange={handleFilterChange} name="lineTwo"/>} label="Line 2" />
+                                  <FormControlLabel control={<Checkbox checked={lineThree} onChange={handleFilterChange} name="lineThree"/>} label="Line 3" />
+                                  <FormControlLabel control={<Checkbox checked={onCall} onChange={handleFilterChange} name="onCall"/>} label="On Call" />
+                              </FormGroup>
+                          </Grid>
+                      </Grid>
+
+                      {/* SHIFT STATUS Column */}
+                      <Grid container direction='column' spacing={1}>
+                          <Grid>
+                              <ListSubheader> <b>Shift Status</b></ListSubheader>
+                              <FormGroup sx={{px:1.5}}>
+                                  <FormControlLabel control={<Checkbox checked={approved} onChange={handleFilterChange} name="approved"/>} label="Approved" />
+                                  <FormControlLabel control={<Checkbox checked={pending} onChange={handleFilterChange} name="pending"/>} label="Pending" />
+                                  <FormControlLabel control={<Checkbox checked={cancelled} onChange={handleFilterChange} name="cancelled"/>} label="Cancelled" />
+                              </FormGroup>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+              </Select>
+            </FormControl>
         </Grid>
       </Grid>
 

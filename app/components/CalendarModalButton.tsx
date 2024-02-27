@@ -27,7 +27,7 @@ const style = {
         xs: '80%'
     },
     height: {
-        lg: 300,
+        lg: 450,
         xs: '70%'
     },
     bgcolor: "#ffffff",
