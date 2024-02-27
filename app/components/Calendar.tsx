@@ -103,7 +103,7 @@ const MyCalendar = (props: {}) => {
         lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
         lastDayOfWeek.setHours(23, 59, 59);
 
-        const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString);
+        const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString());
         const data = await response.json();
         setShiftInfo(data);
       } catch (e) {
@@ -359,7 +359,20 @@ const calendar = () => {
           <FormControl sx={{ m: 1, minWidth: 160 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
               {/* Menu props align the popup */}
-              <Select autoWidth={true} defaultValue={''} id="grouped-select" label="Grouping" MenuProps={{disableAutoFocusItem: true, anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, transformOrigin: { vertical: 'top', horizontal: 'right' }}}>
+              <Select 
+                autoWidth={true} 
+                defaultValue={''} 
+                id="grouped-select" 
+                label="Grouping" 
+                MenuProps={{
+                  disableAutoFocusItem: true, 
+                  anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, 
+                  transformOrigin: { vertical: 'top', horizontal: 'right' }}}
+                  onInputChange={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }}
+                >
                   <Grid container direction='row' spacing={1} marginRight={2}>
 
                       {/* EMPLOYEE NAME Column */}
@@ -367,9 +380,14 @@ const calendar = () => {
                           <Grid sx={{ml:2}}>
                               <ListSubheader> <b>Employee Name</b></ListSubheader>
                               <Autocomplete
+                                disablePortal
                                 options={employeeOptions}
                                 sx={{ width: 175 }}
                                 renderInput={(params) => <TextField {...params} label="Employee Name" />}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                }}
+                                disableCloseOnSelect
                               />
                           </Grid>
                       </Grid>
