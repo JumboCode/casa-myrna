@@ -84,6 +84,9 @@ const CalendarModalButton: FC = () => {
         endTime: '',
         assignedEmployee: '',
     };
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
 
     // Handle form input change
@@ -91,65 +94,32 @@ const CalendarModalButton: FC = () => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
-
-    const formatDateAndTime = (date: Date, time: string): string => {
-        const formattedDate = date.toISOString().split('T')[0];
-        const [timeString, period] = time.split(' ');
-    
-        let [hours, minutes] = timeString.split(':');
-        hours = parseInt(hours, 10);
-    
-        if (period.toLowerCase() === 'pm' && hours !== 12) {
-            hours += 12;
-        } else if (period.toLowerCase() === 'am' && hours === 12) {
-            hours = 0;
-        }
-    
-        const formattedTime = `${formattedDate}T${hours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00.000Z`;
-        return formattedTime;
-    };
     
     // Handle form submission (IN PROGRESS)
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // const formattedStartDate = startDate.toISOString();
-        const formattedStartTime = formatDateAndTime(startDate, formData.startTime);
-        // const formattedEndDate = endDate.toISOString();
-        const formattedEndTime = formatDateAndTime(endDate, formData.endTime);
         const createdAt = new Date().toISOString();
 
-        console.log("start date and time")
-        console.log(startDate)
-        // console.log(formattedStartDate)
-        console.log(formattedStartTime)
+        // format start and end date/times
+        startDate.setHours(formData.startTime)
+        endDate.setHours(formData.endTime)
 
-        console.log("end date and time")
-        console.log(endDate)
-        // console.log(formattedEndDate)
-        console.log(formattedEndTime)
+        console.log(startDate.toISOString())
+        console.log(endDate.toISOString())
 
         const requestData = {
             // ...formData,
-            // firstName: 'Jiyoon',
-            // lastName: 'Choi',
+            firstName: 'Jiyoon',
+            lastName: 'Choi',
             phoneLine: 1,
-            date: startDate,
-            from: formattedStartTime,
-            to: formattedEndTime,
+            date: startDate.toString(), // not necessary anymore
+            from: startDate.toISOString(),
+            to: endDate.toISOString(),
             created_at: createdAt,
-            userID: 2,
+            userID: "2",
             message: 'hello',
             status: 'ACCEPTED',
-            onCallShiftID: 3
-            // date: formattedStartDate,
-            // from: formattedStartTime,
-            // to: formattedEndTime,
-            // created_at: createdAt,
-            // userID: 2,
-            // message: 'hello',
-            // status: 'ACCEPTED',
-            // onCallShiftID: 3
+            onCallShiftID: 1
         };
 
         // See console to see the form data being sent to POST
@@ -229,7 +199,7 @@ const CalendarModalButton: FC = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker 
                                 label="Start Date"
-                                onChange={(newValue) => setStartDate(newValue)} 
+                                onChange={(newValue) => setStartDate(new Date(newValue))} 
                                 sx={{  marginRight: '10px',width: '180px' }}
                                 />
                         </LocalizationProvider>
@@ -240,30 +210,30 @@ const CalendarModalButton: FC = () => {
                             onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
-                        <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
-                        <MenuItem value={'01:00 am'}>1:00 am</MenuItem>
-                        <MenuItem value={'02:00 am'}>2:00 am</MenuItem>
-                        <MenuItem value={'03:00 am'}>3:00 am</MenuItem>
-                        <MenuItem value={'04:00 am'}>4:00 am</MenuItem>
-                        <MenuItem value={'05:00 am'}>5:00 am</MenuItem>
-                        <MenuItem value={'06:00 am'}>6:00 am</MenuItem>
-                        <MenuItem value={'07:00 am'}>7:00 am</MenuItem>
-                        <MenuItem value={'08:00 am'}>8:00 am</MenuItem>
-                        <MenuItem value={'09:00 am'}>9:00 am</MenuItem>
-                        <MenuItem value={'10:00 am'}>10:00 am</MenuItem>
-                        <MenuItem value={'11:00 am'}>11:00 am</MenuItem>
-                        <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
-                        <MenuItem value={'01:00 pm'}>1:00 pm</MenuItem>
-                        <MenuItem value={'02:00 pm'}>2:00 pm</MenuItem>
-                        <MenuItem value={'03:00 pm'}>3:00 pm</MenuItem>
-                        <MenuItem value={'04:00 pm'}>4:00 pm</MenuItem>
-                        <MenuItem value={'05:00 pm'}>5:00 pm</MenuItem>
-                        <MenuItem value={'06:00 pm'}>6:00 pm</MenuItem>
-                        <MenuItem value={'07:00 pm'}>7:00 pm</MenuItem>
-                        <MenuItem value={'08:00 pm'}>8:00 pm</MenuItem>
-                        <MenuItem value={'09:00 pm'}>9:00 pm</MenuItem>
-                        <MenuItem value={'10:00 pm'}>10:00 pm</MenuItem>
-                        <MenuItem value={'11:00 pm'}>11:00 pm</MenuItem>
+                        <MenuItem value={0}>12:00 am</MenuItem>
+                        <MenuItem value={1}>1:00 am</MenuItem>
+                        <MenuItem value={2}>2:00 am</MenuItem>
+                        <MenuItem value={3}>3:00 am</MenuItem>
+                        <MenuItem value={4}>4:00 am</MenuItem>
+                        <MenuItem value={5}>5:00 am</MenuItem>
+                        <MenuItem value={6}>6:00 am</MenuItem>
+                        <MenuItem value={7}>7:00 am</MenuItem>
+                        <MenuItem value={8}>8:00 am</MenuItem>
+                        <MenuItem value={9}>9:00 am</MenuItem>
+                        <MenuItem value={10}>10:00 am</MenuItem>
+                        <MenuItem value={11}>11:00 am</MenuItem>
+                        <MenuItem value={12}>12:00 pm</MenuItem>
+                        <MenuItem value={13}>1:00 pm</MenuItem>
+                        <MenuItem value={14}>2:00 pm</MenuItem>
+                        <MenuItem value={15}>3:00 pm</MenuItem>
+                        <MenuItem value={16}>4:00 pm</MenuItem>
+                        <MenuItem value={17}>5:00 pm</MenuItem>
+                        <MenuItem value={18}>6:00 pm</MenuItem>
+                        <MenuItem value={19}>7:00 pm</MenuItem>
+                        <MenuItem value={20}>8:00 pm</MenuItem>
+                        <MenuItem value={21}>9:00 pm</MenuItem>
+                        <MenuItem value={22}>10:00 pm</MenuItem>
+                        <MenuItem value={23}>11:00 pm</MenuItem>
                     </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12} sx={{marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
@@ -274,7 +244,7 @@ const CalendarModalButton: FC = () => {
                             <div component={['DatePicker']} >
                                 <DatePicker 
                                     label="End Date"
-                                    onChange={(newValue) => setEndDate(newValue)} 
+                                    onChange={(newValue) => setEndDate(new Date(newValue))} 
                                     sx={{ marginRight: '10px',width: '180px' }}
                                 />
                             </div>
@@ -286,30 +256,30 @@ const CalendarModalButton: FC = () => {
                             onChange={handleInputChange}
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
-                            <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
-                            <MenuItem value={'01:00 am'}>1:00 am</MenuItem>
-                            <MenuItem value={'02:00 am'}>2:00 am</MenuItem>
-                            <MenuItem value={'03:00 am'}>3:00 am</MenuItem>
-                            <MenuItem value={'04:00 am'}>4:00 am</MenuItem>
-                            <MenuItem value={'05:00 am'}>5:00 am</MenuItem>
-                            <MenuItem value={'06:00 am'}>6:00 am</MenuItem>
-                            <MenuItem value={'07:00 am'}>7:00 am</MenuItem>
-                            <MenuItem value={'08:00 am'}>8:00 am</MenuItem>
-                            <MenuItem value={'09:00 am'}>9:00 am</MenuItem>
-                            <MenuItem value={'10:00 am'}>10:00 am</MenuItem>
-                            <MenuItem value={'11:00 am'}>11:00 am</MenuItem>
-                            <MenuItem value={'12:00 am'}>12:00 am</MenuItem>
-                            <MenuItem value={'01:00 pm'}>1:00 pm</MenuItem>
-                            <MenuItem value={'02:00 pm'}>2:00 pm</MenuItem>
-                            <MenuItem value={'03:00 pm'}>3:00 pm</MenuItem>
-                            <MenuItem value={'04:00 pm'}>4:00 pm</MenuItem>
-                            <MenuItem value={'05:00 pm'}>5:00 pm</MenuItem>
-                            <MenuItem value={'06:00 pm'}>6:00 pm</MenuItem>
-                            <MenuItem value={'07:00 pm'}>7:00 pm</MenuItem>
-                            <MenuItem value={'08:00 pm'}>8:00 pm</MenuItem>
-                            <MenuItem value={'09:00 pm'}>9:00 pm</MenuItem>
-                            <MenuItem value={'10:00 pm'}>10:00 pm</MenuItem>
-                            <MenuItem value={'11:00 pm'}>11:00 pm</MenuItem>
+                            <MenuItem value={0}>12:00 am</MenuItem>
+                            <MenuItem value={1}>1:00 am</MenuItem>
+                            <MenuItem value={2}>2:00 am</MenuItem>
+                            <MenuItem value={3}>3:00 am</MenuItem>
+                            <MenuItem value={4}>4:00 am</MenuItem>
+                            <MenuItem value={5}>5:00 am</MenuItem>
+                            <MenuItem value={6}>6:00 am</MenuItem>
+                            <MenuItem value={7}>7:00 am</MenuItem>
+                            <MenuItem value={8}>8:00 am</MenuItem>
+                            <MenuItem value={9}>9:00 am</MenuItem>
+                            <MenuItem value={10}>10:00 am</MenuItem>
+                            <MenuItem value={11}>11:00 am</MenuItem>
+                            <MenuItem value={12}>12:00 pm</MenuItem>
+                            <MenuItem value={13}>1:00 pm</MenuItem>
+                            <MenuItem value={14}>2:00 pm</MenuItem>
+                            <MenuItem value={15}>3:00 pm</MenuItem>
+                            <MenuItem value={16}>4:00 pm</MenuItem>
+                            <MenuItem value={17}>5:00 pm</MenuItem>
+                            <MenuItem value={18}>6:00 pm</MenuItem>
+                            <MenuItem value={19}>7:00 pm</MenuItem>
+                            <MenuItem value={20}>8:00 pm</MenuItem>
+                            <MenuItem value={21}>9:00 pm</MenuItem>
+                            <MenuItem value={22}>10:00 pm</MenuItem>
+                            <MenuItem value={23}>11:00 pm</MenuItem>
                         </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>

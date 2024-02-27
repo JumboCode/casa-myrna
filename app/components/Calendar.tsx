@@ -368,6 +368,7 @@ const calendar = () => {
                   disableAutoFocusItem: true, 
                   anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, 
                   transformOrigin: { vertical: 'top', horizontal: 'right' }}}
+                  // most recently added this below to try to fix front-end bug
                   onInputChange={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
