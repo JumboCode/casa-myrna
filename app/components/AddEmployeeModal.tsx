@@ -20,6 +20,8 @@ import { profileData } from './types';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+// import {fetchPeopleData} from '/ManageProfiles.tsx';
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -40,7 +42,12 @@ const style = {
     borderRadius: '35px',
   }; 
 
-const AddEmployeeModal: React.FC = ()  => {
+  type AddEmployeeModalProps = {
+      profiles: profileData[],
+      onUpdate: Function;
+  };
+
+const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({profiles, onUpdate})  => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -100,10 +107,14 @@ const AddEmployeeModal: React.FC = ()  => {
         }
   
         const user = await response.json();
-        console.log('New user:', user);
-        handleSnackClick();
+
+        // Handle success - close the modal 
         setOpen(false);
-        // Handle success - maybe close the modal or show a success message
+        handleSnackClick(); // show a success message
+
+        // Update the current profiles list without needing to refresh the page
+        onUpdate([user, ...profiles]);
+        
       } catch (error) {
         console.error('Error adding employee:', error);
       }
