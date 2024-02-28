@@ -77,7 +77,7 @@ const style = {
 const localizer = momentLocalizer(moment);
 const employeeOptions = ["Ana Quieros", "Anna Seifield", "Anne Brown", "Angel Ferrian"];
 
-const MyCalendar = (props: {}) => {
+const MyCalendar = (props: {filters: any}) => {
   const { isSignedIn, user, isLoaded } = useUser();
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
@@ -111,8 +111,48 @@ const MyCalendar = (props: {}) => {
       }
     })();
   }, [fetchShiftsTrigger])
+  
 
-  const events = shiftInfo?.map((shift: CalendarInfo, _) => {
+  // const filterShifts = (shift : CalendarInfo, filters: any) => {
+    // partTime: false,
+    // fullTime: false,
+    // manager: false,
+    // lineOne: false,
+    // lineTwo: false,
+    // lineThree: false,
+    // onCall: false,
+    // approved: false,
+    // pending: false,
+    // cancelled: false,
+
+
+
+  // };
+
+
+  const filterShifts = (shift: CalendarInfo, filters: any) => {
+    const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
+  
+    // Add your logic here based on the filters
+    if (
+      (partTime && shift.partTime) ||
+      (fullTime && shift.fullTime) ||
+      (manager && shift.manager) ||
+      (lineOne && (shift.phoneLine == 1)) ||
+      (lineTwo && (shift.phoneLine == 2)) ||
+      (lineThree && (shift.phoneLine == 3)) ||
+      (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
+      (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
+      (pending && shift.status === Status.PENDING) ||
+      (cancelled && shift.status === Status.CANCELLED)
+    ) {
+      return true;
+    }
+  
+    return false;
+  };
+
+  const events = shiftInfo?.filter((shift) => filterShifts(shift, props.filters)).map((shift: CalendarInfo, _) => {
 
 
     let background_color = 'green';
@@ -311,17 +351,39 @@ const MyCalendar = (props: {}) => {
 const calendar = () => {
 
   const [filterState, setFilter] = React.useState({
-    partTime: false,
-    fullTime: false,
-    manager: false,
-    lineOne: false,
-    lineTwo: false,
-    lineThree: false,
-    onCall: false,
-    approved: false,
-    pending: false,
-    cancelled: false,
+    partTime: true,
+    fullTime: true,
+    manager: true,
+    lineOne: true,
+    lineTwo: true,
+    lineThree: true,
+    onCall: true,
+    approved: true,
+    pending: true,
+    cancelled: true,
   });
+
+  const filterShifts = (shift: CalendarInfo, filters: any) => {
+    const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
+  
+    // Add your logic here based on the filters
+    if (
+      (partTime && shift.partTime) ||
+      (fullTime && shift.fullTime) ||
+      (manager && shift.manager) ||
+      (lineOne && shift.lineOne) ||
+      (lineTwo && shift.lineTwo) ||
+      (lineThree && shift.lineThree) ||
+      (onCall && shift.onCall) ||
+      (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
+      (pending && shift.status === Status.PENDING) ||
+      (cancelled && shift.status === Status.CANCELLED)
+    ) {
+      return true;
+    }
+  
+    return false;
+  };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter({
@@ -359,12 +421,14 @@ const calendar = () => {
           <FormControl sx={{ m: 1, minWidth: 160 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
               {/* Menu props align the popup */}
+              
               <Select 
                 autoWidth={true} 
                 defaultValue={''} 
                 id="grouped-select" 
                 label="Grouping" 
                 MenuProps={{
+                  open: true,
                   disableAutoFocusItem: true, 
                   anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, 
                   transformOrigin: { vertical: 'top', horizontal: 'right' }}}
@@ -436,7 +500,7 @@ const calendar = () => {
       </Grid>
 
       <Grid paddingBottom={'4%'}>
-        <MyCalendar />
+        <MyCalendar filters={filterState}/>
       </Grid>
     </Box>
   );

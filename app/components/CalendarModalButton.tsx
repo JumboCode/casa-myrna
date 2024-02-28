@@ -69,21 +69,19 @@ const initialFormData = {
     phoneLine: ''
 };
 
-const CalendarModalButton: FC = () => {
-    const prisma = new PrismaClient();
-    
+const CalendarModalButton: FC = () => {    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
 
-    const initialFormData = {
+    // const initialFormData = {
 
-        phoneLine: '',
-        startTime: '',
-        endTime: '',
-        assignedEmployee: '',
-    };
+    //     phoneLine: '',
+    //     startTime: '',
+    //     endTime: '',
+    //     assignedEmployee: '',
+    // };
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -107,11 +105,13 @@ const CalendarModalButton: FC = () => {
         console.log(startDate.toISOString())
         console.log(endDate.toISOString())
 
+        const [firstName, lastName] = formData.assignedEmployee.split(' ');
+
         const requestData = {
             // ...formData,
-            firstName: 'Jiyoon',
-            lastName: 'Choi',
-            phoneLine: 1,
+            firstName: firstName,
+            lastName: lastName,
+            phoneLine: parseInt(formData.phoneLine),
             date: startDate.toString(), // not necessary anymore
             from: startDate.toISOString(),
             to: endDate.toISOString(),
@@ -150,10 +150,6 @@ const CalendarModalButton: FC = () => {
             console.error('Error assigning shift:', error);
         }
     };
-
-    useEffect(() => {
-        return () => prisma.$disconnect();
-      }, []);
 
     return (
         <>
