@@ -6,9 +6,11 @@ import React, { ReactElement } from "react";
 import Sidebar from "./components/sidebar";
 import "./globals.css";
 import theme from './theme';
+import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
+
 
 const Main = () => {
-  return (<ThemeProvider theme={theme}><Sidebar currentPageComponent={Typography}/></ThemeProvider>)
+  return (<ThemeProvider theme={theme}><Router><Sidebar currentPageComponent={Typography}/></Router></ThemeProvider>)
 };
 
 export default Main;
