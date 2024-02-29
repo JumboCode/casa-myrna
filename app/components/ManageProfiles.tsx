@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
-import AddEmployeeModal from './AddEmployeeModal'
+import AddEmployeeModal from './AddEmployeeModal';
 import { profileData } from './types';
 
 // Custom components and images
@@ -104,6 +104,7 @@ const BoxSx: FC = () => {
   };
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
+
   // peopleArray.forEach(person => {
   //   console.log('p:', person.emailAddresses[0].emailAddress);
 
@@ -227,7 +228,7 @@ const BoxSx: FC = () => {
           <Pagination color="secondary" count={totalPages} page={activePage} onChange={(event, value) => setActivePage(value)} />
         </Stack>
       </Stack>
-  </Box>);
+  </Box> );
 }
 
 export default BoxSx;
