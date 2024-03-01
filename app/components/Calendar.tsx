@@ -394,6 +394,22 @@ const calendar = () => {
 
   const {partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled} = filterState;
 
+  const [open, setOpen] = useState(false);
+
+  const handleSelectOpen = () => {
+    setOpen(true);
+  };
+
+  const handleSelectClose = (event: React.ChangeEvent<{}>, reason?: 'select-option' | 'remove-option' | 'close' | 'clear' | 'escape' | 'backdropClick') => {
+    // Close the select only if the reason is "select-option", "escape", or "backdropClick"
+    if (reason === 'select-option' || reason === 'escape' || reason === 'backdropClick') {
+      setOpen(false);
+    }
+  };
+  
+  
+  
+
   return (
     <Box
       sx={{
@@ -427,32 +443,32 @@ const calendar = () => {
                 defaultValue={''} 
                 id="grouped-select" 
                 label="Grouping" 
-                MenuProps={{
-                  open: true,
-                  disableAutoFocusItem: true, 
-                  anchorOrigin: { vertical: 'bottom', horizontal: 'right' }, 
-                  transformOrigin: { vertical: 'top', horizontal: 'right' }}}
-                  // most recently added this below to try to fix front-end bug
-                  onInputChange={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }}
+                open={open}
+                onOpen={handleSelectOpen}
+                onClose={(e, reason) => {
+                  if (reason !== "backdropClick") {
+                    setOpen(false); 
+                  }
+                }}
                 >
                   <Grid container direction='row' spacing={1} marginRight={2}>
 
                       {/* EMPLOYEE NAME Column */}
                       <Grid container direction='column' spacing={1}>
-                          <Grid sx={{ml:2}}>
+                          <Grid sx={{ml:2}} onClick={(e) => e.stopPropagation()} >
                               <ListSubheader> <b>Employee Name</b></ListSubheader>
                               <Autocomplete
                                 disablePortal
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                }}
+                                onClose={(e) => {  
+                                  e.stopPropagation();
+                                }}
                                 options={employeeOptions}
                                 sx={{ width: 175 }}
                                 renderInput={(params) => <TextField {...params} label="Employee Name" />}
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                }}
-                                disableCloseOnSelect
+                                onMouseDown={(e) => e.stopPropagation()}
                               />
                           </Grid>
                       </Grid>
@@ -462,9 +478,9 @@ const calendar = () => {
                           <Grid>
                               <ListSubheader> <b>Employee Type</b></ListSubheader>
                               <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={partTime} onChange={handleFilterChange} name="partTime" />} label="Part Time" />
-                                  <FormControlLabel control={<Checkbox checked={fullTime} onChange={handleFilterChange} name="fullTime"/>} label="Full Time" />
-                                  <FormControlLabel control={<Checkbox checked={manager} onChange={handleFilterChange} name="manager" />} label="Manager" />
+                                  <FormControlLabel control={<Checkbox checked={partTime} onChange={handleFilterChange} name="partTime" />} onClick={(e) => e.stopPropagation()} label="Part Time" />
+                                  <FormControlLabel control={<Checkbox checked={fullTime} onChange={handleFilterChange} name="fullTime"/>} onClick={(e) => e.stopPropagation()} label="Full Time" />
+                                  <FormControlLabel control={<Checkbox checked={manager} onChange={handleFilterChange} name="manager" />} onClick={(e) => e.stopPropagation()} label="Manager" />
                               </FormGroup>
                           </Grid>
                       </Grid>
@@ -474,10 +490,10 @@ const calendar = () => {
                           <Grid>
                               <ListSubheader> <b>Phone Line</b></ListSubheader>
                               <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={lineOne} onChange={handleFilterChange} name="lineOne"/>} label="Line 1" />
-                                  <FormControlLabel control={<Checkbox checked={lineTwo} onChange={handleFilterChange} name="lineTwo"/>} label="Line 2" />
-                                  <FormControlLabel control={<Checkbox checked={lineThree} onChange={handleFilterChange} name="lineThree"/>} label="Line 3" />
-                                  <FormControlLabel control={<Checkbox checked={onCall} onChange={handleFilterChange} name="onCall"/>} label="On Call" />
+                                  <FormControlLabel control={<Checkbox checked={lineOne} onChange={handleFilterChange} name="lineOne"/>} onClick={(e) => e.stopPropagation()} label="Line 1" />
+                                  <FormControlLabel control={<Checkbox checked={lineTwo} onChange={handleFilterChange} name="lineTwo"/>} onClick={(e) => e.stopPropagation()} label="Line 2" />
+                                  <FormControlLabel control={<Checkbox checked={lineThree} onChange={handleFilterChange} name="lineThree"/>} onClick={(e) => e.stopPropagation()} label="Line 3" />
+                                  <FormControlLabel control={<Checkbox checked={onCall} onChange={handleFilterChange} name="onCall"/>} onClick={(e) => e.stopPropagation()} label="On Call" />
                               </FormGroup>
                           </Grid>
                       </Grid>
@@ -487,9 +503,9 @@ const calendar = () => {
                           <Grid>
                               <ListSubheader> <b>Shift Status</b></ListSubheader>
                               <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={approved} onChange={handleFilterChange} name="approved"/>} label="Approved" />
-                                  <FormControlLabel control={<Checkbox checked={pending} onChange={handleFilterChange} name="pending"/>} label="Pending" />
-                                  <FormControlLabel control={<Checkbox checked={cancelled} onChange={handleFilterChange} name="cancelled"/>} label="Cancelled" />
+                                  <FormControlLabel control={<Checkbox checked={approved} onChange={handleFilterChange} name="approved"/>} onClick={(e) => e.stopPropagation()} label="Approved" />
+                                  <FormControlLabel control={<Checkbox checked={pending} onChange={handleFilterChange} name="pending"/>} onClick={(e) => e.stopPropagation()} label="Pending" />
+                                  <FormControlLabel control={<Checkbox checked={cancelled} onChange={handleFilterChange} name="cancelled"/>} onClick={(e) => e.stopPropagation()} label="Cancelled" />
                               </FormGroup>
                           </Grid>
                       </Grid>
