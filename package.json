@@ -17,7 +17,7 @@
     "@fontsource/montserrat": "^5.0.15",
     "@mui/icons-material": "^5.14.15",
     "@mui/material": "^5.14.15",
-    "@prisma/client": "^5.4.1",
+    "@prisma/client": "^5.10.2",
     "aws-sdk": "^2.1560.0",
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
