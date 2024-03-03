@@ -38,5 +38,18 @@ type CalendarInfo = Event & PrimaryShift
 
 type BackupShift = {}
 
-export type { PrimaryShift, Event, CalendarInfo } 
+type OnCallShift = {
+    onCallShiftID: number, 
+    userID: String, 
+    primaryShifts : PrimaryShift[] 
+    date: Date, 
+    from: Date, 
+    to: Date, 
+    status: Status  
+    message: String, 
+    phoneLine: number, 
+    created_at: Date, 
+}
+
+export type { PrimaryShift, Event, CalendarInfo, OnCallShift } 
 
