@@ -11,9 +11,11 @@ import IconButton from '@mui/material/IconButton';
 import { Grid } from '@mui/material';
 import EditEmployeeModal from './EditEmployeeModal'
 import { useUser } from "@clerk/nextjs";
+import { profileData } from './types';
 
 
-const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string; }) => {
+
+const ProfileList = ({ firstName, lastName, role, imageUrl, email, id, profiles, updateProfiles}: { firstName: string; lastName: string; role: string; imageUrl: string; email: string; id: string, profiles: profileData[], updateProfiles: Function;}) => {
   const truncate = (input: string | undefined, num: number): string => {
     return input ? (input.length > num ? `${input.substring(0, num)}...` : input) : '';
   };
@@ -42,11 +44,7 @@ const ProfileList = ({ firstName, lastName, role, imageUrl, email, id }: { first
             </Typography>
         </Stack>
         <Stack direction="row" spacing={0} alignItems={'center'}>
-          {/* Edit Employee modal here!! */}
-          {/* <Button color="secondary"> edit </Button> */}
-          
-          <EditEmployeeModal emailAddress={email} id={id}/>
-          
+          <EditEmployeeModal emailAddress={email} profiles={profiles} updateProfiles={updateProfiles}/>
         </Stack>
       </Stack>
     </Box>
