@@ -39,4 +39,3 @@ const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
 };
 
 export default Sidebar;
-
