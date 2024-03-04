@@ -10,7 +10,7 @@ import theme from '../theme';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Image from "next/image";
 import Add from "../images/9.png"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import UploadImage from '../images/6.png';
 import Select from '@mui/material/Select';
@@ -38,11 +38,13 @@ const style = {
     p: 4,
     borderRadius: '35px',
   }; 
-  type EditEmployeeModalProps = {
-        emailAddress: string;
-      };
+    type EditEmployeeModalProps = {
+        emailAddress: string,
+        profiles: profileData[],
+        updateProfiles: Function;
+    };
       
-const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id }) => {
+const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, profiles, updateProfiles}) => {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     
@@ -55,28 +57,37 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
     // Success Alert
     const [openSnack, setOpenSnack] = React.useState(false);
     const handleSnackClick = () => {
+        console.log("in snack click");
         setOpenSnack(true);
       };
     const handleCloseSnack = (event?: React.SyntheticEvent | Event, reason?: string) => {
       if (reason === 'clickaway') {
         return;
       }
-  
+      console.log("in closing snack click");
+
       setOpenSnack(false);
     };
 
     // Success alert 2 for deleting:
     const [openSnack2, setOpenSnack2] = React.useState(false);
     const handleSnackClick2 = () => {
+        console.log("in handle click2");
         setOpenSnack2(true);
       };
+    
+
     const handleCloseSnack2 = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        console.log("in closing snack click2");
       if (reason === 'clickaway') {
         return;
       }
+      
   
       setOpenSnack2(false);
     };
+
+      
     
     /* Fetches user data when 'edit' button is clicked for that user email passed into Modal */
     const fetchUserByEmail = async () => {
@@ -167,7 +178,10 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
     const handleDelete = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
-            
+
+            /* Show a success message and reload the page immediately */
+            setOpen(false);
+            handleSnackClick2();            
             /* Delete user from the database with specified unique id*/
             const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
                 method: 'DELETE',
@@ -182,11 +196,11 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
   
             const user = await response.json();
 
-            /* Show a success message and reload the page immediately */
-            // console.log("Employee was successfully deleted - refresh the page");
-            // location.reload(); /* Reload page to see change was successful */
-            handleSnackClick2();
-            setOpen(false);
+            /* Update the state of the profile list on the page to remove deleted profile*/
+            const updatedProfiles = profiles.filter(a => a.id !== idString.id);
+    
+            const updateResult = await updateProfiles(updatedProfiles);
+            
         } catch (error) {
             console.error('Error deleting employee:', error);
         }
@@ -196,6 +210,8 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
+            setOpen(false);
+            handleSnackClick(); // show a success message
 
             /* Match specification of database, different from form data formatting */
             const finalFormData = {
@@ -226,11 +242,18 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, id 
   
             const user = await response.json();
 
-            /* Close the modal and show a success message */
-            console.log("Employee was successfully added - refresh the page");
-            handleSnackClick();
-            setOpen(false);
-            // location.reload(); /* Reload page to see change was successful */
+            const updatedProfiles = profiles.map(p => {
+                if (p.id === idString.id) {
+                    // Create a new object with changes
+                    return { ...p, firstName: user.firstName, lastName: user.lastName, emailAddress: user.emailAddress, publicMetaData: user.publicMetadata };
+                } else {
+                    // No changes
+                    return p;
+                }
+            });
+    
+            const result = await updateProfiles(updatedProfiles);
+
         } catch (error) {
             console.error('Error editing employee:', error);
         }
@@ -368,7 +391,7 @@ return (
            
             </Box>
             </Modal>
-            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+            <Snackbar open={openSnack} autoHideDuration={15000} onClose={handleCloseSnack}>
                 <Alert
                 onClose={handleCloseSnack}
                 severity="success"
