@@ -27,7 +27,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { PrimaryShift, Status, Event, CalendarInfo } from '../types/types';
+import { PrimaryShift, Status, Event, CalendarInfo, OnCallShift } from '../types/types';
 import { UserProfile, clerkClient } from "@clerk/nextjs"
 import CalendarModalButton from './CalendarModalButton';
 
@@ -82,30 +82,38 @@ const MyCalendar = (props: {filters: any}) => {
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
   const [shiftInfo, setShiftInfo] = useState<CalendarInfo[] | null>(null);
+  const [onCallInfo, setOnCallInfo] = useState<OnCallShift[] | null>(null);
   const [updateInfo, setUpdateInfo] = useState<CalendarInfo | null>(null);
 
 
   const [formData, setFormData] = useState<CalendarInfo | null>(null);
   const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
 
-
   const [open, setOpen] = useState(false);
   const today = new Date();
-  
+
   useEffect(() => {
     (async function () {
       try {
         const firstDayOfWeek = new Date(today);
         firstDayOfWeek.setDate(today.getDate() - today.getDay());
         firstDayOfWeek.setHours(0, 0, 0);
-      
+
         const lastDayOfWeek = new Date(firstDayOfWeek);
         lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
         lastDayOfWeek.setHours(23, 59, 59);
 
-        const response = await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString());
-        const data = await response.json();
-        setShiftInfo(data);
+        // refactored names into the .then promise, so far nothing has broke.  
+        await fetch('api/shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString).then(async (response) => {
+          const data = await response.json();
+          setShiftInfo(data);
+        });
+        await fetch('api/on-call-shifts?from=' + firstDayOfWeek.toISOString() + "&to=" + lastDayOfWeek.toISOString()).then(async (response) => {
+          const data = await response.json();
+          setOnCallInfo(data);
+        });
+
+
       } catch (e) {
         throw new Error('Failed to fetch shift data');
       }
@@ -113,21 +121,8 @@ const MyCalendar = (props: {filters: any}) => {
   }, [fetchShiftsTrigger])
   
 
-  // const filterShifts = (shift : CalendarInfo, filters: any) => {
-    // partTime: false,
-    // fullTime: false,
-    // manager: false,
-    // lineOne: false,
-    // lineTwo: false,
-    // lineThree: false,
-    // onCall: false,
-    // approved: false,
-    // pending: false,
-    // cancelled: false,
+  // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
 
-
-
-  // };
 
 
   const filterShifts = (shift: CalendarInfo, filters: any) => {
@@ -152,7 +147,7 @@ const MyCalendar = (props: {filters: any}) => {
     return false;
   };
 
-  const events = shiftInfo?.filter((shift) => filterShifts(shift, props.filters)).map((shift: CalendarInfo, _) => {
+  const shifts = shiftInfo?.filter((shift) => filterShifts(shift, props.filters)).map((shift: CalendarInfo, _) => {
 
 
     let background_color = 'green';
@@ -165,26 +160,26 @@ const MyCalendar = (props: {filters: any}) => {
     return {
       /*******************************************************
        *        associated fields for PrimaryShiftInfo       *
-       ******************************************************/ 
+       ******************************************************/
       primaryShiftID: shift.primaryShiftID,
-      userID:         shift.userID,
-      onCallShiftID:    shift.onCallShiftID,
-      from:           new Date(shift.from),
-      to:             new Date(shift.to), 
-      firstName:      shift.firstName,
-      lastName:       shift.lastName,
-      date:           new Date(shift.from).setHours(0,0,0,0),
-      status:         shift.status,
-      phoneLine:      shift.phoneLine, 
-      message:        shift.message,
-      created_at:     new Date(), 
-  
+      userID: shift.userID,
+      onCallShiftID: shift.onCallShiftID,
+      from: new Date(shift.from),
+      to: new Date(shift.to),
+      firstName: shift.firstName,
+      lastName: shift.lastName,
+      date: new Date(shift.from).setHours(0, 0, 0, 0),
+      status: shift.status,
+      phoneLine: shift.phoneLine,
+      message: shift.message,
+      created_at: new Date(),
+
       /*******************************************************
        *            associated fields for Event              *
        ******************************************************/
-      start:          new Date(shift.from),
-      end:            new Date(shift.to),
-      title:          shift.firstName + " " + shift.lastName, // we don't know what to assign this right now 
+      start: new Date(shift.from),
+      end: new Date(shift.to),
+      title: shift.firstName + " " + shift.lastName, // we don't know what to assign this right now 
       style: {
         opacity: .5,
         backgroundColor: background_color,
@@ -192,18 +187,55 @@ const MyCalendar = (props: {filters: any}) => {
     }
   });
 
+  // appended the on call shifts to the events array to render the event to the calendar. 
+  const onCallShifts = onCallInfo?.map((onCallShift: OnCallShift) => {
+    let background_color = 'green';
+
+    if (onCallShift.status.toString() === 'CANCELLED') {
+      background_color = 'gray';
+    } else if (onCallShift.status.toString() === 'PENDING') {
+      background_color = 'orange';
+    }
+
+    return {
+      onCallShiftID: onCallShift.onCallShiftID,
+      userID: onCallShift.userID,
+      primaryShifts: onCallShift.primaryShifts,
+      date: new Date(onCallShift.date), // not sure what to set this 
+      from: new Date(onCallShift.from),
+      to: new Date(onCallShift.to),
+      status: onCallShift.status,
+      message: onCallShift.message,
+      phoneLine: onCallShift.phoneLine,
+      created_at: new Date(onCallShift.created_at),
+
+      start: new Date(onCallShift.from),
+      end: new Date(onCallShift.to),
+      title: onCallShift.userID, // we don't know what to assign this right now 
+      style: {
+        opacity: .5,
+        backgroundColor: background_color,
+      }
+    }
+  });
+
+  // this is to tell typescript that if the array is undefined, then use the empty list instead
+  const events = [...shifts ?? [], ...onCallShifts ?? []]
+
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
     setFormData(e)
   };
 
-  const handleClose = () => {setOpen(false);
-                             setFormData(null)}
+  const handleClose = () => {
+    setOpen(false);
+    setFormData(null)
+  }
 
   /* Currently unused in form, but may be useful later */
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
-    if (formData){
+    if (formData) {
       setFormData({
         ...formData,
         [name]: value,
@@ -214,7 +246,7 @@ const MyCalendar = (props: {filters: any}) => {
   /* Currently unused in form, but may be useful later */
   const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
     const { name, value } = event.target;
-    if (formData){
+    if (formData) {
       setFormData({
         ...formData,
         [name]: value,
@@ -222,45 +254,45 @@ const MyCalendar = (props: {filters: any}) => {
     }
   };
 
-  const handleSubmit = async (e: CalendarInfo, modifiedData : Partial<CalendarInfo>) => {
-      Object.keys(modifiedData).forEach(key => {
-        if (e.hasOwnProperty(key)) {
-          e[key] = modifiedData[key];
-        }
-      });
+  const handleSubmit = async (e: CalendarInfo, modifiedData: Partial<CalendarInfo>) => {
+    Object.keys(modifiedData).forEach(key => {
+      if (e.hasOwnProperty(key)) {
+        e[key] = modifiedData[key];
+      }
+    });
 
-      const keysToDelete = [ 'start', 'end', 'title', 'style', 'sourceResource' ]
-      keysToDelete.forEach((key : string, _) => {
-        if (formData) { delete (formData as {[key: string]: any})[key]; }
-      }) 
+    const keysToDelete = ['start', 'end', 'title', 'style', 'sourceResource']
+    keysToDelete.forEach((key: string, _) => {
+      if (formData) { delete (formData as { [key: string]: any })[key]; }
+    })
 
-      const response = await fetch('api/shifts?shiftID=' + formData?.primaryShiftID.toString(), {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData) 
-      });
+    const response = await fetch('api/shifts?shiftID=' + formData?.primaryShiftID.toString(), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
     setFetchShiftsTrigger(prev => prev + 1);
     handleClose()
   }
 
   /* Used to rdner different buttons on shift modal depending on shift status, user role and user id */
   const renderShiftButtons = () => {
-    if (formData?.status === 'ACCEPTED'){ /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
-        return <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
-    } else if (formData?.status === 'CANCELLED'){ /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
-        return <Button onClick={() => {handleSubmit(formData, {'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
-    } else if (formData?.status === 'PENDING'){
-        if (user?.publicMetadata.role == 'Coordinator'){
-          return <>
-                <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Reject Request</Button>
-                <Button onClick={() => {handleSubmit(formData, {'status': Status.ACCEPTED})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Approve Request</Button>
-                </>
-        } else if (user?.id == formData?.userID){
-            return <Button onClick={() => {handleSubmit(formData, {'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': ''})}} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Cancel Request</Button>
-        }
+    if (formData?.status === 'ACCEPTED') { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
+      return <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+    } else if (formData?.status === 'CANCELLED') { /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
+      return <Button onClick={() => { handleSubmit(formData, { 'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
+    } else if (formData?.status === 'PENDING') {
+      if (user?.publicMetadata.role == 'Coordinator') {
+        return <>
+          <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Reject Request</Button>
+          <Button onClick={() => { handleSubmit(formData, { 'status': Status.ACCEPTED }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Approve Request</Button>
+        </>
+      } else if (user?.id == formData?.userID) {
+        return <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Cancel Request</Button>
+      }
     }
   };
 
@@ -303,39 +335,39 @@ const MyCalendar = (props: {filters: any}) => {
           </Box>
           <Box>
             <form>
-              <Grid container spacing={2} columnSpacing={{ xs: 10, sm: 80, md: 5, lg: 5 }} justify-content='flex-start' alignItems='flex-start' columns={12} margin={{ xs: 1, sm: 2, md: 3, lg: 4 }} sx={{width:"100%"}}>
-                <Grid container spacing={4} direction='column' alignItems='flex-start' paddingBottom='13%' sx={{width: "100%"}}>
-                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width:"100%"}}>
-                    <Typography variant="h4" sx={{marginRight: 1, width: "100"}}>
+              <Grid container spacing={2} columnSpacing={{ xs: 10, sm: 80, md: 5, lg: 5 }} justify-content='flex-start' alignItems='flex-start' columns={12} margin={{ xs: 1, sm: 2, md: 3, lg: 4 }} sx={{ width: "100%" }}>
+                <Grid container spacing={4} direction='column' alignItems='flex-start' paddingBottom='13%' sx={{ width: "100%" }}>
+                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width: "100%" }}>
+                    <Typography variant="h4" sx={{ marginRight: 1, width: "100" }}>
                       Start Time:
                     </Typography>
-                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", flex: 1, width:"100%" }}> <Typography sx={{display: "flex", justifyContent: "center"}}> {formData ? formData.from.toString().substring(0, formData.from.toString().indexOf(' GMT')) : ""} </Typography> </Box>
+                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", flex: 1, width: "100%" }}> <Typography sx={{ display: "flex", justifyContent: "center" }}> {formData ? formData.from.toString().substring(0, formData.from.toString().indexOf(' GMT')) : ""} </Typography> </Box>
                   </Grid>
-                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width: "100%"}}>
-                    <Typography variant="h4" sx={{marginRight: "15px", width: "100"}}>
+                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width: "100%" }}>
+                    <Typography variant="h4" sx={{ marginRight: "15px", width: "100" }}>
                       End Time:
                     </Typography>
-                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{display: "flex", justifyContent: "center"}}> {formData ? formData.to.toString().substring(0, formData.to.toString().indexOf(' GMT')) : ""} </Typography> </Box>
+                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{ display: "flex", justifyContent: "center" }}> {formData ? formData.to.toString().substring(0, formData.to.toString().indexOf(' GMT')) : ""} </Typography> </Box>
                   </Grid>
-                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width:"100%"}}>
-                    <Typography variant="h4" sx={{marginRight: 10}}>
+                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: -1, width: "100%" }}>
+                    <Typography variant="h4" sx={{ marginRight: 10 }}>
                       Assigned Employee:
                     </Typography>
-                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{marginLeft: 1}}> {formData ? formData.title : ""} </Typography> </Box>
+                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{ marginLeft: 1 }}> {formData ? formData.title : ""} </Typography> </Box>
                   </Grid>
-                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: -1, width:"100%" }}>
-                    <Typography variant="h4" sx={{marginRight: "148px"}}>
+                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: -1, width: "100%" }}>
+                    <Typography variant="h4" sx={{ marginRight: "148px" }}>
                       Phone Line:
                     </Typography>
-                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{marginLeft: 1}}> {formData ? formData.phoneLine : ""} </Typography> </Box>
+                    <Box sx={{ border: 1, borderColor: "black", borderRadius: "5px", width: "100%", flex: 1 }}> <Typography sx={{ marginLeft: 1 }}> {formData ? formData.phoneLine : ""} </Typography> </Box>
                   </Grid>
-                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: -1, width:"100%" }}>
-                    <Typography variant="h4" sx={{marginRight: "190px"}}>
-                      Status: 
-                    </Typography> 
-                    <Box sx={{ flex: 1, border: 1, borderColor:formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor, borderRadius: "5px", width: "100%", color: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor }}> <Typography sx={{display: "flex", alignItems: "center", justifyContent: "center"}}> {formData?.style.backgroundColor == "green" ? "Assigned" : (formData?.style.backgroundColor == "gray" ? "Cancelled" : "Pending")} </Typography> </Box>
+                  <Grid container direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: -1, width: "100%" }}>
+                    <Typography variant="h4" sx={{ marginRight: "190px" }}>
+                      Status:
+                    </Typography>
+                    <Box sx={{ flex: 1, border: 1, borderColor: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor, borderRadius: "5px", width: "100%", color: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor }}> <Typography sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}> {formData?.style.backgroundColor == "green" ? "Assigned" : (formData?.style.backgroundColor == "gray" ? "Cancelled" : "Pending")} </Typography> </Box>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign='center' paddingTop='5%'  sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Grid xs={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign='center' paddingTop='5%' sx={{ display: 'flex', justifyContent: 'center' }}>
                     {renderShiftButtons()}
                   </Grid>
                 </Grid>
