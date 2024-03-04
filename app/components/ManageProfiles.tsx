@@ -16,8 +16,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 import AddEmployeeModal from './AddEmployeeModal';
-
-
 import { profileData } from './types';
 
 // Custom components and images
