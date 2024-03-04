@@ -21,6 +21,18 @@ import Alert from '@mui/material/Alert';
 const BoxSx: FC = () => {
   const theme = useTheme();
   const { isSignedIn, user, isLoaded } = useUser();
+  /* Default initial form data, prior to updates */
+  const initialFormData = {
+    firstName: '',
+    lastName: '',
+    emailAddress: '',
+    role: '',
+    pronouns: '',
+    phoneNumber:''
+};
+
+/* This updates the submit form data with the fetched user data */
+const [formData, setFormData] = useState(initialFormData);
 
   if (!user) {
     console.error('User data is not loaded yet.');
@@ -88,6 +100,57 @@ const handleImageChange = async (event) => {
       reader.readAsDataURL(file);
     }
   };
+  /* Handle input change */
+const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData,
+        [name]: value,
+    });
+};
+const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    if (!user) {
+        console.error('User data is not loaded yet.');
+        return;
+      }
+      console.log(formData)
+    e.preventDefault();
+    try {
+
+        /* Match specification of database, different from form data formatting */
+        const finalFormData = {
+            publicMetadata: {
+                firstName: user?.firstName,
+                lastName: user?.lastName,
+                emailAddress: user?.emailAddresses,
+                role: user?.publicMetadata.role,
+                pronouns: formData.pronouns,
+                phoneNumber: user?.publicMetadata.phoneNumber,
+            },
+        };
+        
+        let uid = user?.emailAddresses
+        /* Update the database with the new fields*/
+        const response = await fetch(`/api/users?id=${user?.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(finalFormData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to edit employee');
+        }
+
+
+        /* Close the modal and show a success message */
+        console.log("Employee was successfully added - refresh the page");
+        location.reload(); /* Reload page to see change was successful */
+    } catch (error) {
+        console.error('Error editing employee:', error);
+    }
+};
 
   return (
     <Box
@@ -208,9 +271,11 @@ const handleImageChange = async (event) => {
           <Grid xs={12} sm={12} md={12} lg={12}>
           <Typography variant="h4">Pronouns</Typography>
             <TextField
+              name = "pronouns"
+              onChange={handleInputChange}
               defaultValue={user?.publicMetadata.pronouns}
               InputProps={{
-                readOnly: true,
+                readOnly: false,
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
@@ -328,6 +393,7 @@ const handleImageChange = async (event) => {
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
             <Button
+              onClick={handleSubmit}
               sx={{
                 paddingLeft: "10%",
                 paddingRight: "10%",
