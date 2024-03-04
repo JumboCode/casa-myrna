@@ -15,18 +15,13 @@ export async function GET(req: NextRequest)
                 const searchParams = req.nextUrl.searchParams
                 const userID = searchParams.get('userID')
                 const status = searchParams.get('status')
-                const userID_numeric = userID ? parseInt(userID as string, 10): null;
 
                 const startBound = searchParams.get('after')  
                 const endBound = searchParams.get('before')
                 const startBoundDate = startBound ? new Date(startBound): null
                 const endBoundDate = endBound ? new Date(endBound): null
-
-                if (isNaN(userID_numeric as number)) {
-                        return new Response('Error: Please specify an integer primary user id', {
-                          status: 400,
-                        })
-                } else if ((startBoundDate && isNaN(startBoundDate.getTime())) || 
+                
+                if ((startBoundDate && isNaN(startBoundDate.getTime())) || 
                            (endBoundDate && isNaN(endBoundDate.getTime()))) {
                         return new Response('Error: after & before fields must be valid dates', {
                                 status: 400,
@@ -36,8 +31,8 @@ export async function GET(req: NextRequest)
                 let queryFilters  = {
                         AND: [{}]
                 }
-                if (userID_numeric){
-                        queryFilters.AND.push({ userID: userID_numeric})
+                if (userID){
+                        queryFilters.AND.push({ userID: userID})
                 }
                 if (status){
                         queryFilters.AND.push({ status: status})
@@ -51,7 +46,6 @@ export async function GET(req: NextRequest)
 
                 let shifts = await prisma.primaryShift.findMany({where: queryFilters})
                 return new Response(JSON.stringify(shifts))
-        
 }
 
 
@@ -62,8 +56,13 @@ export async function GET(req: NextRequest)
  */
 export async function POST(req: NextRequest)
 {
-        try {
+
+        console.log("Greetings Globe")
+        // try {
+                console.log(typeof req)
                 let data = await req.json();
+                console.log("PRINTING DATA")
+                console.log(data)
                 data = {
                 ...data,
                 "date": new Date(data.date),
@@ -73,11 +72,11 @@ export async function POST(req: NextRequest)
                 };
                 const shift = await prisma.primaryShift.create({data});
                 return new Response(JSON.stringify(shift))
-        } catch {
-                return new Response('Error: An unexpected error occured', {
-                        status: 500,
-                      })
-        }
+        // } catch (error) {
+        //         return new Response('Error: An unexpected error occured', {
+        //                 status: 500,
+        //               })
+        // }
 }
 
 /* 

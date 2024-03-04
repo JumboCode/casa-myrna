@@ -12,7 +12,11 @@ import UploadImage from "../images/6.png";
 import { useUser } from "@clerk/nextjs";
 import Clerk from '@clerk/clerk-js';
 
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 // import InputFileUpload from "./UploadPic";
+
 
 const BoxSx: FC = () => {
   const theme = useTheme();
@@ -35,6 +39,21 @@ const [formData, setFormData] = useState(initialFormData);
     return;
   }
   const [imageUrl, setImageUrl] = useState("");
+
+    // Success Alert
+
+    const [openSnack, setOpenSnack] = React.useState(false);
+    const handleSnackClick = () => {
+        setOpenSnack(true);
+      };
+
+    const handleCloseSnack = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpenSnack(false);
+    };
   
 
 
@@ -50,6 +69,11 @@ async function uploadProfileImage(imageFile) {
   
       // Handle the result
       console.log('Profile image set successfully:', result);
+      // Insert onclickOpen snackbar here
+      handleSnackClick();
+
+
+
     } catch (error) {
       // Handle any errors that occur during the image upload
       console.error('Failed to set profile image:', error);
@@ -262,6 +286,7 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
             ></TextField>
             <Button
               variant="text"
+              onClick={handleSnackClick}
               sx={{
                 borderRadius: "20px",
                 textIndent: "10px",
@@ -384,7 +409,18 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
           </Grid>
         </Grid>
       </Grid>
+      <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+        <Alert
+        onClose={handleCloseSnack}
+        severity="success"
+        variant="filled"
+        sx={{ width: '100%' }}
+        >
+        Your changes were saved.
+        </Alert>
+      </Snackbar>
     </Box>
+
   );
 };
 
