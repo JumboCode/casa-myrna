@@ -16,46 +16,45 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 import AddEmployeeModal from './AddEmployeeModal';
+
+
 import { profileData } from './types';
 
 // Custom components and images
 import profileList from "./profileList"
+
+
+
 import Image from "next/image";
 import ClearIcon from '@mui/icons-material/Clear';
 import { FC, useEffect, useState } from 'react';
 import theme from '../theme';
 
-// interface profileData {
-//   firstName: string;
-//   lastName: string;
-//   role: string;
-//   image: string;
-// }
-
 interface NameListProps {
   people: profileData[];
   itemsPerPage: number;
+  // updateProfiles: Function;
 }
 
-const NameList: React.FC<NameListProps> = ({ people }) => (
-  <div>
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
-      {people.map((person, index) => (
-        <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
-          <br/> 
-          {profileList({
-            firstName: person.firstName,
-            lastName: person.lastName,
-            role: person.publicMetadata["role"],
-            imageUrl: person.imageUrl,
-            email: person.emailAddresses[0].emailAddress,
-            id: person.id
-          })}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+// const NameList: React.FC<NameListProps> = ({ people }) => (
+//   <div>
+//     <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
+//       {people.map((person, index) => (
+//         <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
+//           <br/> 
+//           {profileList({
+//             firstName: person.firstName,
+//             lastName: person.lastName,
+//             role: person.publicMetadata["role"],
+//             imageUrl: person.imageUrl,
+//             email: person.emailAddresses[0].emailAddress,
+//             id: person.id
+//           })}
+//         </li>
+//       ))}
+//     </ul>
+//   </div>
+// );
 
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
@@ -64,6 +63,29 @@ const BoxSx: FC = () => {
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1); 
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
+
+  const NameList: React.FC<NameListProps> = ({ people }) => (
+    <div>
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0}}>
+        {people.map((person, index) => (
+          <li key={index} style={{fontFamily: theme.typography.body2.fontFamily }}>
+            <br/> 
+            {profileList({
+              firstName: person.firstName,
+              lastName: person.lastName,
+              role: person.publicMetadata["role"],
+              imageUrl: person.imageUrl,
+              email: person.emailAddresses[0].emailAddress,
+              id: person.id, 
+              profiles: peopleArray,
+              updateProfiles: setPeopleArray,
+
+            })}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
   
   useEffect(() => {
     const fetchPeopleData = async () => {
@@ -75,10 +97,6 @@ const BoxSx: FC = () => {
         
         const data = await response.json();
         setPeopleArray(data);
-        // console.log('Email:', peopleArray[0].firstName);
-        // peopleArray.forEach(person => {
-        //   console.log('Email:', person.firstName);
-        // });
         
       } catch (error) {
         console.error('Error fetching people data:', error);
@@ -104,12 +122,6 @@ const BoxSx: FC = () => {
   };
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
-
-  // peopleArray.forEach(person => {
-  //   console.log('p:', person.emailAddresses[0].emailAddress);
-
-  // }
-  // );
 
   return (
     <Box
@@ -190,7 +202,7 @@ const BoxSx: FC = () => {
                 <Grid xs={6}>
                   {/* Add new employee */}
                   <Grid container>
-                     <AddEmployeeModal/> 
+                     <AddEmployeeModal profiles={peopleArray} onUpdate={setPeopleArray}/> 
                   </Grid>
 
                   {/* Select filters */}
@@ -220,7 +232,7 @@ const BoxSx: FC = () => {
 
 
           {/* Profile List */}
-          <NameList people={items} itemsPerPage={itemsPerPage} />
+          <NameList people={items} itemsPerPage={itemsPerPage}/>
         </Stack>
 
         {/* Pagination */}
