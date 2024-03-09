@@ -13,6 +13,13 @@ enum Status {
   CANCELLED
 }
 
+enum AnnouncementGroup {
+  Coordinator
+  Full_time
+  Part_time
+  Relief
+}
+
 // Represents On Call shifts
 model primaryShift {
   primaryShiftID       Int    @id @default(autoincrement()) 
@@ -41,5 +48,26 @@ model onCallShift {
   message              String
   phoneLine            Int
   created_at           DateTime
+}
+
+model Announcement {
+  announcementID        Int    @id @default(autoincrement()) 
+  title                 String
+  date                  DateTime
+  content               String
+  userID                String
+  group                 AnnouncementGroup
+  firstName             String
+  lastName              String 
+  profileImageURL       String 
+  userViews             UserAnnouncementView[] @relation("Announcement")
+
+}
+
+model UserAnnouncementView {
+  userAnnouncementViewID  Int @id @default(autoincrement()) 
+  userID                  String
+  announcementID          Int    
+  announcement  Announcement  @relation("Announcement", fields: [announcementID], references: [announcementID]) 
 }
 
