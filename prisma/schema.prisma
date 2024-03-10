@@ -50,7 +50,7 @@ model onCallShift {
   created_at           DateTime
 }
 
-model Announcement {
+model announcement {
   announcementID        Int    @id @default(autoincrement()) 
   title                 String
   date                  DateTime
@@ -60,14 +60,14 @@ model Announcement {
   firstName             String
   lastName              String 
   profileImageURL       String 
-  userViews             UserAnnouncementView[] @relation("Announcement")
+  userViews             userAnnouncementView[] @relation("Announcement")
 
 }
 
-model UserAnnouncementView {
-  userAnnouncementViewID  Int @id @default(autoincrement()) 
+model userAnnouncementView {
   userID                  String
   announcementID          Int    
-  announcement  Announcement  @relation("Announcement", fields: [announcementID], references: [announcementID]) 
+  announcement  announcement  @relation("Announcement", fields: [announcementID], references: [announcementID], onDelete: Cascade) 
+  @@id([userID, announcementID])
 }
 
