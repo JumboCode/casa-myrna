@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     if (endBound) {
             queryFilters.AND.push({date : {lte: endBoundDate,}})
     }
-    let annoucements = await prisma.Announcement.findMany({where: queryFilters})
+    let annoucements = await prisma.announcement.findMany({where: queryFilters})
     return new Response(JSON.stringify(annoucements))
 }
 
@@ -51,14 +51,13 @@ export async function GET(req: NextRequest) {
  *      profileImageURL
  */
 export async function POST(req: Request) {
-   
     try {
         let data = await req.json();
         data = {
             ...data,
             "date": new Date(data.date),
         };
-        const shift = await prisma.Announcement.create({data});
+        const shift = await prisma.announcement.create({data});
         return new Response(JSON.stringify(shift))
     } catch (error) {
          return new Response('Error: An unexpected error occured', {
@@ -89,7 +88,7 @@ export async function PUT(req: NextRequest)
             "date": new Date(data.date),
         };
 
-        const announcement = await prisma.Announcement.upsert({
+        const announcement = await prisma.announcement.upsert({
             where: {announcementID: announcementIDNumeric },
             update: data,
             create: data
@@ -124,7 +123,7 @@ export async function PUT(req: NextRequest)
           })
         }
     
-        let announcement = await prisma.Announcement.delete({
+        let announcement = await prisma.announcement.delete({
           where: {
             announcementID: idNum,
           },
@@ -133,7 +132,7 @@ export async function PUT(req: NextRequest)
      } catch (error) {
          if (error instanceof Prisma.PrismaClientKnownRequestError && 
              error.code === 'P2025') {
-          return new Response('Error: Announcement not found', {
+          return new Response('Error: announcement not found', {
             status: 400,
           })
         } else {
