@@ -95,6 +95,7 @@ const BoxSx: FC = () => {
         
         const data = await response.json();
         setPeopleArray(data);
+        console.log("Number of people fetched:", data.length);
         
       } catch (error) {
         console.error('Error fetching people data:', error);
