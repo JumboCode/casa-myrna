@@ -280,7 +280,7 @@ const MyCalendar = (props: {filters: any}) => {
 
   /* Used to rdner different buttons on shift modal depending on shift status, user role and user id */
   const renderShiftButtons = () => {
-    if (formData?.status === 'ACCEPTED') { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
+    if (formData?.status === 'ACCEPTED' && (user?.publicMetadata.role == 'Coordinator' || (user?.id == formData?.userID))) { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
     } else if (formData?.status === 'CANCELLED') { /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
