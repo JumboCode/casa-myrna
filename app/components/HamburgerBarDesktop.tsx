@@ -7,6 +7,9 @@ import Calendar from "app/images/3.png";
 import Groupchat from "app/images/4.png";
 import Profile from "app/images/7.png";
 import Logout from "app/images/5.png";
+import Stick from "app/images/stickFig.svg"
+import People from "app/images/people.svg"
+import Announce from "app/images/announce.svg"
 import Image from "next/image";
 import { FC, useState } from "react";
 import Logo from "app/images/1.png";
@@ -67,7 +70,7 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
             component="a"
             href="announcements"
           >
-            <Image src={Announcements} alt="Error" width={30} height={30} />
+            <Image src={Announce} alt="Error" width={30} height={30} />
             <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
             Announcements{" "}
           </MenuItem>
@@ -116,7 +119,7 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
               component="a"
               href="employer-manage-profiles"
             >
-              <Image src={Profile} alt="Error" width={30} height={30} />
+              <Image src={People} alt="Error" width={30} height={30} />
               <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
               Manage Profiles
             </MenuItem>
