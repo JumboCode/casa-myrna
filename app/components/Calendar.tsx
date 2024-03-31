@@ -457,9 +457,9 @@ const calendar = () => {
         marginRight: '5%',
       }}
     >
-      <Grid container spacing={2} columns={20} paddingTop="2%">
+      <Grid container spacing={2} columns={{lg:20, xs:30}} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
-          <Typography variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
+          <Typography display={{xs: 'none', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
         </Grid>
