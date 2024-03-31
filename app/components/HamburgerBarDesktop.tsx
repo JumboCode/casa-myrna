@@ -82,20 +82,6 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
               color: "#2E0057",
             }}
             component="a"
-            href="group-chat"
-          >
-            <Image src={Groupchat} alt="Error" width={30} height={30} />
-            <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
-            Groupchat{" "}
-          </MenuItem>
-          <div style={{ paddingBottom: 15, background: "#F6F6F6" }}></div>
-          <MenuItem
-            style={{
-              background: "#FFFFFF",
-              borderRadius: 20,
-              color: "#2E0057",
-            }}
-            component="a"
             href="my-profile"
           >
             <Image src={Profile} alt="Error" width={30} height={30} />
