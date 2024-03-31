@@ -77,7 +77,7 @@ const style = {
 const localizer = momentLocalizer(moment);
 const employeeOptions = ["Ana Quieros", "Anna Seifield", "Anne Brown", "Angel Ferrian"];
 
-const MyCalendar = (props: {filters: any}) => {
+const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShiftsTrigger: any}) => {
   const { isSignedIn, user, isLoaded } = useUser();
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
@@ -87,7 +87,7 @@ const MyCalendar = (props: {filters: any}) => {
 
 
   const [formData, setFormData] = useState<CalendarInfo | null>(null);
-  const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
+  // const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
 
   const [open, setOpen] = useState(false);
   const today = new Date();
@@ -118,7 +118,7 @@ const MyCalendar = (props: {filters: any}) => {
         throw new Error('Failed to fetch shift data');
       }
     })();
-  }, [fetchShiftsTrigger])
+  }, [props.fetchShiftsTrigger])
   
 
   // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
@@ -274,7 +274,8 @@ const MyCalendar = (props: {filters: any}) => {
       },
       body: JSON.stringify(formData)
     });
-    setFetchShiftsTrigger(prev => prev + 1);
+    console.log("Before setfetchShiftsTrigger")
+    props.setFetchShiftsTrigger(Date.now());
     handleClose()
   }
 
@@ -381,7 +382,7 @@ const MyCalendar = (props: {filters: any}) => {
 };
 
 const calendar = () => {
-
+  const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
   const [filterState, setFilter] = React.useState({
     partTime: true,
     fullTime: true,
@@ -465,7 +466,7 @@ const calendar = () => {
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
-          <CalendarModalButton/>
+          <CalendarModalButton callback={setFetchShiftsTrigger}/>
           <FormControl sx={{ m: 1, minWidth: 160 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
               {/* Menu props align the popup */}
@@ -548,7 +549,7 @@ const calendar = () => {
       </Grid>
 
       <Grid paddingBottom={'4%'}>
-        <MyCalendar filters={filterState}/>
+        <MyCalendar filters={filterState} fetchShiftsTrigger={fetchShiftsTrigger} setFetchShiftsTrigger={setFetchShiftsTrigger}/>
       </Grid>
     </Box>
   );
