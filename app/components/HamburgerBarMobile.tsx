@@ -46,12 +46,6 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
       Link: "/announcements",
     },
     {
-      Name: "GroupChatButton",
-      Icon: Groupchat,
-      DisplayName: "Groupchat",
-      Link: "/group-chat",
-    },
-    {
       Name: "ProfileButton",
       Icon: Profile,
       DisplayName: "Profile",
