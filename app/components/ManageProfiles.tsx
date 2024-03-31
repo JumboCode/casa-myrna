@@ -57,7 +57,8 @@ interface NameListProps {
 const BoxSx: FC = () => {
   // Items Per Page (Pagination)
   const itemsPerPage = 8;
-  
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [selectedFilter, setSelectedFilter] = useState<string | null> ("All");
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1); 
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
@@ -104,20 +105,36 @@ const BoxSx: FC = () => {
     fetchPeopleData();
   }, []);
 
-  const usePagination = (people: profileData[], page = 1, perPage = 5) => {
-    const totalPages = Math.ceil(people.length / perPage);
+  const handleChange = (event: any) => {
+    setSelectedFilter(event.target.value)
+  };
+
+    const usePagination = (people: profileData[], page = 1, perPage = 5) => {
+    const filteredPeople = people.filter((person) =>
+      [
+        person.firstName,
+        person.lastName,
+        person.publicMetadata["role"], // Check if 'role' property exists
+        person.emailAddresses[0]?.emailAddress,
+      ].some((value) =>
+      value?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) 
+      && (selectedFilter === "All" || person.publicMetadata["role"] === selectedFilter)
+    );
+
+    const totalPages = Math.ceil(filteredPeople.length / perPage);
     const offset = perPage * (page - 1);
-    const paginatedItems = people.slice(offset, perPage * page);
-    
+    const paginatedItems = filteredPeople.slice(offset, perPage * page);
 
     return {
-      nextPage: () => setActivePage(p => p < totalPages ? p + 1 : p),
-      previousPage: () => setActivePage(p => p > 1 ? p - 1 : p),
+      nextPage: () => setActivePage((p) => (p < totalPages ? p + 1 : p)),
+      previousPage: () => setActivePage((p) => (p > 1 ? p - 1 : p)),
       totalPages,
-      totalItems: people.length,
+      totalItems: filteredPeople.length,
       items: paginatedItems,
     };
   };
+
 
   const { nextPage, previousPage, totalPages, totalItems, items } = usePagination(peopleArray, activePage, itemsPerPage);
 
@@ -143,29 +160,23 @@ const BoxSx: FC = () => {
                       Manage Profiles
                   </Typography>
 
-                  {/* Search Bar */}
                   <Grid container spacing={3} columns={4}>
-                    {/* Actual Search Bar */}
                     <Grid xs={3}>
-                      <InputBase 
-                        fullWidth
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <SearchIcon />
-                          </InputAdornment>
-                        }
-                        sx={{
-                          backgroundColor: '#FFFFFF',
-                          borderRadius: '10px',
-                          padding: '3px',
-                          paddingLeft: '20px',
-                          paddingRight: '10px',
-                        }}
-                      />
+                    <InputBase
+                    fullWidth
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{
+                      backgroundColor: '#FFFFFF',
+                      borderRadius: '10px',
+                      padding: '3px',
+                      paddingLeft: '20px',
+                      paddingRight: '10px',
+                    }}
+                  />
                     </Grid>
-                    {/* Search Button */}
                     <Grid xs={1}>
-                      <Button fullWidth sx={{borderRadius:'15px', backgroundColor:"#89B839", '&:hover': {backgroundColor: theme.palette.primary.main}, textTransform: 'none'}} variant="contained">search</Button>
+                    <Button fullWidth sx={{ borderRadius: '15px', backgroundColor: "#89B839", '&:hover': { backgroundColor: theme.palette.primary.main }, textTransform: 'none' }} variant="contained">search</Button>
                     </Grid>
                   </Grid>
 
