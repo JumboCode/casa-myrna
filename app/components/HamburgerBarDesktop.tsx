@@ -13,11 +13,12 @@ import Announce from "../images/announce.svg"
 import Image from "next/image";
 import { FC, useState } from "react";
 import Logo from "../images/1.png";
-import { Stack } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import { SignOutButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import theme from "../theme";
 
 interface DesktopBarProps {
   currentPageComponent: FC; // Update prop type to React Functional Component
@@ -82,20 +83,6 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
               color: "#2E0057",
             }}
             component="a"
-            href="group-chat"
-          >
-            <Image src={Groupchat} alt="Error" width={30} height={30} />
-            <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
-            Groupchat{" "}
-          </MenuItem>
-          <div style={{ paddingBottom: 15, background: "#F6F6F6" }}></div>
-          <MenuItem
-            style={{
-              background: "#FFFFFF",
-              borderRadius: 20,
-              color: "#2E0057",
-            }}
-            component="a"
             href="my-profile"
           >
             <Image src={Profile} alt="Error" width={30} height={30} />
@@ -138,11 +125,11 @@ const HamburgerBarDesktop: FC<DesktopBarProps> = ({ currentPageComponent }) => {
           }}
         >
           <SignOutButton signOutCallback={() => router.push("/login")}>
-            <MenuItem component="a" href="/">
-              <Image src={Logout} alt="Error" width={30} height={30} />
+            <Grid container justifyContent="center" alignItems="center">
+                <Image src={Logout} alt="Error" width={30} height={30} />
               <div style={{ paddingRight: 8, background: "#F6F6F6" }}></div>
-              Logout
-            </MenuItem>
+              <Typography>Logout</Typography>
+              </Grid>
           </SignOutButton>
         </MenuList>
       </div>

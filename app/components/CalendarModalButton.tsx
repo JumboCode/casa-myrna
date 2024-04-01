@@ -16,6 +16,7 @@ import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import ComboBox from './ComboBox';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -69,23 +70,16 @@ const initialFormData = {
     phoneLine: ''
 };
 
-const CalendarModalButton: FC = () => {    
+const CalendarModalButton: FC <any> = ({callback}) => {    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-
-    // const initialFormData = {
-
-    //     phoneLine: '',
-    //     startTime: '',
-    //     endTime: '',
-    //     assignedEmployee: '',
-    // };
-
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
+
+    const [employeeNames, setEmployeeNames] = useState([]);
 
     // Handle form input change
     const handleInputChange = (e) => {
@@ -145,6 +139,7 @@ const CalendarModalButton: FC = () => {
 
             // Reset form data after successful submission
             setFormData(initialFormData);
+            callback(Date.now())
             handleClose();
         } catch (error) {
             console.error('Error assigning shift:', error);
@@ -279,18 +274,10 @@ const CalendarModalButton: FC = () => {
                         </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '114px' }}>
+                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '20px' }}>
                         Assigned Employee: 
                         </Typography>
-                        <Select
-                            name="assignedEmployee"
-                            value={formData.assignedEmployee}
-                            onChange={handleInputChange}
-                            sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
-                        >
-                        <MenuItem value={'Carly Seigel'}>Carly Seigel</MenuItem>
-                        <MenuItem value={'Eliana Longoria-Valenzuela'}>Eliana Longoria-Valenzuela</MenuItem>
-                    </Select>
+                        <ComboBox/>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
                         <Typography variant="h4" sx={{ marginTop: '15px',marginRight: '182px' }}>

@@ -21,6 +21,7 @@ const Sidebar: FC<SidebarProps> = ({ currentPageComponent }): ReactElement => {
 
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
+    handleWindowSizeChange();
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange);
     }
