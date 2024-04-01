@@ -2,16 +2,16 @@
 
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
-import Announcements from "app/images/2.png";
-import Calendar from "app/images/3.png";
-import Groupchat from "app/images/4.png";
-import Profile from "app/images/7.png";
-import Logout from "app/images/5.png";
+import Announcements from "../images/2.png";
+import Calendar from "../images/3.png";
+import Groupchat from "../images/4.png";
+import Profile from "../images/7.png";
+import Logout from "../images/5.png";
 import Image from "next/image";
-import Hamburger from "app/images/hamburger.png";
+import Hamburger from "../images/hamburger.png";
 import { FC, useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import CloseIcon from "app/images/closeIcon.svg";
+import CloseIcon from "../images/closeIcon.svg";
 import { SignOutButton, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
