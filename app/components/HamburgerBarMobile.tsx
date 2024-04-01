@@ -46,24 +46,11 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
       Link: "/announcements",
     },
     {
-      Name: "GroupChatButton",
-      Icon: Groupchat,
-      DisplayName: "Groupchat",
-      Link: "/group-chat",
-    },
-    {
       Name: "ProfileButton",
       Icon: Profile,
       DisplayName: "Profile",
       Link: "/my-profile",
-    },
-
-    {
-      Name: "ManageProfilesButton",
-      Icon: Profile,
-      DisplayName: "Manage Profiles",
-      Link: "/employer-manage-profiles",
-    },
+    }
   ];
 
   /* used as work around for a rerouting issue */
@@ -127,45 +114,17 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
           <MenuList
             style={{
               width: "auto",
-              height: "400px",
+              height: "30%",
               background: "rgba(246, 246, 246, 0.5)",
               padding: 10,
             }}
           >
             <div
               style={{
-                marginTop: 60,
+                marginTop: '10%',
+                marginBottom: '10%'
               }}
             >
-              {/* {buttonList.map((button) => {
-                return (
-                  <MenuItem
-                    component="a"
-                    href={button.Link}
-                    style={{
-                      background: "#FFFFFF",
-                      marginBottom: 10,
-                      width: "auto",
-                      height: 60,
-                      borderRadius: 20,
-                      fontSize: 20,
-                      boxShadow: "0px 5px rgba(128,128,128,0.3)",
-                    }}
-                    key={button.Name}
-                  >
-                    <Image
-                      src={button.Icon}
-                      alt={button.Name}
-                      style={{
-                        height: 35,
-                        width: 35,
-                        marginRight: 15,
-                      }}
-                    />
-                    {button.DisplayName}
-                  </MenuItem>
-                );
-              })} */}
               {buttonList.map((button) => {
                 if (
                   button.Name == "ManageProfilesButton" &&

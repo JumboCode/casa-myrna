@@ -69,19 +69,10 @@ const initialFormData = {
     phoneLine: ''
 };
 
-const CalendarModalButton: FC = () => {    
+const CalendarModalButton: FC <any> = ({callback}) => {    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-
-    // const initialFormData = {
-
-    //     phoneLine: '',
-    //     startTime: '',
-    //     endTime: '',
-    //     assignedEmployee: '',
-    // };
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -145,6 +136,7 @@ const CalendarModalButton: FC = () => {
 
             // Reset form data after successful submission
             setFormData(initialFormData);
+            callback(Date.now())
             handleClose();
         } catch (error) {
             console.error('Error assigning shift:', error);
