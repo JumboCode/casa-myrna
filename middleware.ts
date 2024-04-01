@@ -8,7 +8,7 @@ export default authMiddleware({
       /******************************************
        * todo: remove the api route from public * 
        ******************************************/ 
-      publicRoutes: ["/login", "/sign-up", "/api/shifts", "/api/users", "/api/on-call-shifts"],
+      publicRoutes: ["/login", "/sign-up", "/api/shifts", "/api/users", "/api/on-call-shifts", "/api/announcements", "/api/user-announcement-views"],
 
       afterAuth(auth, req, evt) {
 
