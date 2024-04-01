@@ -3,16 +3,16 @@
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Announcements from "../images/5.png";
-import Calendar from "app/images/3.png";
-import Groupchat from "app/images/4.png";
-import Profile from "app/images/7.png";
-import Logout from "app/images/5.png";
-import Stick from "app/images/stickFig.svg"
-import People from "app/images/people.svg"
-import Announce from "app/images/announce.svg"
+import Calendar from "../images/3.png";
+import Groupchat from "../images/4.png";
+import Profile from "../images/7.png";
+import Logout from "../images/5.png";
+import Stick from "../images/stickFig.svg"
+import People from "../images/people.svg"
+import Announce from "../images/announce.svg"
 import Image from "next/image";
 import { FC, useState } from "react";
-import Logo from "app/images/1.png";
+import Logo from "../images/1.png";
 import { Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import { SignOutButton } from "@clerk/nextjs";
