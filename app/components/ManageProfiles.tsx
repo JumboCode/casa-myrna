@@ -62,7 +62,6 @@ const BoxSx: FC = () => {
   // Move setActivePage to the outer scope
   const [activePage, setActivePage] = React.useState(1); 
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
-  
 
   const NameList: React.FC<NameListProps> = ({ people }) => (
     <div>
