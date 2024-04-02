@@ -96,7 +96,14 @@ const CalendarModalButton: FC <any> = ({callback}) => {
         console.log(startDate.toISOString())
         console.log(endDate.toISOString())
 
-        const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        // const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        let firstName, lastName;
+        if (formData.assignedEmployee) {
+            [firstName, lastName] = formData.assignedEmployee.split(' ');
+        } else {
+            firstName = '';
+            lastName = '';
+        }
 
         const requestData = {
             // ...formData,
