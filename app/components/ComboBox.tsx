@@ -7,8 +7,11 @@ import { profileData } from './types';
 import {useEffect, useState } from 'react';
 
 
+interface ComboBoxProps {
+  onSelect: (selectedValue: string) => void;
+}
 
-export default function ComboBox() {
+export default function ComboBox({ onSelect }: ComboBoxProps) {
 
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
   useEffect(() => {
@@ -29,19 +32,32 @@ export default function ComboBox() {
 
     fetchPeopleData();
   }, []);
+ 
+  const handleSelect = (event: React.ChangeEvent<{}>, value: profileData | null) => {
+    if (value) {
+      const fullName = `${value.firstName} ${value.lastName}`;
+      onSelect(fullName);
+    } else {
+      onSelect('');
+    }
+  };
 
 
-  const options = peopleArray.map(({ firstName, lastName }) => ({
+  const people = peopleArray.map(({ firstName, lastName }) => ({
     label: `${firstName} ${lastName}`,
+    firstName,
+    lastName,
   }));
 
+  console.log("people\n " + people);
 
   return (
     <Autocomplete
       disablePortal
       id="combo-box-demo"
-      options={options}
+      options={people}
       sx={{ width: 300 }}
+      onChange={handleSelect}
       renderInput={(params) => <TextField {...params} label="Assigned Employee" />}
     />
   );

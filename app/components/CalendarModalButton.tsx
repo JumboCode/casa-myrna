@@ -16,6 +16,7 @@ import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { profileData } from './types';
 import ComboBox from './ComboBox';
 
 const style = {
@@ -88,7 +89,19 @@ const CalendarModalButton: FC = () => {
     const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
 
-    const [employeeNames, setEmployeeNames] = useState([]);
+    // For ComboBox Emplyee Selection
+    // const [selectedEmployee, setSelectedEmployee] = useState<profileData | null>(null);
+
+    // const handleSelectEmployee = (selectedValue: profileData | null) => {
+    //   setSelectedEmployee(selectedValue);
+    // };
+
+    const handleSelectEmployee = (selectedValue: string) => {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          assignedEmployee: selectedValue,
+        }));
+      };
 
     // Handle form input change
     const handleInputChange = (e) => {
@@ -285,7 +298,7 @@ const CalendarModalButton: FC = () => {
                         <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '20px' }}>
                         Assigned Employee: 
                         </Typography>
-                        <ComboBox/>
+                        <ComboBox onSelect={handleSelectEmployee}/>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
                         <Typography variant="h4" sx={{ marginTop: '15px',marginRight: '182px' }}>
