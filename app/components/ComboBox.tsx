@@ -1,3 +1,11 @@
+/*
+ * ComboBox.tsx
+ * Written by: Eliana Longoria-Valenzuela and Pamela Melgar
+ * 4-4-24
+ * Used to create dropdown of first and last names for Select component in Calendar Shifts Modal
+ */
+
+
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -13,6 +21,7 @@ interface ComboBoxProps {
 
 export default function ComboBox({ onSelect }: ComboBoxProps) {
 
+  // Fetch the array of profileData from backend
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
   useEffect(() => {
     const fetchPeopleData = async () => {
@@ -32,7 +41,8 @@ export default function ComboBox({ onSelect }: ComboBoxProps) {
 
     fetchPeopleData();
   }, []);
- 
+
+  // onChange event to store the selected name of the employee form dropdown list
   const handleSelect = (event: React.ChangeEvent<{}>, value: profileData | null) => {
     if (value) {
       const fullName = `${value.firstName} ${value.lastName}`;
@@ -43,13 +53,12 @@ export default function ComboBox({ onSelect }: ComboBoxProps) {
   };
 
 
+  // parse through the peopleArray and store firstname and last name
   const people = peopleArray.map(({ firstName, lastName }) => ({
     label: `${firstName} ${lastName}`,
     firstName,
     lastName,
   }));
-
-  console.log("people\n " + people);
 
   return (
     <Autocomplete

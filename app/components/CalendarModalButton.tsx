@@ -298,6 +298,7 @@ const CalendarModalButton: FC = () => {
                         <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '20px' }}>
                         Assigned Employee: 
                         </Typography>
+                        {/* Dropdown list for employee name selection to update useState of formdata information*/}
                         <ComboBox onSelect={handleSelectEmployee}/>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
