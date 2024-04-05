@@ -9,6 +9,7 @@ import { FC, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
+import blankImage from "../images/7.png";
 import { useUser } from "@clerk/nextjs";
 import Clerk from '@clerk/clerk-js';
 
@@ -214,7 +215,7 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
               sx={{ width: 200, height: 200 }}
             />
           </Grid>
-          <Grid xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
+          <Grid xs={12} sm={12} md={13} lg={13} textAlign={"center"}>
             <input
               type="file"
               accept="image/*"
@@ -222,7 +223,9 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
               style={{ display: "none" }}
               id="avatar-input"
             />
+            {/* Change Profile Picture */}
             <Button
+              fullWidth
               sx={{
                 borderRadius: "20px",
                 textIndent: "10px",
@@ -241,7 +244,41 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
                 width={20}
                 height={20}
               />
-              <label htmlFor="avatar-input">Upload Picture</label>
+              <label htmlFor="avatar-input">Change Profile Picture</label>
+            </Button>
+          </Grid>
+          <Grid xs={12} sm={12} md={13} lg={13} textAlign={"center"}>
+            <input
+              type="file"
+              // accept="peopleImage"
+              onChange={uploadProfileImage("blankImage")}
+              style={{ display: "none" }}
+              id="avatar-input"
+            />
+            {/* Delete Profile Picture */}
+            <Button
+              onClick={() => uploadProfileImage(blankImage)} // Call uploadProfileImage with the peopleImage
+              sx={{
+                borderRadius: "20px",
+                textIndent: "10px",
+                borderColor: theme.palette.primary.main,
+                color: "#000000",
+                "&:hover": { borderColor: theme.palette.primary.main },
+                textTransform: "none",
+                paddingLeft: "9%",
+                paddingRight: "12%",
+                marginTop: '-10%'
+              }}
+              variant="outlined"
+            >
+              {/* TODO: update icon later */}
+              <Image
+                src={UploadImage}
+                alt="delete profile picture"
+                width={20}
+                height={20}
+              />
+              Delete Profile Picture
             </Button>
           </Grid>
         </Grid>
