@@ -116,7 +116,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             created_at: createdAt,
             userID: "2",
             message: 'hello',
-            status: 'ACCEPTED',
+            status: firstName === '' && lastName === '' ? 'PENDING' : 'ACCEPTED',
             onCallShiftID: 1
         };
 
