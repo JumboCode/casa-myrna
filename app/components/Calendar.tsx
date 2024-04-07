@@ -124,28 +124,30 @@ const MyCalendar = (props: { filters: any }) => {
   const filterShifts = (shift: CalendarInfo | OnCallShift, filters: any) => {
     const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
 
-    const propPosition = 0; 
-    const boolPosition = 1; 
+    let filteredBool = Object.entries(filters).some((_) => {
+      return (
+        ((approved && (shift.status.toString().toLowerCase() === "accepted")) && (
+          (lineOne && (shift.phoneLine === 1)) || 
+          (lineTwo && (shift.phoneLine === 2)) || 
+          (lineThree && (shift.phoneLine === 3)) || 
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((pending && (shift.status.toString().toLowerCase() === "pending")) && (
+          (lineOne && (shift.phoneLine === 1)) || 
+          (lineTwo && (shift.phoneLine === 2)) || 
+          (lineThree && (shift.phoneLine === 3)) || 
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((cancelled && (shift.status.toString().toLowerCase() === "cancelled")) && (
+          (lineOne && (shift.phoneLine === 1)) || 
+          (lineTwo && (shift.phoneLine === 2)) || 
+          (lineThree && (shift.phoneLine === 3)) || 
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) 
+      );
+    })
 
-    let filteredBool = false; 
-    console.log(Object.entries(filters))
-
-    Object.entries(filters).map((boolBit : any) => {
-      console.log(shift.hasOwnProperty(boolBit[propPosition]));
-      if (
-        (boolBit[boolPosition] && boolBit[propPosition] === "approved" && shift.status.toString().toLowerCase() === "accepted") || 
-        (boolBit[boolPosition] && boolBit[propPosition] === "pending" && shift.status.toString().toLowerCase() === "pending") || 
-        (boolBit[boolPosition] && boolBit[propPosition] === "cancelled" && shift.status.toString().toLowerCase() === "cancelled") || 
-        (boolBit[boolPosition] && boolBit[propPosition] === "lineOne" && shift.phoneLine === 1) || 
-        (boolBit[boolPosition] && boolBit[propPosition] === "lineTwo" && shift.phoneLine === 2) ||
-        (boolBit[boolPosition] && boolBit[propPosition] === "lineThree" && shift.phoneLine === 3) ||
-        (boolBit[boolPosition] && boolBit[propPosition] === "onCall" && (shift as OnCallShift)["primaryShifts"] !== undefined)
-      ) {
-        filteredBool = true; 
-      }
-    }); 
-
-    return filteredBool; 
+    return filteredBool;
 
   };
 
@@ -188,7 +190,7 @@ const MyCalendar = (props: { filters: any }) => {
     }
   });
 
-  console.log(shifts);
+  // console.log(shifts);
 
   // appended the on call shifts to the events array to render the event to the calendar. 
   const onCallShifts = onCallInfo?.map((onCallShift: OnCallShift) => {
@@ -222,10 +224,10 @@ const MyCalendar = (props: { filters: any }) => {
     }
   });
 
-  console.log(onCallShifts);
+  // console.log(onCallShifts);
 
   // this is to tell typescript that if the array is undefined, then use the empty list instead
-  const events = [...shifts ?? [], ...onCallShifts ?? []].filter((shift : any) => filterShifts(shift, props.filters));
+  const events = [...shifts ?? [], ...onCallShifts ?? []].filter((shift: any) => filterShifts(shift, props.filters));
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
