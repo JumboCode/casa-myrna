@@ -219,8 +219,37 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     }
   });
 
+  /* 
+   * splits shifts that occur over two days into two different events so that
+   * they're rendered correctly on the calendar
+   */
+  const splitOvernightShifts = (shiftsArray: any): any => {
+    
+    if (!shiftsArray) return []
+
+    let updatedShifts = []
+
+    for (let shift of shiftsArray) {
+      const isOvernight = shift.start.getDate() !== shift.end.getDate()
+      if (isOvernight) {
+          let shift1 = {...shift, end: new Date(shift.start)};
+          let shift2 = {...shift, start: new Date(shift.end)};
+          
+          shift1.end.setHours(23, 59, 59, 999)
+          shift2.start.setHours(0, 0, 0, 0)
+      
+          updatedShifts.push(shift1)
+          updatedShifts.push(shift2)
+      } else {
+        updatedShifts.push(shift)
+      }
+    }
+    return updatedShifts
+   
+  }
+
   // this is to tell typescript that if the array is undefined, then use the empty list instead
-  const events = [...shifts ?? [], ...onCallShifts ?? []]
+  const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
@@ -440,9 +469,6 @@ const calendar = () => {
     }
   };
   
-  
-  
-
   return (
     <Box
       sx={{
