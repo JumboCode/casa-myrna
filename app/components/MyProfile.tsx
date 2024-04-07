@@ -9,7 +9,7 @@ import { FC, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
-import blankImage from "../images/7.png";
+import DefaultImage from "../images/default-profile-pic.png";
 import { useUser } from "@clerk/nextjs";
 import Clerk from '@clerk/clerk-js';
 
@@ -93,7 +93,7 @@ const handleImageChange = async (event) => {
           setImageUrl(imageUrl);
             console.log("image: ", imageUrl)
             console.log("user:", user)
-            uploadProfileImage(imageUrl)
+            uploadProfileImage(file)
         }
       };
   
@@ -151,6 +151,19 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
     } catch (error) {
         console.error('Error editing employee:', error);
     }
+};
+
+const handleDeleteProfilePicture = async () => {
+  try {
+    await user.setProfileImage({
+      file: null,
+      contentType: 'image/png',
+    });
+    console.log('Profile image deleted successfully');
+    handleSnackClick();
+  } catch (error) {
+    console.error('Failed to delete profile image:', error);
+  }
 };
 
   return (
@@ -248,16 +261,9 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
             </Button>
           </Grid>
           <Grid xs={12} sm={12} md={13} lg={13} textAlign={"center"}>
-            <input
-              type="file"
-              // accept="peopleImage"
-              onChange={uploadProfileImage("blankImage")}
-              style={{ display: "none" }}
-              id="avatar-input"
-            />
             {/* Delete Profile Picture */}
             <Button
-              onClick={() => uploadProfileImage(blankImage)} // Call uploadProfileImage with the peopleImage
+              onClick={handleDeleteProfilePicture}
               sx={{
                 borderRadius: "20px",
                 textIndent: "10px",
