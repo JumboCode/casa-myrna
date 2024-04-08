@@ -31,6 +31,9 @@ import { PrimaryShift, Status, Event, CalendarInfo, OnCallShift } from '../types
 import { UserProfile, clerkClient } from "@clerk/nextjs"
 import CalendarModalButton from './CalendarModalButton';
 
+import CloseIcon from '@mui/icons-material/Close';
+
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -275,11 +278,12 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
 
     // Check if the time difference is within 8 hours
 
-    handleClose()
+    // handleClose()
 
     if (timeDifference <= eightHoursInMilliseconds) {
       // Cancal Shift Modal
-      setOpenCancelModal(true);
+      
+        setOpenCancelModal(true);
       
 
     } else {
@@ -313,29 +317,49 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
   const renderShiftButtons = () => {
     if (formData?.status === 'ACCEPTED' && (user?.publicMetadata.role == 'Coordinator' || (user?.id == formData?.userID))) { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
       return <>
-        <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
-        <Modal 
+        <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+        <Modal
             open={openCancelModal}
             onClose={handleCancelClose}>
             <Box sx={style}>
-              <Box sx={{ width: 50, height: 50, position: 'absolute', right: '5%', fill: 'none' }}>
-                <button
-                  onClick={() => {
-                    handleCancelClose();
-                  }}>
-                  <CloseOutlinedIcon color="secondary" />
-                </button>
-              </Box>
-              <Box sx={{ paddingLeft: 2, paddingRight: 6 }}>
-                <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '25px', xs: '22px' } }}>
-                  Cannot Cancel Shift
-                </Typography>
-              </Box>
-              <Box>
-              </Box>
+                <Box sx={{ width: 50, height: 50, position: 'absolute', right: '5%', fill: 'none' }}>
+                    <button
+                     style={{
+                      background: 'transparent', // Remove the gray background
+                      border: 'none', // Remove the button border
+                      padding: 0, // Remove default padding
+                      cursor: 'pointer', // Show pointer cursor on hover
+                      
+                    }}
+                      onClick={() => {
+                        handleCancelClose();
+                      }}>
+                      <CloseIcon fill="none" color="primary" sx={{fontSize: 45 }} />
+
+                      
+                    </button>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 6}}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '35px', xs: '32px'}, fontWeight: 'bold' }}>
+                      Cannot Cancel Shift
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 4, paddingTop: 4}}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '25px', xs: '22px' } }}>
+                      Since this shift is in less than 8 hours, it cannot be cancelled on the shift scheduler.
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 6, paddingTop: 4, paddingBottom: 4 }}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '25px', xs: '22px' } }}>
+                    Please contact your manager.
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 32.5}}>
+                    <Button onClick={() => {handleCancelClose()}} sx={{ borderRadius:'25px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">OK</Button>
+                </Box>
             </Box>
-          </Modal>
-      </>
+        </Modal>
+    </>
     } else if (formData?.status === 'CANCELLED') { /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
     } else if (formData?.status === 'PENDING') {
