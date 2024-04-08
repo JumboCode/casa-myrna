@@ -317,7 +317,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
   const renderShiftButtons = () => {
     if (formData?.status === 'ACCEPTED' && (user?.publicMetadata.role == 'Coordinator' || (user?.id == formData?.userID))) { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
       return <>
-        <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+        <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>
         <Modal
             open={openCancelModal}
             onClose={handleCancelClose}>
