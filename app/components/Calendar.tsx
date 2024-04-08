@@ -31,6 +31,9 @@ import { PrimaryShift, Status, Event, CalendarInfo, OnCallShift } from '../types
 import { UserProfile, clerkClient } from "@clerk/nextjs"
 import CalendarModalButton from './CalendarModalButton';
 
+import CloseIcon from '@mui/icons-material/Close';
+
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -77,6 +80,7 @@ const style = {
 const localizer = momentLocalizer(moment);
 const employeeOptions = ["Ana Quieros", "Anna Seifield", "Anne Brown", "Angel Ferrian"];
 
+
 const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShiftsTrigger: any}) => {
   const { isSignedIn, user, isLoaded } = useUser();
 
@@ -88,6 +92,13 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
 
   const [formData, setFormData] = useState<CalendarInfo | null>(null);
   // const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
+
+
+  //Cancel Shift modal
+  const [openCancelModal, setOpenCancelModal] = useState(false);
+  const handleCancelOpen = () => setOpenCancelModal(true);
+  const handleCancelClose = () => setOpenCancelModal(false);
+
 
   const [open, setOpen] = useState(false);
   const today = new Date();
@@ -219,37 +230,8 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     }
   });
 
-  /* 
-   * splits shifts that occur over two days into two different events so that
-   * they're rendered correctly on the calendar
-   */
-  const splitOvernightShifts = (shiftsArray: any): any => {
-    
-    if (!shiftsArray) return []
-
-    let updatedShifts = []
-
-    for (let shift of shiftsArray) {
-      const isOvernight = shift.start.getDate() !== shift.end.getDate()
-      if (isOvernight) {
-          let shift1 = {...shift, end: new Date(shift.start)};
-          let shift2 = {...shift, start: new Date(shift.end)};
-          
-          shift1.end.setHours(23, 59, 59, 999)
-          shift2.start.setHours(0, 0, 0, 0)
-      
-          updatedShifts.push(shift1)
-          updatedShifts.push(shift2)
-      } else {
-        updatedShifts.push(shift)
-      }
-    }
-    return updatedShifts
-   
-  }
-
   // this is to tell typescript that if the array is undefined, then use the empty list instead
-  const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
+  const events = [...shifts ?? [], ...onCallShifts ?? []]
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
@@ -284,34 +266,100 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
   };
 
   const handleSubmit = async (e: CalendarInfo, modifiedData: Partial<CalendarInfo>) => {
-    Object.keys(modifiedData).forEach(key => {
-      if (e.hasOwnProperty(key)) {
-        e[key] = modifiedData[key];
-      }
-    });
 
-    const keysToDelete = ['start', 'end', 'title', 'style', 'sourceResource']
-    keysToDelete.forEach((key: string, _) => {
-      if (formData) { delete (formData as { [key: string]: any })[key]; }
-    })
+    const startOfShift = new Date(formData.start);
+    const currentDate = new Date(Date.now());
 
-    const response = await fetch('api/shifts?shiftID=' + formData?.primaryShiftID.toString(), {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    });
-    console.log("Before setfetchShiftsTrigger")
-    props.setFetchShiftsTrigger(Date.now());
-    handleClose()
+    // Calculate the difference in milliseconds
+    const timeDifference = startOfShift.getTime() - currentDate.getTime();
+
+    // Convert 8 hours to milliseconds
+    const eightHoursInMilliseconds = 8 * 60 * 60 * 1000;
+
+    // Check if the time difference is within 8 hours
+
+    // handleClose()
+
+    if (timeDifference <= eightHoursInMilliseconds) {
+      // Cancal Shift Modal
+      
+        setOpenCancelModal(true);
+      
+
+    } else {
+      console.log('The end date does not occur within 8 hours of the start date.');
+
+      Object.keys(modifiedData).forEach(key => {
+        if (e.hasOwnProperty(key)) {
+          e[key] = modifiedData[key];
+        }
+      });
+  
+      const keysToDelete = ['start', 'end', 'title', 'style', 'sourceResource']
+      keysToDelete.forEach((key: string, _) => {
+        if (formData) { delete (formData as { [key: string]: any })[key]; }
+      })
+  
+      const response = await fetch('api/shifts?shiftID=' + formData?.primaryShiftID.toString(), {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      console.log("Before setfetchShiftsTrigger")
+      props.setFetchShiftsTrigger(Date.now());
+    }
   }
 
   /* Used to rdner different buttons on shift modal depending on shift status, user role and user id */
   const renderShiftButtons = () => {
     if (formData?.status === 'ACCEPTED' && (user?.publicMetadata.role == 'Coordinator' || (user?.id == formData?.userID))) { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
-      return <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+      return <>
+        <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
+        <Modal
+            open={openCancelModal}
+            onClose={handleCancelClose}>
+            <Box sx={style}>
+                <Box sx={{ width: 50, height: 50, position: 'absolute', right: '5%', fill: 'none' }}>
+                    <button
+                     style={{
+                      background: 'transparent', // Remove the gray background
+                      border: 'none', // Remove the button border
+                      padding: 0, // Remove default padding
+                      cursor: 'pointer', // Show pointer cursor on hover
+                      
+                    }}
+                      onClick={() => {
+                        handleCancelClose();
+                      }}>
+                      <CloseIcon fill="none" color="primary" sx={{fontSize: 45 }} />
+
+                      
+                    </button>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 6}}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '35px', xs: '32px'}, fontWeight: 'bold' }}>
+                      Cannot Cancel Shift
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 4, paddingTop: 4}}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '25px', xs: '22px' } }}>
+                      Since this shift is in less than 8 hours, it cannot be cancelled on the shift scheduler.
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 2, paddingRight: 6, paddingTop: 4, paddingBottom: 4 }}>
+                    <Typography sx={{ fontFamily: "Montserrat", fontSize: { lg: '25px', xs: '22px' } }}>
+                    Please contact your manager.
+                    </Typography>
+                </Box>
+                <Box sx={{ paddingLeft: 32.5}}>
+                    <Button onClick={() => {handleCancelClose()}} sx={{ borderRadius:'25px', backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">OK</Button>
+                </Box>
+            </Box>
+        </Modal>
+    </>
     } else if (formData?.status === 'CANCELLED') { /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
     } else if (formData?.status === 'PENDING') {
@@ -409,7 +457,6 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     </div >
   );
 };
-
 const calendar = () => {
   const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
   const [filterState, setFilter] = React.useState({
@@ -426,25 +473,7 @@ const calendar = () => {
   });
 
   const filterShifts = (shift: CalendarInfo, filters: any) => {
-    const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
-  
-    // Add your logic here based on the filters
-    if (
-      (partTime && shift.partTime) ||
-      (fullTime && shift.fullTime) ||
-      (manager && shift.manager) ||
-      (lineOne && shift.lineOne) ||
-      (lineTwo && shift.lineTwo) ||
-      (lineThree && shift.lineThree) ||
-      (onCall && shift.onCall) ||
-      (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
-      (pending && shift.status === Status.PENDING) ||
-      (cancelled && shift.status === Status.CANCELLED)
-    ) {
-      return true;
-    }
-  
-    return false;
+    // Filter logic here
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -454,21 +483,25 @@ const calendar = () => {
     });
   };
 
-  const {partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled} = filterState;
+  const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filterState;
 
   const [open, setOpen] = useState(false);
 
+  // const [openCancelModal, setOpenCancelModal] = useState(false);
+  // const handleCancelOpen = () => setOpenCancelModal(true);
+  // const handleCancelClose = () => setOpenCancelModal(false);
+
+  // Add the missing setOpenCancelModal function here
   const handleSelectOpen = () => {
     setOpen(true);
   };
 
   const handleSelectClose = (event: React.ChangeEvent<{}>, reason?: 'select-option' | 'remove-option' | 'close' | 'clear' | 'escape' | 'backdropClick') => {
-    // Close the select only if the reason is "select-option", "escape", or "backdropClick"
     if (reason === 'select-option' || reason === 'escape' || reason === 'backdropClick') {
       setOpen(false);
     }
   };
-  
+
   return (
     <Box
       sx={{
@@ -484,98 +517,41 @@ const calendar = () => {
         marginRight: '5%',
       }}
     >
-      <Grid container spacing={2} columns={{lg:20, xs:30}} paddingTop="2%" marginRight='4%'>
+      <Grid container spacing={2} columns={{ lg: 20, xs: 30 }} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
-          <Typography display={{xs: 'block', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
+          <Typography display={{ xs: 'block', md: 'block', lg: 'block' }} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
-          <CalendarModalButton callback={setFetchShiftsTrigger}/>
+          <CalendarModalButton callback={setFetchShiftsTrigger} />
+
           <FormControl sx={{ m: 1, minWidth: 160 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
-              {/* Menu props align the popup */}
-              
-              <Select 
-                autoWidth={true} 
-                defaultValue={''} 
-                id="grouped-select" 
-                label="Grouping" 
-                open={open}
-                onOpen={handleSelectOpen}
-                onClose={(e, reason) => {
-                  if (reason !== "backdropClick") {
-                    setOpen(false); 
-                  }
-                }}
-                >
-                  <Grid container direction='row' spacing={1} marginRight={2}>
-
-                      {/* EMPLOYEE NAME Column */}
-                      <Grid container direction='column' spacing={1}>
-                          <Grid sx={{ml:2}} onClick={(e) => e.stopPropagation()} >
-                              <ListSubheader> <b>Employee Name</b></ListSubheader>
-                              <Autocomplete
-                                disablePortal
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                }}
-                                onClose={(e) => {  
-                                  e.stopPropagation();
-                                }}
-                                options={employeeOptions}
-                                sx={{ width: 175 }}
-                                renderInput={(params) => <TextField {...params} label="Employee Name" />}
-                                onMouseDown={(e) => e.stopPropagation()}
-                              />
-                          </Grid>
-                      </Grid>
-
-                      {/* EMPLOYEE TYPE Column */}
-                      <Grid container direction='column' spacing={1}>
-                          <Grid>
-                              <ListSubheader> <b>Employee Type</b></ListSubheader>
-                              <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={partTime} onChange={handleFilterChange} name="partTime" />} onClick={(e) => e.stopPropagation()} label="Part Time" />
-                                  <FormControlLabel control={<Checkbox checked={fullTime} onChange={handleFilterChange} name="fullTime"/>} onClick={(e) => e.stopPropagation()} label="Full Time" />
-                                  <FormControlLabel control={<Checkbox checked={manager} onChange={handleFilterChange} name="manager" />} onClick={(e) => e.stopPropagation()} label="Manager" />
-                              </FormGroup>
-                          </Grid>
-                      </Grid>
-
-                      {/* PHONE LINE Column */}
-                      <Grid container direction='column' spacing={1}>
-                          <Grid>
-                              <ListSubheader> <b>Phone Line</b></ListSubheader>
-                              <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={lineOne} onChange={handleFilterChange} name="lineOne"/>} onClick={(e) => e.stopPropagation()} label="Line 1" />
-                                  <FormControlLabel control={<Checkbox checked={lineTwo} onChange={handleFilterChange} name="lineTwo"/>} onClick={(e) => e.stopPropagation()} label="Line 2" />
-                                  <FormControlLabel control={<Checkbox checked={lineThree} onChange={handleFilterChange} name="lineThree"/>} onClick={(e) => e.stopPropagation()} label="Line 3" />
-                                  <FormControlLabel control={<Checkbox checked={onCall} onChange={handleFilterChange} name="onCall"/>} onClick={(e) => e.stopPropagation()} label="On Call" />
-                              </FormGroup>
-                          </Grid>
-                      </Grid>
-
-                      {/* SHIFT STATUS Column */}
-                      <Grid container direction='column' spacing={1}>
-                          <Grid>
-                              <ListSubheader> <b>Shift Status</b></ListSubheader>
-                              <FormGroup sx={{px:1.5}}>
-                                  <FormControlLabel control={<Checkbox checked={approved} onChange={handleFilterChange} name="approved"/>} onClick={(e) => e.stopPropagation()} label="Approved" />
-                                  <FormControlLabel control={<Checkbox checked={pending} onChange={handleFilterChange} name="pending"/>} onClick={(e) => e.stopPropagation()} label="Pending" />
-                                  <FormControlLabel control={<Checkbox checked={cancelled} onChange={handleFilterChange} name="cancelled"/>} onClick={(e) => e.stopPropagation()} label="Cancelled" />
-                              </FormGroup>
-                          </Grid>
-                      </Grid>
-                  </Grid>
-              </Select>
-            </FormControl>
+            <Select
+              autoWidth={true}
+              defaultValue={''}
+              id="grouped-select"
+              label="Grouping"
+              open={open}
+              onOpen={handleSelectOpen}
+              onClose={(e, reason) => {
+                if (reason !== "backdropClick") {
+                  setOpen(false);
+                }
+              }}
+            >
+              <Grid container direction='row' spacing={1} marginRight={2}>
+                {/* Filter options here */}
+              </Grid>
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
       <Grid paddingBottom={'4%'}>
-        <MyCalendar filters={filterState} fetchShiftsTrigger={fetchShiftsTrigger} setFetchShiftsTrigger={setFetchShiftsTrigger}/>
+        <MyCalendar filters={filterState} fetchShiftsTrigger={fetchShiftsTrigger} setFetchShiftsTrigger={setFetchShiftsTrigger} />
       </Grid>
     </Box>
   );
