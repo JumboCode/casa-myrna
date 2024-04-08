@@ -119,11 +119,6 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             setTimeError(false);
         }
     }
-
-    const isFormValid = () => {
-        // Check if all fields in the form are filled out
-        return Object.values(formData).every(value => value !== '');
-    };
     
     // Handle form submission (IN PROGRESS)
     const handleSubmit = async (e) => {
@@ -364,7 +359,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                                 </Grid>
                                 {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
                                 <Grid item xs={3}>
-                                    <Button type="submit" disabled={!isFormValid() || timeError} variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
+                                    <Button type="submit" disabled={timeError} variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
                                 </Grid>
                             </Grid>
                             </Grid>    
