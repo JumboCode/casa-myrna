@@ -253,6 +253,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
             });
     
             const result = await updateProfiles(updatedProfiles);
+            window.location.reload(false);
 
         } catch (error) {
             console.error('Error editing employee:', error);
