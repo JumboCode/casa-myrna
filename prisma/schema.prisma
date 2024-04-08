@@ -1,10 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider        = "prisma-client-js"
+model primaryShift {
+  primaryShiftID Int         @id @default(autoincrement())
+  userID         String
+  onCallShiftID  Int
+  date           DateTime
+  from           DateTime
+  to             DateTime
+  status         Status      @default(PENDING)
+  message        String
+  phoneLine      Int
+  created_at     DateTime
+  firstName      String
+  lastName       String
+  onCallShift    onCallShift @relation("onCallShift", fields: [onCallShiftID], references: [onCallShiftID])
+}
+
+model onCallShift {
+  onCallShiftID Int            @id @default(autoincrement())
+  userID        String
+  date          DateTime
+  from          DateTime
+  to            DateTime
+  status        Status         @default(PENDING)
+  message       String
+  phoneLine     Int
+  created_at    DateTime
+  primaryShifts primaryShift[] @relation("onCallShift")
+}
+
+model announcement {
+  announcementID  Int                    @id @default(autoincrement())
+  title           String
+  date            DateTime
+  content         String
+  userID          String
+  group           AnnouncementGroup
+  firstName       String
+  lastName        String
+  profileImageURL String
+  userViews       userAnnouncementView[] @relation("Announcement")
+}
+
+model userAnnouncementView {
+  userID         String
+  announcementID Int
+  announcement   announcement @relation("Announcement", fields: [announcementID], references: [announcementID], onDelete: Cascade)
+
+  @@id([userID, announcementID])
 }
 
 enum Status {
@@ -13,33 +63,9 @@ enum Status {
   CANCELLED
 }
 
-// Represents On Call shifts
-model primaryShift {
-  primaryShiftID       Int    @id @default(autoincrement()) 
-  userID               String
-  onCallShiftID        Int    
-  date                 DateTime
-  from                 DateTime
-  to                   DateTime
-  status               Status  @default(PENDING)
-  firstName            String
-  lastName             String
-  message              String
-  phoneLine            Int
-  created_at           DateTime
-  onCallShift  onCallShift   @relation("onCallShift", fields: [onCallShiftID], references: [onCallShiftID]) 
+enum AnnouncementGroup {
+  Coordinator
+  Full_time
+  Part_time
+  Relief
 }
- 
-model onCallShift {
-  onCallShiftID        Int    @id @default(autoincrement()) 
-  userID               String
-  primaryShifts        primaryShift[] @relation("onCallShift")
-  date                 DateTime
-  from                 DateTime
-  to                   DateTime
-  status               Status  @default(PENDING)
-  message              String
-  phoneLine            Int
-  created_at           DateTime
-}
-

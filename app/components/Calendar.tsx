@@ -77,7 +77,7 @@ const style = {
 const localizer = momentLocalizer(moment);
 const employeeOptions = ["Ana Quieros", "Anna Seifield", "Anne Brown", "Angel Ferrian"];
 
-const MyCalendar = (props: {filters: any}) => {
+const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShiftsTrigger: any}) => {
   const { isSignedIn, user, isLoaded } = useUser();
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
@@ -87,7 +87,7 @@ const MyCalendar = (props: {filters: any}) => {
 
 
   const [formData, setFormData] = useState<CalendarInfo | null>(null);
-  const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
+  // const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
 
   const [open, setOpen] = useState(false);
   const today = new Date();
@@ -118,7 +118,7 @@ const MyCalendar = (props: {filters: any}) => {
         throw new Error('Failed to fetch shift data');
       }
     })();
-  }, [fetchShiftsTrigger])
+  }, [props.fetchShiftsTrigger])
   
 
   // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
@@ -219,8 +219,37 @@ const MyCalendar = (props: {filters: any}) => {
     }
   });
 
+  /* 
+   * splits shifts that occur over two days into two different events so that
+   * they're rendered correctly on the calendar
+   */
+  const splitOvernightShifts = (shiftsArray: any): any => {
+    
+    if (!shiftsArray) return []
+
+    let updatedShifts = []
+
+    for (let shift of shiftsArray) {
+      const isOvernight = shift.start.getDate() !== shift.end.getDate()
+      if (isOvernight) {
+          let shift1 = {...shift, end: new Date(shift.start)};
+          let shift2 = {...shift, start: new Date(shift.end)};
+          
+          shift1.end.setHours(23, 59, 59, 999)
+          shift2.start.setHours(0, 0, 0, 0)
+      
+          updatedShifts.push(shift1)
+          updatedShifts.push(shift2)
+      } else {
+        updatedShifts.push(shift)
+      }
+    }
+    return updatedShifts
+   
+  }
+
   // this is to tell typescript that if the array is undefined, then use the empty list instead
-  const events = [...shifts ?? [], ...onCallShifts ?? []]
+  const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
@@ -274,13 +303,14 @@ const MyCalendar = (props: {filters: any}) => {
       },
       body: JSON.stringify(formData)
     });
-    setFetchShiftsTrigger(prev => prev + 1);
+    console.log("Before setfetchShiftsTrigger")
+    props.setFetchShiftsTrigger(Date.now());
     handleClose()
   }
 
   /* Used to rdner different buttons on shift modal depending on shift status, user role and user id */
   const renderShiftButtons = () => {
-    if (formData?.status === 'ACCEPTED') { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
+    if (formData?.status === 'ACCEPTED' && (user?.publicMetadata.role == 'Coordinator' || (user?.id == formData?.userID))) { /* TODO: change firstName, lastName & userID to null rathern than ''? Not sure if necessary */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.CANCELLED, 'firstName': '', 'lastName': '', 'userID': '' }) }} sx={{ marginRight: '5%', paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.primary.main, '&:hover': { backgroundColor: "#2E0057" }, textTransform: 'none' }} variant="contained">Cancel Shift</Button>;
     } else if (formData?.status === 'CANCELLED') { /* TODO: despite warnings in line below code appears to work. In the future, Code might be cleaned up and warnings removed by making these fields nullable in the prisma schema */
       return <Button onClick={() => { handleSubmit(formData, { 'status': Status.PENDING, 'firstName': user?.firstName, 'lastName': user?.lastName, 'userID': user?.id }) }} sx={{ paddingLeft: '10%', textIndent: '5.5px', paddingRight: '10%', borderRadius: '10px', backgroundColor: theme.palette.secondary.main, '&:hover': { backgroundColor: "#89B839" }, textTransform: 'none' }} variant="contained">Request Shift</Button>
@@ -381,7 +411,7 @@ const MyCalendar = (props: {filters: any}) => {
 };
 
 const calendar = () => {
-
+  const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
   const [filterState, setFilter] = React.useState({
     partTime: true,
     fullTime: true,
@@ -439,9 +469,6 @@ const calendar = () => {
     }
   };
   
-  
-  
-
   return (
     <Box
       sx={{
@@ -459,13 +486,13 @@ const calendar = () => {
     >
       <Grid container spacing={2} columns={{lg:20, xs:30}} paddingTop="2%" marginRight='4%'>
         <Grid xs={15} paddingBottom="5%">
-          <Typography display={{xs: 'none', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
+          <Typography display={{xs: 'block', md: 'block', lg: 'block'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
         </Grid>
 
         <Grid xs={5} paddingTop="8%">
-          <CalendarModalButton/>
+          <CalendarModalButton callback={setFetchShiftsTrigger}/>
           <FormControl sx={{ m: 1, minWidth: 160 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
               {/* Menu props align the popup */}
@@ -548,7 +575,7 @@ const calendar = () => {
       </Grid>
 
       <Grid paddingBottom={'4%'}>
-        <MyCalendar filters={filterState}/>
+        <MyCalendar filters={filterState} fetchShiftsTrigger={fetchShiftsTrigger} setFetchShiftsTrigger={setFetchShiftsTrigger}/>
       </Grid>
     </Box>
   );

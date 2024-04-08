@@ -71,19 +71,10 @@ const initialFormData = {
     phoneLine: ''
 };
 
-const CalendarModalButton: FC = () => {    
+const CalendarModalButton: FC <any> = ({callback}) => {    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-
-    // const initialFormData = {
-
-    //     phoneLine: '',
-    //     startTime: '',
-    //     endTime: '',
-    //     assignedEmployee: '',
-    // };
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -121,7 +112,14 @@ const CalendarModalButton: FC = () => {
         console.log(startDate.toISOString())
         console.log(endDate.toISOString())
 
-        const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        // const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        let firstName, lastName;
+        if (formData.assignedEmployee) {
+            [firstName, lastName] = formData.assignedEmployee.split(' ');
+        } else {
+            firstName = '';
+            lastName = '';
+        }
 
         const requestData = {
             // ...formData,
@@ -134,7 +132,7 @@ const CalendarModalButton: FC = () => {
             created_at: createdAt,
             userID: "2",
             message: 'hello',
-            status: 'ACCEPTED',
+            status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
             onCallShiftID: 1
         };
 
@@ -161,6 +159,7 @@ const CalendarModalButton: FC = () => {
 
             // Reset form data after successful submission
             setFormData(initialFormData);
+            callback(Date.now())
             handleClose();
         } catch (error) {
             console.error('Error assigning shift:', error);
@@ -204,7 +203,7 @@ const CalendarModalButton: FC = () => {
                 <Grid container spacing={4}  direction='column' alignItems='flex-start'  paddingBottom='13%'>
                     <Grid container direction="row" justifyContent={'flex-end'} xs ={12} sm={12} md={12} lg={12}sx={{marginTop: '20px', marginLeft: '-130px' }}>
                         <Typography variant="h4"  sx={{marginTop: '15px', marginRight: '10px'}}>
-                        Start Time: 
+                            Start Time: <span style={{ color: 'red' }}>*</span>
                         </Typography>
 
                         {/* Start Date */}
@@ -220,6 +219,7 @@ const CalendarModalButton: FC = () => {
                             name="startTime"
                             value={formData.startTime}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                         <MenuItem value={0}>12:00 am</MenuItem>
@@ -249,8 +249,8 @@ const CalendarModalButton: FC = () => {
                     </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12} sx={{marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{marginTop: '15px', marginRight: '10px' }}>
-                        End Time: 
+                        <Typography variant="h4" sx={{marginTop: '15px', marginRight: '15px' }}>
+                        End Time: <span style={{ color: 'red' }}>*</span>
                         </Typography>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <div component={['DatePicker']} >
@@ -266,6 +266,7 @@ const CalendarModalButton: FC = () => {
                             name="endTime"
                             value={formData.endTime}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                             <MenuItem value={0}>12:00 am</MenuItem>
@@ -295,20 +296,21 @@ const CalendarModalButton: FC = () => {
                         </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '20px' }}>
+                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '21px'}}>
                         Assigned Employee: 
                         </Typography>
                         {/* Dropdown list for employee name selection to update useState of formdata information*/}
                         <ComboBox onSelect={handleSelectEmployee}/>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ marginTop: '15px',marginRight: '182px' }}>
-                        Phone Line: 
+                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '188px' }}>
+                        Phone Line: <span style={{ color: 'red' }}>*</span>
                         </Typography>
                             <Select
                             name="phoneLine"
                             value={formData.phoneLine}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                             >
                             <MenuItem value={'1'}>1</MenuItem>
