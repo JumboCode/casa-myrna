@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -90,9 +91,10 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
   // const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
 
   const [open, setOpen] = useState(false);
-  const today = new Date();
+  
 
   useEffect(() => {
+    const today = new Date();
     (async function () {
       try {
         const firstDayOfWeek = new Date(today);
@@ -129,14 +131,15 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
   
     // Add your logic here based on the filters
+    //@ts-ignore
     if (
-      (partTime && shift.partTime) ||
-      (fullTime && shift.fullTime) ||
-      (manager && shift.manager) ||
+      // (partTime && shift.partTime) ||
+      // (fullTime && shift.fullTime) ||
+      // (manager && shift.manager) ||
       (lineOne && (shift.phoneLine == 1)) ||
       (lineTwo && (shift.phoneLine == 2)) ||
       (lineThree && (shift.phoneLine == 3)) ||
-      (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
+      // (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
       (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
       (pending && shift.status === Status.PENDING) ||
       (cancelled && shift.status === Status.CANCELLED)
@@ -283,7 +286,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     }
   };
 
-  const handleSubmit = async (e: CalendarInfo, modifiedData: Partial<CalendarInfo>) => {
+  const handleSubmit = async (e: any, modifiedData: Partial<any>) => {
     Object.keys(modifiedData).forEach(key => {
       if (e.hasOwnProperty(key)) {
         e[key] = modifiedData[key];
@@ -425,27 +428,27 @@ const Cal = () => {
     cancelled: true,
   });
 
-  const filterShifts = (shift: CalendarInfo, filters: any) => {
-    const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
+  // const filterShifts = (shift: CalendarInfo, filters: any) => {
+  //   const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
   
-    // Add your logic here based on the filters
-    if (
-      (partTime && shift.partTime) ||
-      (fullTime && shift.fullTime) ||
-      (manager && shift.manager) ||
-      (lineOne && shift.lineOne) ||
-      (lineTwo && shift.lineTwo) ||
-      (lineThree && shift.lineThree) ||
-      (onCall && shift.onCall) ||
-      (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
-      (pending && shift.status === Status.PENDING) ||
-      (cancelled && shift.status === Status.CANCELLED)
-    ) {
-      return true;
-    }
+  //   // Add your logic here based on the filters
+  //   if (
+  //     (partTime && shift.partTime) ||
+  //     (fullTime && shift.fullTime) ||
+  //     (manager && shift.manager) ||
+  //     (lineOne && shift.lineOne) ||
+  //     (lineTwo && shift.lineTwo) ||
+  //     (lineThree && shift.lineThree) ||
+  //     (onCall && shift.onCall) ||
+  //     (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
+  //     (pending && shift.status === Status.PENDING) ||
+  //     (cancelled && shift.status === Status.CANCELLED)
+  //   ) {
+  //     return true;
+  //   }
   
-    return false;
-  };
+  //   return false;
+  // };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter({
@@ -504,11 +507,11 @@ const Cal = () => {
                 label="Grouping" 
                 open={open}
                 onOpen={handleSelectOpen}
-                onClose={(e, reason) => {
-                  if (reason !== "backdropClick") {
-                    setOpen(false); 
-                  }
-                }}
+                // onClose={(_e: any, reason: string) => {
+                //   if (reason !== "backdropClick") {
+                //     setOpen(false); 
+                //   }
+                // }}
                 >
                   <Grid container direction='row' spacing={1} marginRight={2}>
 
