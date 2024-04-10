@@ -410,7 +410,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
   );
 };
 
-const calendar = () => {
+const Cal = () => {
   const [fetchShiftsTrigger, setFetchShiftsTrigger] = useState(0);
   const [filterState, setFilter] = React.useState({
     partTime: true,
@@ -581,4 +581,4 @@ const calendar = () => {
   );
 };
 
-export default calendar;
+export default Cal;
