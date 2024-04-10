@@ -9,6 +9,7 @@ import { FC, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import UploadImage from "../images/6.png";
+import DeleteImage from "../images/trashcan.png"
 import DefaultImage from "../images/default-profile-pic.png";
 import { useUser } from "@clerk/nextjs";
 import Clerk from '@clerk/clerk-js';
@@ -277,14 +278,13 @@ const handleDeleteProfilePicture = async () => {
               }}
               variant="outlined"
             >
-              {/* TODO: update icon later */}
               <Image
-                src={UploadImage}
+                src={DeleteImage}
                 alt="delete profile picture"
                 width={20}
                 height={20}
               />
-              Delete Profile Picture
+              <label htmlFor="avatar-input">Delete Profile Picture</label>
             </Button>
           </Grid>
         </Grid>
