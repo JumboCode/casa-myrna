@@ -41,6 +41,8 @@ model onCallShift {
   onCallShiftID        Int    @id @default(autoincrement()) 
   userID               String
   primaryShifts        primaryShift[] @relation("onCallShift")
+  firstName            String
+  lastName             String
   date                 DateTime
   from                 DateTime
   to                   DateTime

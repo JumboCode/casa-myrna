@@ -16,6 +16,8 @@ import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { FormatListNumberedRtlSharp } from '@mui/icons-material';
+import { request } from 'http';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -98,8 +100,11 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         console.log(endDate.toISOString())
 
         const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        console.log("First Name: ", firstName)
+        console.log("Last Name: ", lastName)
 
-        const requestData = {
+        // TODO: remove 'any' type
+        let requestData : any = {
             // ...formData,
             firstName: firstName,
             lastName: lastName,
@@ -111,22 +116,43 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             userID: "2",
             message: 'hello',
             status: 'ACCEPTED',
-            onCallShiftID: 1
         };
+
+        if (formData.shiftType === 'regular'){
+            requestData.onCallShiftID = 6
+        } 
+        
 
         // See console to see the form data being sent to POST
         console.log('Request Payload:', requestData);
         console.log("TESTING PRINT")
 
         try {
-            const response = await fetch('api/shifts', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData),
-            });
+            // value={"regular"}>Regular</MenuItem>
+            // <MenuItem value={"onCall"}
+            let response = null
+            if (formData.shiftType === 'regular'){
+                response = await fetch('api/shifts', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            } else {
+                response = await fetch('api/on-call-shifts', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            }
+       
+
+
             console.log('after retrieving response')
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
