@@ -280,7 +280,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
 
     // handleClose()
 
-    if (timeDifference <= eightHoursInMilliseconds) {
+    if (timeDifference <= eightHoursInMilliseconds && user?.publicMetadata.role != 'Coordinator' ) {
       // Cancal Shift Modal
       
         setOpenCancelModal(true);
