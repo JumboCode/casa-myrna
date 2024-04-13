@@ -281,13 +281,12 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     // handleClose()
 
     if (timeDifference <= eightHoursInMilliseconds && user?.publicMetadata.role != 'Coordinator' ) {
-      // Cancal Shift Modal
-      
+      // Cancal Shift Modal      
         setOpenCancelModal(true);
       
 
     } else {
-      console.log('The end date does not occur within 8 hours of the start date.');
+      console.log('The end date does not occur within 8 hours of the start date OR is coordinator role');
 
       Object.keys(modifiedData).forEach(key => {
         if (e.hasOwnProperty(key)) {
@@ -443,7 +442,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
                     <Typography variant="h4" sx={{ marginRight: "190px" }}>
                       Status:
                     </Typography>
-                    <Box sx={{ flex: 1, border: 1, borderColor: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor, borderRadius: "5px", width: "100%", color: formData?.style.backgroundColor == "gray" ? "red" : formData?.style.backgroundColor }}> <Typography sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}> {formData?.style.backgroundColor == "green" ? "Assigned" : (formData?.style.backgroundColor == "gray" ? "Cancelled" : "Pending")} </Typography> </Box>
+                    <Box sx={{ flex: 1, border: 1, borderColor: formData?.style?.backgroundColor == "gray" ? "red" : formData?.style?.backgroundColor, borderRadius: "5px", width: "100%", color: formData?.style?.backgroundColor == "gray" ? "red" : formData?.style?.backgroundColor }}> <Typography sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}> {formData?.style?.backgroundColor == "green" ? "Assigned" : (formData?.style?.backgroundColor == "gray" ? "Cancelled" : "Pending")} </Typography> </Box>
                   </Grid>
                   <Grid xs={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign='center' paddingTop='5%' sx={{ display: 'flex', justifyContent: 'center' }}>
                     {renderShiftButtons()}
