@@ -57,24 +57,22 @@ export async function GET(req: NextRequest)
  */
 export async function POST(req: Request) {
     try {
+        let data = await req.json();
 
-//       console.log(req.url); 
-      let data : any = {} 
-      const urlParams = new URLSearchParams(new URL(req.url).search);
-      urlParams.forEach((value, key) => {
-        if ('userID' == key || 'date' == key || 'from' == key || 'to' == key 
-            || 'message' == key || 'phoneLine' == key) {
-                if (key == 'phoneLine') {
-                        data[key] = parseInt(value, 10); 
-                        return; 
-                }
-                data[key] = value;                 
-            }
-      });
+// TODO: find out why this was added / if passing data as URL params is preferred?
+//       const urlParams = new URLSearchParams(new URL(req.url).search);
+//       urlParams.forEach((value, key) => {
+//         if ('userID' == key || 'date' == key || 'from' == key || 'to' == key 
+//             || 'message' == key || 'phoneLine' == key) {
+//                 if (key == 'phoneLine') {
+//                         data[key] = parseInt(value, 10); 
+//                         return; 
+//                 }
+//                 data[key] = value;                 
+//             }
+//       });
 
-      console.log(data);
 
-//       let data = await req.json(); 
     if (!('userID' in data && 'date' in data && 'from' in data && 'to' in data 
             && 'message' in data && 'phoneLine' in data)){
           return new Response('Error: Missing required field', {
@@ -90,7 +88,8 @@ export async function POST(req: Request) {
         };
         const shift = await prisma.onCallShift.create({data});
         return new Response(JSON.stringify(shift))
-    } catch (error){
+    } 
+    catch (error){
         return new Response('ERROR: ' + (error as Error).message); 
         // return new Response('Error: An unexpected error occured', {status: 500,})
       }

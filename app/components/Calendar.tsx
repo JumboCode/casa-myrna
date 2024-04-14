@@ -225,7 +225,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
 
       start: new Date(onCallShift.from),
       end: new Date(onCallShift.to),
-      title: onCallShift.userID, // we don't know what to assign this right now 
+      title: onCallShift.firstName + " " + onCallShift.lastName,
       style: {
         opacity: .5,
         backgroundColor: background_color,

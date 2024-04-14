@@ -15,6 +15,8 @@ import theme from '../theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { FormatListNumberedRtlSharp } from '@mui/icons-material';
+import { request } from 'http';
 import { profileData } from './types';
 import ComboBox from './ComboBox';
 
@@ -28,7 +30,7 @@ const style = {
         xs: '80%'
     },
     height: {
-        lg: 450,
+        lg: 500,
         xs: '70%'
     },
     bgcolor: "#ffffff",
@@ -59,9 +61,10 @@ const style = {
             fontWeight: 'regular'
         }
     }
-  }; 
+};
 
 const initialFormData = {
+    shiftType: '', 
     startDate: '',
     endDate: '',
     startTime: '',
@@ -70,7 +73,7 @@ const initialFormData = {
     phoneLine: ''
 };
 
-const CalendarModalButton: FC <any> = ({callback}) => {    
+const CalendarModalButton: FC<any> = ({ callback }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -98,7 +101,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
-    
+
     // Handle form submission (IN PROGRESS)
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -120,7 +123,8 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             lastName = '';
         }
 
-        const requestData = {
+        // TODO: remove 'any' type
+        let requestData : any = {
             // ...formData,
             firstName: firstName,
             lastName: lastName,
@@ -135,19 +139,41 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             onCallShiftID: 6
         };
 
+        if (formData.shiftType === 'regular'){
+            requestData.onCallShiftID = 6
+        } 
+        
+
         // See console to see the form data being sent to POST
         console.log('Request Payload:', requestData);
         console.log("TESTING PRINT")
 
         try {
-            const response = await fetch('api/shifts', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData),
-            });
+            // value={"regular"}>Regular</MenuItem>
+            // <MenuItem value={"onCall"}
+            let response = null
+            if (formData.shiftType === 'regular'){
+                response = await fetch('api/shifts', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            } else {
+                response = await fetch('api/on-call-shifts', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            }
+       
+
+
             console.log('after retrieving response')
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
@@ -167,12 +193,11 @@ const CalendarModalButton: FC <any> = ({callback}) => {
 
     return (
         <>
-
             <Button
                 variant="contained"
                 // color="#FFFFFF"
                 onClick={handleOpen}
-                style={{marginBottom: '10px', marginLeft: '10px', textTransform: 'none', minWidth: 160, fontFamily: 'Montserrat', fontSize: '16', fontWeight: 'bold', color: '#FFFFFF'}} 
+                style={{ marginBottom: '10px', marginLeft: '10px', textTransform: 'none', minWidth: 160, fontFamily: 'Montserrat', fontSize: '16', fontWeight: 'bold', color: '#FFFFFF' }}
             >
                 Add Shift
             </Button>
