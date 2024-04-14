@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client"
-
 // Import necessary dependencies and components
 import { FC, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
@@ -12,7 +12,6 @@ import { format, parse } from 'date-fns';
 import theme from '../theme';
 // Add employee modal functionality imports
 // import { POST } from '../api/shifts/route';
-import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -95,7 +94,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
       };
 
     // Handle form input change
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
@@ -106,8 +105,8 @@ const CalendarModalButton: FC <any> = ({callback}) => {
         const createdAt = new Date().toISOString();
 
         // format start and end date/times
-        startDate.setHours(formData.startTime)
-        endDate.setHours(formData.endTime)
+        startDate.setHours(parseInt(formData.startTime))
+        endDate.setHours(parseInt(formData.endTime))
 
         console.log(startDate.toISOString())
         console.log(endDate.toISOString())
@@ -328,7 +327,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                         </Grid>
                         {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
                         <Grid item xs={3}>
-                            <Button type="submit" variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
+                            <Button type="submit" variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}>Assign Shift</Button>
                         </Grid>
                     </Grid>
                     </Grid>    

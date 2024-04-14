@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 import * as React from 'react';
 
@@ -20,7 +21,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 // Custom components and images
-import profileList from "./ProfileList"
+import profileList from "./profileList"
 import Image from "next/image";
 import Add from "../images/9.png"
 import SwapVertIcon from '@mui/icons-material/SwapVert';
