@@ -26,7 +26,8 @@
     "next-auth": "^4.23.2",
     "react": "^18",
     "react-big-calendar": "^1.8.7",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-phone-number-input": "^3.3.12"
   },
   "devDependencies": {
     "@types/node": "^20",

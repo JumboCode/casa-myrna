@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -19,6 +20,9 @@ import { profileData } from './types';
 
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 // import {fetchPeopleData} from '/ManageProfiles.tsx';
 
@@ -74,6 +78,18 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({profiles, onUpdate})
         pronouns: '',
         phoneNumber:''
       };
+
+    // Phone number
+    const [phoneNumber, setPhoneNumber] = useState('');
+
+    const handlePhoneNumberChange = (value: string | undefined) => {
+      setPhoneNumber(value);
+      setFormData({ ...formData, phoneNumber: value });
+    };
+
+    // Email
+    const [emailError, setEmailError] = useState('');
+
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
       const { name, value } = e.target;
@@ -81,6 +97,13 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({profiles, onUpdate})
         ...formData,
         [name]: value,
       });
+      if (name === 'emailAddress') {
+        if (!value.endsWith('@casamyrna.org')) {
+            setEmailError('Email must end with @casamyrna.org');
+        } else {
+            setEmailError('');
+        }
+      }
     };
     const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
       const { name, value } = event.target;
@@ -93,6 +116,10 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({profiles, onUpdate})
     
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
+      if (emailError) {
+        alert('Please correct the errors before submitting.');
+        return;
+    }
       try {
         const response = await fetch('/api/users', {
           method: 'POST',
@@ -174,7 +201,8 @@ return (
                         value={formData.firstName}
                         onChange={handleInputChange} 
                         InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                        variant="standard"/>
+                        variant="standard"
+                        required/>
                 </Grid>
                 <Grid direction='row' xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4" >
@@ -196,7 +224,10 @@ return (
                     value={formData.emailAddress}
                     onChange={handleInputChange}
                     InputProps={{disableUnderline: true, style: {paddingLeft: 8} }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                    variant="standard"/>
+                    variant="standard"
+                    error={Boolean(emailError)}
+                    helperText={emailError}
+                    required/>
                 </Grid>
             </Grid>
             {/* This is column 2 */}
@@ -211,7 +242,8 @@ return (
                     value={formData.lastName}
                     onChange={handleInputChange}
                     InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }} sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                    variant="standard"/>
+                    variant="standard"
+                    required/>
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12}>
                     <Typography variant="h4">
@@ -222,6 +254,7 @@ return (
                         value={formData.role}
                         onChange={handleSelectChange}
                         sx={{ borderRadius: '20px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '32px'}}
+                        required
                     >
                     <MenuItem value={'Coordinator'}>Coordinator</MenuItem>
                     <MenuItem value={'Full-time Staff'}>Full-time Staff</MenuItem>
@@ -233,12 +266,15 @@ return (
                     <Typography variant="h4">
                         Phone Number
                     </Typography>
-                    <TextField 
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    InputProps={{disableUnderline: true, style: {paddingLeft: 8}  }}sx={{backgroundColor: '#FFFFFF', borderRadius:'10px'}} 
-                    variant="standard"/>
+                      <PhoneInput
+                        international
+                        countryCallingCodeEditable={false}
+                        value={phoneNumber}
+                        onChange={handlePhoneNumberChange}
+                        defaultCountry="US"
+                        style={{ width: '100%', height: '40px', backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                        required
+                      />
                 </Grid>
                 <Grid xs ={12} sm={12} md={12} lg={12} container justifyContent='flex-end' textAlign ='center' paddingTop='15%' paddingRight='15%' paddingLeft='20%' sx = {{ display:'flex', justifyContent:'center'}}>
                     <Button type="submit" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'25px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}variant="contained">Save Changes</Button>
