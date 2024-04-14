@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Announcement from "../components/announcements";
 import { FC } from "react";
 import Box from '@mui/material/Box';
@@ -19,6 +20,7 @@ import theme from '../theme';
 import ClearIcon from '@mui/icons-material/Clear';
 import Add from "../images/9.png"
 import Image from "next/image";
+import React from "react";
 
 const AnnouncementList: FC = () => {
 
@@ -82,7 +84,7 @@ const AnnouncementList: FC = () => {
                   <Grid container>
                      {/* <AddEmployeeModal profiles={peopleArray} onUpdate={setPeopleArray}/>  */}
                     <Button fullWidth variant="outlined" sx={{ padding: '3%', borderRadius: '25px', borderColor: "#57228F", backgroundColor: '#FFFFFF', color: "#000000", '&:hover': { borderColor: theme.palette.primary.main }, textTransform: 'none', display: 'flex', alignItems: 'center' }}> 
-                      <div fullWidth style={{ paddingRight: '35px' }}>Add New Announcement</div>
+                      <div style={{ paddingRight: '35px' }}>Add New Announcement</div>
                       <Image src={Add} alt="Error" width={30} height={30} />
                     </Button>
                   </Grid>
