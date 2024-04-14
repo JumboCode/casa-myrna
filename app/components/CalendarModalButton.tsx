@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client"
-
 // Import necessary dependencies and components
 import { FC, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
@@ -12,10 +12,11 @@ import { format, parse } from 'date-fns';
 import theme from '../theme';
 // Add employee modal functionality imports
 // import { POST } from '../api/shifts/route';
-import { PrismaClient } from '@prisma/client';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { profileData } from './types';
+import ComboBox from './ComboBox';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -78,8 +79,22 @@ const CalendarModalButton: FC <any> = ({callback}) => {
     const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
 
+    // For ComboBox Emplyee Selection
+    // const [selectedEmployee, setSelectedEmployee] = useState<profileData | null>(null);
+
+    // const handleSelectEmployee = (selectedValue: profileData | null) => {
+    //   setSelectedEmployee(selectedValue);
+    // };
+
+    const handleSelectEmployee = (selectedValue: string) => {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          assignedEmployee: selectedValue,
+        }));
+      };
+
     // Handle form input change
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
@@ -90,13 +105,20 @@ const CalendarModalButton: FC <any> = ({callback}) => {
         const createdAt = new Date().toISOString();
 
         // format start and end date/times
-        startDate.setHours(formData.startTime)
-        endDate.setHours(formData.endTime)
+        startDate.setHours(parseInt(formData.startTime))
+        endDate.setHours(parseInt(formData.endTime))
 
         console.log(startDate.toISOString())
         console.log(endDate.toISOString())
 
-        const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        // const [firstName, lastName] = formData.assignedEmployee.split(' ');
+        let firstName, lastName;
+        if (formData.assignedEmployee) {
+            [firstName, lastName] = formData.assignedEmployee.split(' ');
+        } else {
+            firstName = '';
+            lastName = '';
+        }
 
         const requestData = {
             // ...formData,
@@ -109,7 +131,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             created_at: createdAt,
             userID: "2",
             message: 'hello',
-            status: 'ACCEPTED',
+            status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
             onCallShiftID: 1
         };
 
@@ -180,7 +202,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                 <Grid container spacing={4}  direction='column' alignItems='flex-start'  paddingBottom='13%'>
                     <Grid container direction="row" justifyContent={'flex-end'} xs ={12} sm={12} md={12} lg={12}sx={{marginTop: '20px', marginLeft: '-130px' }}>
                         <Typography variant="h4"  sx={{marginTop: '15px', marginRight: '10px'}}>
-                        Start Time: 
+                            Start Time: <span style={{ color: 'red' }}>*</span>
                         </Typography>
 
                         {/* Start Date */}
@@ -196,6 +218,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                             name="startTime"
                             value={formData.startTime}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                         <MenuItem value={0}>12:00 am</MenuItem>
@@ -225,8 +248,8 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                     </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12} sx={{marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{marginTop: '15px', marginRight: '10px' }}>
-                        End Time: 
+                        <Typography variant="h4" sx={{marginTop: '15px', marginRight: '15px' }}>
+                        End Time: <span style={{ color: 'red' }}>*</span>
                         </Typography>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <div component={['DatePicker']} >
@@ -242,6 +265,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                             name="endTime"
                             value={formData.endTime}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                         >
                             <MenuItem value={0}>12:00 am</MenuItem>
@@ -271,27 +295,21 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                         </Select>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '114px' }}>
+                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '21px'}}>
                         Assigned Employee: 
                         </Typography>
-                        <Select
-                            name="assignedEmployee"
-                            value={formData.assignedEmployee}
-                            onChange={handleInputChange}
-                            sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
-                        >
-                        <MenuItem value={'Carly Seigel'}>Carly Seigel</MenuItem>
-                        <MenuItem value={'Eliana Longoria-Valenzuela'}>Eliana Longoria-Valenzuela</MenuItem>
-                    </Select>
+                        {/* Dropdown list for employee name selection to update useState of formdata information*/}
+                        <ComboBox onSelect={handleSelectEmployee}/>
                     </Grid>
                     <Grid container direction="row" xs ={12} sm={12} md={12} lg={12}sx={{ marginTop: '18px', marginLeft: '-130px', justifyContent: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ marginTop: '15px',marginRight: '182px' }}>
-                        Phone Line: 
+                        <Typography variant="h4" sx={{ marginTop: '15px', marginRight: '188px' }}>
+                        Phone Line: <span style={{ color: 'red' }}>*</span>
                         </Typography>
                             <Select
                             name="phoneLine"
                             value={formData.phoneLine}
                             onChange={handleInputChange}
+                            required
                             sx={{ borderRadius: '10px',  width: "190px", backgroundColor: "#FFFFFF", outlineColor: "#000000", height: '56px'}}
                             >
                             <MenuItem value={'1'}>1</MenuItem>
@@ -309,7 +327,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
                         </Grid>
                         {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
                         <Grid item xs={3}>
-                            <Button type="submit" variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}} variant="contained">Assign Shift</Button>
+                            <Button type="submit" variant="contained" sx={{ paddingLeft: '10%', textIndent:'5.5px', paddingRight:'10%', borderRadius:'10px', backgroundColor: theme.palette.secondary.main, '&:hover': {backgroundColor:"#89B839"}, textTransform: 'none'}}>Assign Shift</Button>
                         </Grid>
                     </Grid>
                     </Grid>    
