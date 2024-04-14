@@ -132,7 +132,7 @@ const CalendarModalButton: FC <any> = ({callback}) => {
             userID: "2",
             message: 'hello',
             status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
-            onCallShiftID: 1
+            onCallShiftID: 6
         };
 
         // See console to see the form data being sent to POST
