@@ -126,3 +126,32 @@
     background: red; 
     border-radius: 5%;
 }
+
+.add-shift-svg {
+    height: 64px; 
+    width: 64px; 
+    margin-right: 10px; 
+}
+
+.add-shift-btn {
+    margin-bottom: '10px';
+    margin-left: '10px';
+    text-transform: 'none'; 
+    min-width: 180;
+    /* min-weight: 70; */
+    font-family: 'Montserrat';
+    font-size: '16';
+    font-weight: 'bold';
+    color: 'black';
+    background-color: "white";
+    position: "absolute";
+    right: 150;
+    top: 100;
+    border: "black";
+    border-radius: "35px";
+    border: '1px solid purple'; 
+
+    @media screen-width {
+        width: 150px; 
+    }
+}
