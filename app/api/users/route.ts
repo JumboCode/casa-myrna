@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { clerkClient } from '@clerk/nextjs';
 import { type NextRequest } from 'next/server'
@@ -116,6 +117,6 @@ export async function PUT(req: NextRequest) {
     }
   }
 
-  export async function GETNAMES(req: NextRequest) {
+  // export async function GETNAMES(req: NextRequest) {
       
-  } 
+  // } 

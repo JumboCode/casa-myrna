@@ -36,7 +36,7 @@ type announcementProps = {
   date: string;
 };
 
-const announcment: FC<announcementProps> = ({
+const Announcement: React.FC<announcementProps> = ({
   imageUrl,
   senderName,
   messageTitle,
@@ -70,4 +70,4 @@ const announcment: FC<announcementProps> = ({
   );
 };
 
-export default announcment;
+export default Announcement;
