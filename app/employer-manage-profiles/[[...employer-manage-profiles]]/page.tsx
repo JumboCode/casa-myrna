@@ -9,7 +9,7 @@ import theme from "../../theme";
 import { Protect } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 
-const employerManageProfiles: React.FC = () => {
+const EmployerManageProfiles: React.FC = () => {
   const { isSignedIn, user, isLoaded } = useUser();
   if (user?.publicMetadata.role == "Coordinator") {
     return (
@@ -31,4 +31,4 @@ const employerManageProfiles: React.FC = () => {
   }
 };
 
-export default employerManageProfiles;
+export default EmployerManageProfiles;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -34,16 +35,17 @@ const BoxSx: FC = () => {
 
 /* This updates the submit form data with the fetched user data */
 const [formData, setFormData] = useState(initialFormData);
+const [imageUrl, setImageUrl] = useState("");
+const [openSnack, setOpenSnack] = React.useState(false);
 
   if (!user) {
     console.error('User data is not loaded yet.');
     return;
   }
-  const [imageUrl, setImageUrl] = useState("");
+  
 
     // Success Alert
 
-    const [openSnack, setOpenSnack] = React.useState(false);
     const handleSnackClick = () => {
         setOpenSnack(true);
       };

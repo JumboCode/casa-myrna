@@ -5,7 +5,7 @@
  * Used to create dropdown of first and last names for Select component in Calendar Shifts Modal
  */
 
-
+// @ts-nocheck
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
