@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 import { PrintTwoTone } from '@mui/icons-material'
+import sendEmail from "../../lib/email"
 const prisma = new PrismaClient()
 
 
@@ -56,7 +57,7 @@ export async function GET(req: NextRequest)
  */
 export async function POST(req: NextRequest)
 {
-
+        console.log("IN POST\n")
         try {
                 console.log(typeof req)
                 let data = await req.json();
@@ -85,8 +86,11 @@ export async function POST(req: NextRequest)
  */
 export async function PUT(req: NextRequest)
 {
+        console.log("IN PUT\n")
+
         try {
                 const searchParams = req.nextUrl.searchParams
+
                 const shiftID = searchParams.get('shiftID')
                 const shiftIDNumeric = shiftID ? parseInt(shiftID, 10): null;
                 if (!shiftIDNumeric){
@@ -94,6 +98,7 @@ export async function PUT(req: NextRequest)
                 }
 
                 let data = await req.json();
+                console.log(data)
                 data = {
                 ...data,
                 "primaryShiftID": shiftIDNumeric,
@@ -102,7 +107,11 @@ export async function PUT(req: NextRequest)
                 "to": new Date(data.to),
                 "created_at": new Date(data.created_at)
                 };
-    
+
+                const userID = data.userID; 
+                
+
+
                 const shift = await prisma.primaryShift.upsert({
                         where: {primaryShiftID: shiftIDNumeric },
                         update: data,

@@ -257,6 +257,7 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
     }
   };
 
+
   /* Currently unused in form, but may be useful later */
   const handleSelectChange = (event: { target: { name: any; value: any; }; }) => {
     const { name, value } = event.target;
@@ -307,7 +308,8 @@ const MyCalendar = (props: {filters: any, fetchShiftsTrigger: any, setFetchShift
         if (formData) { delete (formData as { [key: string]: any })[key]; }
       })
   
-      const response = await fetch('api/shifts?shiftID=' + formData?.primaryShiftID.toString(), {
+      console.log("FormData: ", formData)
+      const response = await fetch('api/shifts?shiftID=' + (formData?.primaryShiftID).toString(), {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
