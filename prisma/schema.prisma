@@ -72,4 +72,3 @@ model userAnnouncementView {
   announcement  announcement  @relation("Announcement", fields: [announcementID], references: [announcementID], onDelete: Cascade) 
   @@id([userID, announcementID])
 }
-

@@ -1,10 +1,14 @@
-import { useAuth, useClerk } from "@clerk/nextjs" 
-
+import { useAuth, useClerk } from "@clerk/nextjs";
 
 const authHook = ({}) => {
-    return null
+    return null;
 }
 
 const signOutAction = () => {}
 
-export default { authHook, signOutAction }
+const AuthHookModule = {
+    authHook,
+    signOutAction
+};
+
+export default AuthHookModule;

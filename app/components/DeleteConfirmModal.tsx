@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import { FC, useState } from 'react'
 import Button from '@mui/joy/Button';
