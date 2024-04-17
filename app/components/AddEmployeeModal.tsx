@@ -270,7 +270,8 @@ return (
                         international
                         countryCallingCodeEditable={false}
                         value={phoneNumber}
-                        onChange={handlePhoneNumberChange}
+                        limitMaxLength={true}
+                        onChange={handlePhoneNumberChange} 
                         defaultCountry="US"
                         style={{ width: '100%', height: '40px', backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                         required
