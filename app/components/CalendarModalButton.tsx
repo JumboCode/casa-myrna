@@ -68,7 +68,13 @@ const initialFormData = {
   startDate: "",
   endDate: "",
   startTime: "",
+  startHour: "",
+  startMin: "",
+  startAm: "",
   endTime: "",
+  endHour: "",
+  endMins: "",
+  endAm: "",
   assignedEmployee: "",
   phoneLine: "",
 };
@@ -108,8 +114,21 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
     const createdAt = new Date().toISOString();
 
     // format start and end date/times
-    startDate.setHours(formData.startTime);
-    endDate.setHours(formData.endTime);
+    //     startDate.setHours(formData.startTime);
+    if (formData.startAm === "pm") {
+      if (formData.startHour !== 12) {
+        formData.startHour = (parseInt(formData.startHour) + 12) % 24;
+      }
+    }
+
+    // Convert end hour if PM
+    if (formData.endAm === "pm") {
+      if (formData.endHour !== 12) {
+        formData.endHour = (parseInt(formData.endHour) + 12) % 24;
+      }
+    }
+    startDate.setHours(formData.startHour, formData.startMin);
+    endDate.setHours(formData.endHour, formData.endMin);
 
     console.log(startDate.toISOString());
     console.log(endDate.toISOString());
@@ -275,7 +294,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "57%",
+                        width: "57.75%",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
@@ -310,18 +329,18 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                         onChange={(newValue) =>
                           setStartDate(new Date(newValue))
                         }
-                        sx={{ marginRight: "10px", width: "180px" }}
+                        sx={{ marginRight: "10px", width: "153px" }}
                       />
                     </LocalizationProvider>
 
                     <Select
-                      name="startTime"
-                      value={formData.startTime}
+                      name="startHour"
+                      value={formData.startHour}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
@@ -343,13 +362,13 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                     </Select>
 
                     <Select
-                      name="startTime"
-                      value={formData.startTime}
+                      name="startMin"
+                      value={formData.startMin}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
@@ -362,20 +381,20 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                       <MenuItem value={"45"}>45</MenuItem>
                     </Select>
                     <Select
-                      name="startam"
-                      value={formData.startTime}
+                      name="startAm"
+                      value={formData.startAm}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
                       }}
                     >
-                      <MenuItem value="am">am</MenuItem>
-                      <MenuItem value="pm">pm</MenuItem>
+                      <MenuItem value={"am"}>am</MenuItem>
+                      <MenuItem value={"pm"}>pm</MenuItem>
                     </Select>
                   </Grid>
                   <Grid
@@ -404,72 +423,72 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                           onChange={(newValue) =>
                             setEndDate(new Date(newValue))
                           }
-                          sx={{ marginRight: "10px", width: "180px" }}
+                          sx={{ marginRight: "10px", width: "153px" }}
                         />
                       </div>
                     </LocalizationProvider>
 
                     <Select
-                      name="endTime"
-                      value={formData.endTime}
+                      name="endHour"
+                      value={formData.endHour}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
                         marginRight: "5px",
                       }}
                     >
-                      <MenuItem>01</MenuItem>
-                      <MenuItem>02</MenuItem>
-                      <MenuItem>03</MenuItem>
-                      <MenuItem>04</MenuItem>
-                      <MenuItem>05</MenuItem>
-                      <MenuItem>06</MenuItem>
-                      <MenuItem>07</MenuItem>
-                      <MenuItem>08</MenuItem>
-                      <MenuItem>09</MenuItem>
-                      <MenuItem>10</MenuItem>
-                      <MenuItem>11</MenuItem>
-                      <MenuItem>12</MenuItem>
+                      <MenuItem value={"01"}>01</MenuItem>
+                      <MenuItem value={"02"}>02</MenuItem>
+                      <MenuItem value={"03"}>03</MenuItem>
+                      <MenuItem value={"04"}>04</MenuItem>
+                      <MenuItem value={"05"}>05</MenuItem>
+                      <MenuItem value={"06"}>06</MenuItem>
+                      <MenuItem value={"07"}>07</MenuItem>
+                      <MenuItem value={"08"}>08</MenuItem>
+                      <MenuItem value={"09"}>09</MenuItem>
+                      <MenuItem value={"10"}>10</MenuItem>
+                      <MenuItem value={"11"}>11</MenuItem>
+                      <MenuItem value={"12"}>12</MenuItem>
                     </Select>
                     <Select
-                      name="endmins"
-                      value={formData.startTime}
+                      name="endMin"
+                      value={formData.endMin}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
                         marginRight: "5px",
                       }}
                     >
-                      <MenuItem>00</MenuItem>
-                      <MenuItem>15</MenuItem>
-                      <MenuItem>30</MenuItem>
-                      <MenuItem>45</MenuItem>
+                      <MenuItem value={"00"}>00</MenuItem>
+                      <MenuItem value={"15"}>15</MenuItem>
+                      <MenuItem value={"30"}>30</MenuItem>
+                      <MenuItem value={"45"}>45</MenuItem>
                     </Select>
                     <Select
-                      name="endam"
-                      value={formData.startTime}
+                      name="endAm"
+                      value={formData.endAm}
                       onChange={handleInputChange}
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "60px",
+                        width: "70px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
                       }}
                     >
-                      <MenuItem>am</MenuItem>
-                      <MenuItem>pm</MenuItem>
+                      <MenuItem value={"am"}>am</MenuItem>
+                      <MenuItem value={"pm"}>pm</MenuItem>
                     </Select>
                   </Grid>
                   <Grid
@@ -487,7 +506,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                   >
                     <Typography
                       variant="h4"
-                      sx={{ marginTop: "15px", marginRight: "15px" }}
+                      sx={{ marginTop: "15px", marginRight: "20px" }}
                     >
                       Assigned Employee :
                     </Typography>
@@ -519,7 +538,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                       required
                       sx={{
                         borderRadius: "10px",
-                        width: "190px",
+                        width: "195px",
                         backgroundColor: "#FFFFFF",
                         outlineColor: "#000000",
                         height: "56px",
