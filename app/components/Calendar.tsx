@@ -114,6 +114,7 @@ const MyCalendar = (props: {
   useEffect(() => {
     const today = new Date();
     (async function () {
+      
       try {
         const firstDayOfWeek = new Date(today);
         firstDayOfWeek.setDate(today.getDate() - today.getDay());
@@ -146,6 +147,7 @@ const MyCalendar = (props: {
         throw new Error("Failed to fetch shift data");
       }
     })();
+
   }, [props.fetchShiftsTrigger]);
 
   // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
@@ -163,6 +165,7 @@ const MyCalendar = (props: {
       pending,
       cancelled,
     } = filters;
+
 
     // Add your logic here based on the filters
     //@ts-ignore
@@ -257,6 +260,36 @@ const MyCalendar = (props: {
       },
     };
   });
+
+  /* 
+   * splits shifts that occur over two days into two different events so that
+   * they're rendered correctly on the calendar
+   */
+  const splitOvernightShifts = (shiftsArray: any): any => {
+
+    if (!shiftsArray) return []
+
+    let updatedShifts = []
+
+    for (let shift of shiftsArray) {
+      const isOvernight = shift.start.getDate() !== shift.end.getDate()
+      if (isOvernight) {
+        let shift1 = { ...shift, end: new Date(shift.start) };
+        let shift2 = { ...shift, start: new Date(shift.end) };
+
+        shift1.end.setHours(23, 59, 59, 999)
+        shift2.start.setHours(0, 0, 0, 0)
+
+        updatedShifts.push(shift1)
+        updatedShifts.push(shift2)
+      } else {
+        updatedShifts.push(shift)
+      }
+    }
+    return updatedShifts
+
+  }
+
 
   // this is to tell typescript that if the array is undefined, then use the empty list instead
   const events = [...(shifts ?? []), ...(onCallShifts ?? [])];
@@ -610,11 +643,12 @@ const MyCalendar = (props: {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ margin: "50px" }}
-        defaultView={"week"}
+        style={{ margin: '50px' }}
+        defaultView={'day'}
         eventPropGetter={(event: Event) => {
           return { style: event.style };
         }}
+        views={['month', 'agenda', 'day']}
       />
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
@@ -924,6 +958,7 @@ const Cal = () => {
     });
   };
 
+
   const {
     partTime,
     fullTime,
@@ -936,6 +971,7 @@ const Cal = () => {
     pending,
     cancelled,
   } = filterState;
+
 
   const [open, setOpen] = useState(false);
 
@@ -970,33 +1006,102 @@ const Cal = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        minHeight: "90vh",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        borderRadius: "5%",
-        backgroundColor: "#f6f6f6",
-        fontFamily: "default",
-        margin: "2%",
-        marginLeft: "5%",
-        marginRight: "5%",
+        display: 'flex',
+        minHeight: '90vh',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        borderRadius: '5%',
+        backgroundColor: '#f6f6f6',
+        fontFamily: 'default',
+        marginLeft: '5%',
+        marginRight: '5%',
+        marginTop: '-2%'
       }}
     >
-      <Grid
-        container
-        spacing={2}
-        columns={{ lg: 20, xs: 30 }}
-        paddingTop="2%"
-        marginRight="4%"
-      >
-        <Grid xs={15} paddingBottom="5%">
-          <Typography
-            display={{ xs: "block", md: "block", lg: "block" }}
-            variant="h1"
-            sx={{ fontWeight: "bold", paddingLeft: "8%", paddingTop: "5%" }}
-          >
+      <Grid container spacing={2} columns={{ lg: 20, xs: 30 }} paddingTop="2%" marginRight='4%'>
+        <Grid xs={15} paddingBottom="5%" sx={{position: "relative"}}>
+          <Typography display={{ xs: 'block', md: 'block', lg: 'block' }} marginLeft={{sm:'10%', lg:'0%'}} variant="h1" sx={{ fontWeight: 'bold', paddingLeft: '8%', paddingTop: '5%' }}>
             Calendar
           </Typography>
+          <FormControl sx={{ m: 1, minWidth: 150 , marginLeft: { sm: 0, lg:"50px" }}} >
+            <InputLabel htmlFor="grouped-select" sx={{ height: "fit"}} >
+              Choose Filters
+            </InputLabel>
+            {/* Menu props align the popup */}
+            <Select
+              autoWidth={true}
+              defaultValue={''}
+              id="grouped-select"
+              label="Grouping"
+              open={open}
+              onOpen={handleSelectOpen}
+            // onClose={(_e: any, reason: string) => {
+            //   if (reason !== "backdropClick") {
+            //     setOpen(false); 
+            //   }
+            // }}
+            >
+              <Grid container direction='row' spacing={1} marginRight={2}>
+
+                {/* EMPLOYEE NAME Column */}
+                <Grid container direction='column' spacing={1}>
+                  <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()} >
+                    <ListSubheader> <b>Employee Name</b></ListSubheader>
+                    <Autocomplete
+                      disablePortal
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onClose={(e) => {
+                        e.stopPropagation();
+                      }}
+                      options={employeeOptions}
+                      sx={{ width: 175 }}
+                      renderInput={(params) => <TextField {...params} label="Employee Name" />}
+                      onMouseDown={(e) => e.stopPropagation()}
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* EMPLOYEE TYPE Column */}
+                <Grid container direction='column' spacing={1}>
+                  <Grid>
+                    <ListSubheader> <b>Employee Type</b></ListSubheader>
+                    <FormGroup sx={{ px: 1.5 }}>
+                      <FormControlLabel control={<Checkbox checked={partTime} onChange={handleFilterChange} name="partTime" />} onClick={(e) => e.stopPropagation()} label="Part Time" />
+                      <FormControlLabel control={<Checkbox checked={fullTime} onChange={handleFilterChange} name="fullTime" />} onClick={(e) => e.stopPropagation()} label="Full Time" />
+                      <FormControlLabel control={<Checkbox checked={manager} onChange={handleFilterChange} name="manager" />} onClick={(e) => e.stopPropagation()} label="Manager" />
+                    </FormGroup>
+                  </Grid>
+                </Grid>
+
+                {/* PHONE LINE Column */}
+                <Grid container direction='column' spacing={1}>
+                  <Grid>
+                    <ListSubheader> <b>Phone Line</b></ListSubheader>
+                    <FormGroup sx={{ px: 1.5 }}>
+                      <FormControlLabel control={<Checkbox checked={lineOne} onChange={handleFilterChange} name="lineOne" />} onClick={(e) => e.stopPropagation()} label="Line 1" />
+                      <FormControlLabel control={<Checkbox checked={lineTwo} onChange={handleFilterChange} name="lineTwo" />} onClick={(e) => e.stopPropagation()} label="Line 2" />
+                      <FormControlLabel control={<Checkbox checked={lineThree} onChange={handleFilterChange} name="lineThree" />} onClick={(e) => e.stopPropagation()} label="Line 3" />
+                      <FormControlLabel control={<Checkbox checked={onCall} onChange={handleFilterChange} name="onCall" />} onClick={(e) => e.stopPropagation()} label="On Call" />
+                    </FormGroup>
+                  </Grid>
+                </Grid>
+
+                {/* SHIFT STATUS Column */}
+                <Grid container direction='column' spacing={1}>
+                  <Grid>
+                    <ListSubheader> <b>Shift Status</b></ListSubheader>
+                    <FormGroup sx={{ px: 1.5 }}>
+                      <FormControlLabel control={<Checkbox checked={approved} onChange={handleFilterChange} name="approved" />} onClick={(e) => e.stopPropagation()} label="Approved" />
+                      <FormControlLabel control={<Checkbox checked={pending} onChange={handleFilterChange} name="pending" />} onClick={(e) => e.stopPropagation()} label="Pending" />
+                      <FormControlLabel control={<Checkbox checked={cancelled} onChange={handleFilterChange} name="cancelled" />} onClick={(e) => e.stopPropagation()} label="Cancelled" />
+                    </FormGroup>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Select>
+          </FormControl>
         </Grid>
 
         <Grid xs={5} paddingTop="8%">

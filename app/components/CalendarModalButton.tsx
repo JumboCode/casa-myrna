@@ -20,6 +20,9 @@ import { request } from "http";
 import { profileData } from "./types";
 import ComboBox from "./ComboBox";
 
+// import "../calendar/[[...calendar]]/calendar.css"
+import "../calendar/[[...calendar]]/calendar.css" 
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -50,17 +53,35 @@ const style = {
       fontSize: "16",
       fontWeight: "bold",
     },
-    body1: {
-      fontFamily: "Montserrat",
-      fontSize: "16",
-      fontWeight: "regular",
-    },
-    body2: {
-      fontFamily: "Montserrat",
-      fontSize: "16",
-      fontWeight: "regular",
-    },
-  },
+    bgcolor: "#ffffff",
+    // border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: '35px',
+
+    typography: {
+        h1: {
+            fontFamily: 'Montserrat',
+            fontSize: '32',
+            fontWeight: 'bold'
+        },
+        h4: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'bold'
+        },
+        body1: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'regular'
+        },
+        body2: {
+            fontFamily: 'Montserrat',
+            fontSize: '16',
+            fontWeight: 'regular'
+        }
+    }
+
 };
 
 const initialFormData = {
@@ -94,6 +115,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
   // const handleSelectEmployee = (selectedValue: profileData | null) => {
   //   setSelectedEmployee(selectedValue);
   // };
+
 
   const handleSelectEmployee = (selectedValue: string) => {
     setFormData((prevFormData) => ({
@@ -188,7 +210,6 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
       if (!response.ok) {
         throw new Error(`Failed to assign shift. Status: ${response.status}`);
       }
-
       const result = await response.json();
       console.log("Shift assigned successfully:", result);
 
