@@ -598,8 +598,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                           backgroundColor: theme.palette.secondary.main,
                           "&:hover": { backgroundColor: "#89B839" },
                           textTransform: "none",
-                        }}
-                        variant="contained"
+                        }}  
                       >
                         Assign Shift
                       </Button>
