@@ -36,8 +36,10 @@ export async function GET(req: NextRequest) {
     if (email){
       queryFilters["emailAddress"] = [email]
     }
+    queryFilters["limit"] = 500
+
     try {
-      const users = await clerkClient.users.getUserList({queryFilters, limit: 500});
+      const users = await clerkClient.users.getUserList(queryFilters);
       return Response.json(users)
     } catch {
       return new Response('Error: user not found', {
