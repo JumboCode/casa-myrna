@@ -19,6 +19,9 @@ import { MenuItem } from '@mui/material';
 import { profileData } from './types';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import { useUser } from "@clerk/nextjs";
+import Clerk from '@clerk/clerk-js';
+
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -46,14 +49,18 @@ const style = {
     };
       
 const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, profiles, updateProfiles}) => {
+
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     
        
     const [user, setUser] = useState({ firstName: '', lastName: '', email: '', role: '', pronouns: '', phoneNumber: '' });
+
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [idString, setidString] = useState({ id: ''});
+    const [imageUrl, setImageUrl] = useState("");
+
 
     // Success Alert
     const [openSnack, setOpenSnack] = React.useState(false);
@@ -89,7 +96,30 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
     };
 
       
+  
+  const handleImageChange = async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
     
+        // Convert the onloadend handler into an async function
+        reader.onloadend = async () => {
+          if (reader.result !== null) {
+            const imageUrl = reader.result as string;
+            console.log("imageURL:", imageUrl)
+            const name = "imageUrl"
+            const value = imageUrl
+            setFormData({
+              ...formData,
+              imageUrl: imageUrl,
+            });
+          }
+        };
+    
+        // Start reading the file as Data URL
+        reader.readAsDataURL(file);
+      }
+    };
     /* Fetches user data when 'edit' button is clicked for that user email passed into Modal */
     const fetchUserByEmail = async () => {
         setOpen(true);
@@ -126,9 +156,11 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
                     role: userObject.publicMetadata.role,
                     pronouns: userObject.publicMetadata.pronouns,
                     phoneNumber: userObject.publicMetadata.phoneNumber,
-                    hasImgae: true
+                    hasImgae: true,
+                    imageUrl: userObject.imageUrl
                     
             });
+            console.log("imageUrlFrontend:", formData.imageUrl)
 
             setUser({
                     ...user, // Spread the existing user state
@@ -151,7 +183,8 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
             role: '',
             pronouns: '',
             phoneNumber:'',
-            hasImgae: false
+            hasImgae: false,
+            imageUrl: ''
     };
  
     /* This updates the submit form data with the fetched user data */
@@ -160,6 +193,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
     /* Handle input change */
     const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
+        console.log(name, value)
         setFormData({
             ...formData,
             [name]: value,
@@ -215,10 +249,12 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
             handleSnackClick(); // show a success message
 
             /* Match specification of database, different from form data formatting */
+            
             const finalFormData = {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 emailAddress: formData.emailAddress,
+                imageUrl: formData.imageUrl,
                 publicMetadata: {
                     role: formData.role,
                     pronouns: formData.pronouns,
@@ -227,6 +263,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
                 
                 hasImgae: false
             };
+            console.log(finalFormData)
             
             /* Update the database with the new fields*/
             const response = await fetch(`/api/users?id=${encodeURIComponent(idString.id)}`, {
@@ -254,7 +291,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ emailAddress, pro
             });
     
             const result = await updateProfiles(updatedProfiles);
-            window.location.reload(false);
+            // window.location.reload(false);
 
         } catch (error) {
             console.error('Error editing employee:', error);
@@ -295,11 +332,48 @@ return (
                     <Avatar alt="Remy Sharp" sx={{ width: 150, height: 150 }} />
                 </Grid>
                 <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                  id="avatar-input"
+                />
+               
+                <Button variant="outlined" sx={{ 
+                  textIndent: '2px',
+                  borderRadius: '20px',
+                  borderColor: theme.palette.primary.main,
+                  color: "#000000",
+                  '&:hover': {borderColor: theme.palette.primary.main},
+                  textTransform: 'none',
+                  paddingRight: '2%', // reduced padding
+                  minWidth: '200px', // added minimum width
+                  whiteSpace: 'nowrap' // added to prevent wrapping
+                }}>
+                  
+                  <Image src={UploadImage} alt="upload image" width={17} height={17} />
+                  <label htmlFor="avatar-input">Edit Profile Picture</label>
+                </Button>
+                
+                </Grid>
+                <Grid xs={12} sm={12} md={12} lg={12} textAlign={'center'}>
     
-                    <Button variant="outlined" sx={{ textIndent: '2px' ,borderRadius: '20px',  borderColor: theme.palette.primary.main, color: "#000000", '&:hover': {borderColor: theme.palette.primary.main}, textTransform: 'none', paddingRight: '10%'}}>
-                <Image src={UploadImage} alt="upload image" width={17} height={17} />
-                        delete photo
-                    </Button>
+                <Button variant="outlined" sx={{ 
+                  textIndent: '2px',
+                  borderRadius: '20px',
+                  borderColor: theme.palette.primary.main,
+                  color: "#000000",
+                  '&:hover': {borderColor: theme.palette.primary.main},
+                  textTransform: 'none',
+                  paddingRight: '2%', // reduced padding
+                  minWidth: '200px', // added minimum width
+                  whiteSpace: 'nowrap', // added to prevent wrapping
+                  marginTop: '-18%'
+                }}>
+                  <Image src={UploadImage} alt="upload image" width={17} height={17} />
+                  Delete Profile Photo
+                </Button>
                     
                 </Grid>
             </Grid>
@@ -422,11 +496,3 @@ return (
 
 export default EditEmployeeModal
   
-
-
-
-
-
-
-
-

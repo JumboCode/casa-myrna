@@ -288,6 +288,7 @@ const handleDeleteProfilePicture = async () => {
               />
               Delete Profile Picture
             </Button>
+            
           </Grid>
         </Grid>
         {/* This is column 1 */}
