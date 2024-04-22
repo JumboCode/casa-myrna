@@ -79,21 +79,6 @@ const Calendar: React.FC = () => {
     return (
       <ThemeProvider theme={theme}>
         <Sidebar currentPageComponent={Cal} />
-        <div className="post-btn">
-          <button className="post-btn-retrieve" onClick={handler}>
-            retrieve info
-          </button>
-          {!shiftArray ? (
-            <></>
-          ) : (
-            <div className="">
-              results here
-              {shiftArray.map((shift: PrimaryShift, index: number) => (
-                <li key={shift.primaryShiftID}>{shift.status}</li>
-              ))}
-            </div>
-          )}
-        </div>
       </ThemeProvider>
     );
   } else {
