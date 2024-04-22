@@ -307,7 +307,7 @@ const handleDeleteProfilePicture = async () => {
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              sx={{ backgroundColor: "#EEEEEE", borderRadius: "10px" }}
               id="outlined-basic"
               label=""
               variant="standard"
@@ -359,7 +359,7 @@ const handleDeleteProfilePicture = async () => {
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              sx={{ backgroundColor: "#EEEEEE", borderRadius: "10px" }}
               id="outlined-basic"
               label=""
               variant="standard"
@@ -384,7 +384,7 @@ const handleDeleteProfilePicture = async () => {
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              sx={{ backgroundColor: "#EEEEEE", borderRadius: "10px" }}
               id="outlined-basic"
               label=""
               variant="standard"
@@ -405,7 +405,7 @@ const handleDeleteProfilePicture = async () => {
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              sx={{ backgroundColor: "#EEEEEE", borderRadius: "10px"}}
               id="outlined-basic"
               label=""
               variant="standard"
@@ -420,7 +420,7 @@ const handleDeleteProfilePicture = async () => {
                 disableUnderline: true,
                 style: { paddingLeft: 8 },
               }}
-              sx={{ backgroundColor: "#FFFFFF", borderRadius: "10px" }}
+              sx={{ backgroundColor: "#EEEEEE", borderRadius: "10px" }}
               id="outlined-basic"
               label=""
               variant="standard"
