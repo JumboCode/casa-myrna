@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
-import { PrintTwoTone } from '@mui/icons-material'
-import sendEmail from "../../lib/email"
+import { PrintTwoTone, Update } from '@mui/icons-material'
+import emailHandler from "../../lib/email"
+import { clerkClient } from '@clerk/nextjs'
 const prisma = new PrismaClient()
 
 
@@ -64,18 +65,19 @@ export async function POST(req: NextRequest)
                 console.log("PRINTING DATA")
                 console.log(data)
                 data = {
-                ...data,
-                "date": new Date(data.date),
-                "from": new Date(data.from),
-                "to": new Date(data.to),
-                "created_at": new Date(data.created_at)
+                        ...data,
+                        "date": new Date(data.date),
+                        "from": new Date(data.from),
+                        "to": new Date(data.to),
+                        "created_at": new Date(data.created_at)
                 };
                 const shift = await prisma.primaryShift.create({data});
                 return new Response(JSON.stringify(shift))
         } catch (error) {
                 return new Response('Error: An unexpected error occured', {
                         status: 500,
-                      })
+                      }
+                )
         }
 }
 
@@ -88,7 +90,7 @@ export async function PUT(req: NextRequest)
 {
         console.log("IN PUT\n")
 
-        try {
+        // try {
                 const searchParams = req.nextUrl.searchParams
 
                 const shiftID = searchParams.get('shiftID')
@@ -100,32 +102,104 @@ export async function PUT(req: NextRequest)
                 let data = await req.json();
                 console.log(data)
                 data = {
-                ...data,
-                "primaryShiftID": shiftIDNumeric,
-                "date": new Date(data.date),
-                "from": new Date(data.from),
-                "to": new Date(data.to),
-                "created_at": new Date(data.created_at)
+                        ...data,
+                        "primaryShiftID": shiftIDNumeric,
+                        "date": new Date(data.date),
+                        "from": new Date(data.from),
+                        "to": new Date(data.to),
+                        "created_at": new Date(data.created_at)
                 };
 
-                const userID = data.userID; 
+                console.log(data["status"] === "PENDING")
                 
+                // filtering users based on admin status
+                const admins : (string | undefined) [] = await clerkClient.users.getUserList()
+                        .then((adminList) => {
+                                return adminList.filter((curr) => {
+                                                return curr.publicMetadata.role === "Coordinator"; 
+                                        }).map((curr) => {
+                                                return curr.emailAddresses[0].emailAddress; 
+                                        }); 
+                        }).catch((err) => {
+                                throw new Error("FAILED TO FETCH USERS " + err.message); 
+                        })
 
 
+                // get old state of shift
+                let oldShift = await prisma.primaryShift.findUnique({
+                        where : {
+                                primaryShiftID : data["primaryShiftID"]
+                        }
+                })
+               
+                if (!oldShift){
+                        throw  new Error("FAILED TO SHIFT BEFORE MODIFICATION"); 
+                }
+
+                const updater = await clerkClient.users.getUser(oldShift.userID)
+                
+                
+                 if (!updater.emailAddresses[0].emailAddress) {
+                        throw new Error("FAILED TO SHIFT USER WHO'S UPDATING SHIFT"); 
+                }
+                
                 const shift = await prisma.primaryShift.upsert({
                         where: {primaryShiftID: shiftIDNumeric },
                         update: data,
                         create: data
                       })
 
+                const employeName = updater['firstName'] + " " + updater['lastName']; 
+
+                
+                
+                if (data["status"] === "PENDING") {
+
+                        console.log("are we here?");
+                       
+                        // To all admin: "[Employee name] has requested the shift on [date/time]. Approve this shift to assign it to [employee name]."
+                        // To the employee who requested the shift: "You have requested the shift on [date/time]. A coordinator will approve or cancel this request."
+                
+                        await emailHandler({
+                                emailTo: [updater.emailAddresses[0].emailAddress],
+                                content: `You have requested the shift at ${data['from']}. A coordinator will approve or cancel this request`, 
+                                subject: "SHIFT " + oldShift?.primaryShiftID + " STATUS UPDATE - PENDING" 
+                        })
+                        
+                        await emailHandler({
+                                emailTo: admins,
+                                content: `${employeName} has requested the shift on ${data['from']}. Approve this shift to assign it to ${employeName}`, 
+                                subject: "SHIFT " + oldShift?.primaryShiftID + " STATUS UPDATE - PENDING" 
+                        });         
+                } 
+                // else if (data["status"] === "ACCEPTED"){
+
+                // } 
+                // else if (data["status"] === "CANCELLED"){
+                        
+                //         await emailHandler({
+                //                 emailTo: [],
+                //                 content: "has requested the shift on [date/time]. Approve this shift to assign it to", 
+                //                 subject: "SHIFT " + oldShift?.primaryShiftID + " STATUS UPDATE - CANCELLED" 
+                //         });   
+                        
+                //         if (oldShift?.status == "PENDING"){
+                                
+                //         } else if (oldShift?.status == "ACCEPTED"){
+
+                //         }
+                // } 
+                        
+
+
                 return new Response(JSON.stringify(shift))
-        } catch (error) {
-                if (error instanceof Prisma.PrismaClientValidationError) {
-                        return new Response('Error: ' + error.message, {status: 400,})
-                } else {
-                        return new Response('Error: An unexpected error occured', {status: 500,})
-                }
-        }
+        // } catch (error) {
+        //         if (error instanceof Prisma.PrismaClientValidationError) {
+        //                 return new Response('Error: ' + error.message, {status: 400,})
+        //         } else {
+        //                 return new Response('Error: An unexpected error occured', {status: 500,})
+        //         }
+        // }
 }
 
 
@@ -161,6 +235,6 @@ export async function DELETE(req: NextRequest) {
           } else {
               return new Response('Error: An unexpected error occured', {status: 500,})
           }
-          }   
+        }   
 }
 

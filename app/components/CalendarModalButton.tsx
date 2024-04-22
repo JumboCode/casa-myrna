@@ -90,6 +90,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
     // };
 
     const handleSelectEmployee = (selectedValue: string) => {
+        console.log("Selected Value: ", selectedValue)
         setFormData((prevFormData) => ({
           ...prevFormData,
           assignedEmployee: selectedValue,
@@ -115,12 +116,26 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         console.log(endDate.toISOString())
 
         // const [firstName, lastName] = formData.assignedEmployee.split(' ');
-        let firstName, lastName;
+        let firstName, lastName, id;
         if (formData.assignedEmployee) {
-            [firstName, lastName] = formData.assignedEmployee.split(' ');
+            // [firstName, lastName] = formData.assignedEmployee.split(' ');
+            firstName = formData.assignedEmployee.firstName
+            console.log("FirstName: ", firstName)
+            lastName = formData.assignedEmployee.lastName
+            console.log("LastName: ", lastName)
+            id = formData.assignedEmployee.id
+            console.log("ID: ", id)
+
+
+
+            // firstName = formData.assignedEmployee.firstName
+            // firstName = formData.assignedEmployee.firstName
+
+
         } else {
             firstName = '';
             lastName = '';
+            id = '';
         }
 
         // TODO: remove 'any' type
@@ -133,7 +148,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             from: startDate.toISOString(),
             to: endDate.toISOString(),
             created_at: createdAt,
-            userID: "2",
+            userID: id,
             message: 'hello',
             status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
             onCallShiftID: 6
@@ -175,6 +190,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
 
 
             console.log('after retrieving response')
+            
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
             }

@@ -40,6 +40,5 @@
     "prisma": "^5.5.2",
     "react-router-dom": "^6.22.3",
     "typescript": "^5"
-  }, 
-  "type": "module"  
+  }
 }
