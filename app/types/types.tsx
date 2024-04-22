@@ -49,6 +49,8 @@ type OnCallShift = {
     message: String, 
     phoneLine: number, 
     created_at: Date, 
+    firstName: String,
+    lastName: String
 }
 
 export type { PrimaryShift, Event, CalendarInfo, OnCallShift } 
