@@ -9,6 +9,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Popper from '@mui/material/Popper';
 
 import profileList from "./profileList"
 import { profileData } from './types';
@@ -17,9 +18,12 @@ import {useEffect, useState } from 'react';
 
 interface ComboBoxProps {
   onSelect: (selectedValue: string) => void;
+  boxWidth: number;
+  value: string;
+  label: string;
 }
 
-export default function ComboBox({ onSelect }: ComboBoxProps) {
+export default function ComboBox({ onSelect, boxWidth, value, label }: ComboBoxProps) {
 
   // Fetch the array of profileData from backend
   const [peopleArray, setPeopleArray] = useState<profileData[]>([]);
@@ -62,12 +66,12 @@ export default function ComboBox({ onSelect }: ComboBoxProps) {
 
   return (
     <Autocomplete
-      disablePortal
+      value={value}
       id="combo-box-demo"
       options={people}
-      sx={{ width: 300 }}
+      sx={{ width: boxWidth}}
       onChange={handleSelect}
-      renderInput={(params) => <TextField {...params} label="Assigned Employee" />}
+      renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
 }

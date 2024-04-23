@@ -37,6 +37,8 @@ import { UserProfile, clerkClient } from "@clerk/nextjs";
 import CalendarModalButton from "./CalendarModalButton";
 
 import CloseIcon from "@mui/icons-material/Close";
+import ComboBox from "./ComboBox";
+
 
 const style = {
   position: "absolute" as "absolute",
@@ -917,6 +919,10 @@ const Cal = () => {
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
+  const handleSelectEmployee = (selectedValue: string) => {
+      setSelectedEmployee(selectedValue); // Update selectedEmployee state
+  };
+
   const [open, setOpen] = useState(false);
 
   // const [openCancelModal, setOpenCancelModal] = useState(false);
@@ -978,42 +984,24 @@ const Cal = () => {
               label="Grouping"
               open={open}
               onOpen={handleSelectOpen}
-              onClose={handleClose}
+              onClose={handleClose}              
             >
               <Grid container direction="row" spacing={1} width={'50em'}>
                 {/* EMPLOYEE NAME Column */}
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Grid container direction="column" spacing={1}>
                       <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
                         <ListSubheader>
                           {" "}
                           <b>Employee Name</b>
                         </ListSubheader>
-                        <Autocomplete
-                          disablePortal
-                          value={selectedEmployee}
-                          onChange={(event, newValue) => {
-                            setSelectedEmployee(newValue);
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onClose={(e) => {
-                            e.stopPropagation();
-                          }}
-                          options={employeeOptions}
-                          sx={{ width: '100%' }}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Employee Name" />
-                          )}
-                          onMouseDown={(e) => e.stopPropagation()}
-                        />
+                        <ComboBox value={selectedEmployee} onSelect={handleSelectEmployee} boxWidth={175} label={"Employee Name"}/>
                       </Grid>
                     </Grid>
                 </Grid>
 
                 {/* EMPLOYEE TYPE Column */}
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Grid container direction="column" spacing={1}>
                       <Grid>
                         <ListSubheader>
@@ -1060,7 +1048,7 @@ const Cal = () => {
                 </Grid>
 
                 {/* PHONE LINE Column */}
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Grid container direction="column" spacing={1}>
                       <Grid>
                         <ListSubheader>
@@ -1118,7 +1106,7 @@ const Cal = () => {
                 </Grid>
 
                 {/* SHIFT STATUS Column */}
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Grid container direction="column" spacing={1}>
                       <Grid>
                         <ListSubheader>

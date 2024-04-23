@@ -510,7 +510,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                     >
                       Assigned Employee :
                     </Typography>
-                    <ComboBox onSelect={handleSelectEmployee} />
+                    <ComboBox onSelect={handleSelectEmployee} boxWidth={300} label={"Assigned Employee"}/>
                   </Grid>
                   <Grid
                     container
