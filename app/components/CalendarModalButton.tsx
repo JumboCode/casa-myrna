@@ -140,7 +140,6 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         firstName = '';
         lastName = '';
     }
-
     console.log("First Name: ", firstName);
     console.log("Last Name: ", lastName);
 
