@@ -133,7 +133,14 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
     console.log(startDate.toISOString());
     console.log(endDate.toISOString());
 
-    const [firstName, lastName] = formData.assignedEmployee.split(" ");
+    let firstName, lastName;
+    if (formData.assignedEmployee) {
+        [firstName, lastName] = formData.assignedEmployee.split(' ');
+    } else {
+        firstName = '';
+        lastName = '';
+    }
+
     console.log("First Name: ", firstName);
     console.log("Last Name: ", lastName);
 
@@ -149,7 +156,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
       created_at: createdAt,
       userID: "2",
       message: "hello",
-      status: "ACCEPTED",
+      status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
     };
 
     if (formData.shiftType === "regular") {
