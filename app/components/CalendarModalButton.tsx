@@ -30,7 +30,7 @@ const style = {
     xs: "80%",
   },
   height: {
-    lg: 500,
+    lg: 520,
     xs: "70%",
   },
   bgcolor: "#ffffff",
@@ -568,25 +568,8 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <Grid item xs={3}>
-                      <Button
-                        type="submit"
-                        sx={{
-                          paddingLeft: "10%",
-                          textIndent: "5.5px",
-                          paddingRight: "10%",
-                          borderRadius: "10px",
-                          backgroundColor: theme.palette.primary.main,
-                          "&:hover": { backgroundColor: "#2E0057" },
-                          textTransform: "none",
-                        }}
-                        variant="contained"
-                      >
-                        Cancel Shift
-                      </Button>
-                    </Grid>
                     {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
-                    <Grid item xs={3}>
+                    <Grid item xs={3} >
                       <Button
                         type="submit"
                         variant="contained"
