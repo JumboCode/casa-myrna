@@ -126,18 +126,18 @@ const MyCalendar = (props: {
         // refactored names into the .then promise, so far nothing has broke.
         await fetch(
           "api/shifts?from=" +
-            firstDayOfWeek.toISOString() +
-            "&to=" +
-            lastDayOfWeek.toISOString
+          firstDayOfWeek.toISOString() +
+          "&to=" +
+          lastDayOfWeek.toISOString
         ).then(async (response) => {
           const data = await response.json();
           setShiftInfo(data);
         });
         await fetch(
           "api/on-call-shifts?from=" +
-            firstDayOfWeek.toISOString() +
-            "&to=" +
-            lastDayOfWeek.toISOString()
+          firstDayOfWeek.toISOString() +
+          "&to=" +
+          lastDayOfWeek.toISOString()
         ).then(async (response) => {
           const data = await response.json();
           setOnCallInfo(data);
@@ -176,7 +176,7 @@ const MyCalendar = (props: {
       // (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
       (approved &&
         shift.status ===
-          Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
+        Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
       (pending && shift.status === Status.PENDING) ||
       (cancelled && shift.status === Status.CANCELLED)
     ) {
@@ -699,11 +699,11 @@ const MyCalendar = (props: {
                         {" "}
                         {formData
                           ? formData.from
-                              .toString()
-                              .substring(
-                                0,
-                                formData.from.toString().indexOf(" GMT")
-                              )
+                            .toString()
+                            .substring(
+                              0,
+                              formData.from.toString().indexOf(" GMT")
+                            )
                           : ""}{" "}
                       </Typography>{" "}
                     </Box>
@@ -741,11 +741,11 @@ const MyCalendar = (props: {
                         {" "}
                         {formData
                           ? formData.to
-                              .toString()
-                              .substring(
-                                0,
-                                formData.to.toString().indexOf(" GMT")
-                              )
+                            .toString()
+                            .substring(
+                              0,
+                              formData.to.toString().indexOf(" GMT")
+                            )
                           : ""}{" "}
                       </Typography>{" "}
                     </Box>
@@ -852,8 +852,8 @@ const MyCalendar = (props: {
                         {formData?.style?.backgroundColor == "green"
                           ? "Assigned"
                           : formData?.style?.backgroundColor == "gray"
-                          ? "Cancelled"
-                          : "Pending"}{" "}
+                            ? "Cancelled"
+                            : "Pending"}{" "}
                       </Typography>{" "}
                     </Box>
                   </Grid>
@@ -1013,11 +1013,11 @@ const Cal = () => {
               label="Grouping"
               open={open}
               onOpen={handleSelectOpen}
-              // onClose={(_e: any, reason: string) => {
-              //   if (reason !== "backdropClick") {
-              //     setOpen(false);
-              //   }
-              // }}
+            // onClose={(_e: any, reason: string) => {
+            //   if (reason !== "backdropClick") {
+            //     setOpen(false);
+            //   }
+            // }}
             >
               <Grid container direction="row" spacing={1} marginRight={2}>
                 {/* EMPLOYEE NAME Column */}
