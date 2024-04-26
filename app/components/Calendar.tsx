@@ -230,7 +230,7 @@ const MyCalendar = (props: {
   const onCallShifts = onCallInfo?.map((onCallShift: OnCallShift) => {
     let background_color = "green";
 
-    if (onCallShift.status.toString() === "CANCELLED") {
+    if (onCallShift.status.toString() === "CANCELED") {
       background_color = "gray";
     } else if (onCallShift.status.toString() === "PENDING") {
       background_color = "orange";
@@ -852,7 +852,8 @@ const MyCalendar = (props: {
                         {formData?.style?.backgroundColor == "green"
                           ? "Assigned"
                           : formData?.style?.backgroundColor == "gray"
-                          ? "Cancelled"
+                          ? "Available"
+                          // ? "Cancelled"
                           : "Pending"}{" "}
                       </Typography>{" "}
                     </Box>
@@ -1181,11 +1182,11 @@ const Cal = () => {
                           <Checkbox
                             checked={cancelled}
                             onChange={handleFilterChange}
-                            name="cancelled"
+                            name="Cancelled"
                           />
                         }
                         onClick={(e) => e.stopPropagation()}
-                        label="Cancelled"
+                        label="Available"
                       />
                     </FormGroup>
                   </Grid>
