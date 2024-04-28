@@ -72,6 +72,7 @@ export async function POST(req: NextRequest)
                 const shift = await prisma.primaryShift.create({data});
                 return new Response(JSON.stringify(shift))
         } catch (error) {
+                console.log(error)
                 return new Response('Error: An unexpected error occured', {
                         status: 500,
                       })
