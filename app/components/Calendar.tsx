@@ -95,6 +95,8 @@ const MyCalendar = (props: {
   setFetchShiftsTrigger: any;
 }) => {
   const { isSignedIn, user, isLoaded } = useUser();
+  user.publicMetadata.role = "Coordinator" /* TODO: remove, used for testing */
+
 
   // TODO: start of modal logic - abstract away into a different component (CalendarModalButton)
   const [shiftInfo, setShiftInfo] = useState<CalendarInfo[] | null>(null);
@@ -243,6 +245,8 @@ const MyCalendar = (props: {
       date: new Date(onCallShift.date), // not sure what to set this
       from: new Date(onCallShift.from),
       to: new Date(onCallShift.to),
+      firstName: onCallShift.firstName,
+      lastName: onCallShift.lastName,
       status: onCallShift.status,
       message: onCallShift.message,
       phoneLine: onCallShift.phoneLine,
@@ -250,7 +254,7 @@ const MyCalendar = (props: {
 
       start: new Date(onCallShift.from),
       end: new Date(onCallShift.to),
-      title: onCallShift.firstName + " " + onCallShift.lastName,
+      title: `${onCallShift.firstName} ${onCallShift.lastName}`,
       style: {
         opacity: 0.5,
         backgroundColor: background_color,
@@ -337,17 +341,34 @@ const MyCalendar = (props: {
         }
       });
 
-      const response = await fetch(
-        "api/shifts?shiftID=" + formData?.primaryShiftID.toString(),
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      console.log("FORM DATA HELLO: ", formData)
+
+      if ('primaryShiftID' in formData){
+        const response = await fetch(
+          "api/shifts?shiftID=" + formData?.primaryShiftID.toString(),
+          {
+            method: "PUT",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        ); 
+      } else {
+        const response = await fetch(
+          "api/on-call-shifts?shiftID=" + formData?.onCallShiftID.toString(),
+          {
+            method: "PUT",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        ); 
+      }
+
       console.log("Before setfetchShiftsTrigger");
       props.setFetchShiftsTrigger(Date.now());
     }
@@ -647,6 +668,7 @@ const MyCalendar = (props: {
             </Typography>
           </Box>
           <Box>
+
             <form>
               <Grid
                 container

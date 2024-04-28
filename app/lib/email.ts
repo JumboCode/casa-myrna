@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { clerkClient } from '@clerk/nextjs';
 import { config } from "dotenv";
 config();
 
@@ -66,5 +67,73 @@ function parseTime(fromStr : string, toStr: string) {
     return "from " + fromMonth + "/" + fromDay + "/" + fromYear + " " + fromDispHour + ":" + fromMinutes + " " + fromPeriod + " to " + toMonth + "/" + toDay + "/" + toYear + " " + toDispHour + ":" + toMinutes + " " + toPeriod ; 
 }   
 
+async function notifyUsers(data : any, oldShift: any, shiftIDNumeric : number, shiftType : string){
+    
+    let messageAdmin = "";
+    let subjectAdmin = "";
+    let messageEmployee = "";
+    let subjectEmployee = "";
 
-export { sendEmail, parseTime }
+    const userID = (data.userID != '') ? data.userID : oldShift?.userID
+    console.log("USER ID: ", userID)
+    const userEmail = (await clerkClient.users.getUser(userID)).emailAddresses[0].emailAddress;
+    const users = await clerkClient.users.getUserList()
+
+    const adminList = users.filter((user) => {
+            return user.publicMetadata.role === 'Coordinator';
+    }).map((user) => {
+            return user.emailAddresses[0].emailAddress;
+    });
+    console.log(adminList)
+    adminList.push("Sean.Reilly@tufts.edu")
+    adminList.push("Bilguun.soronzonbold@tufts.edu")
+
+    let isAdminEmail = true;
+
+    if (data.status === "PENDING") {
+            subjectAdmin = `${shiftType} ${shiftIDNumeric} is pending`;
+            messageAdmin = `${data.firstName + " " + data.lastName} has requested the ${shiftType}  ${parseTime(data.from, data.to)}. Approve this shift to assign it to ${data.firstName + " " + data.lastName}.`
+
+            subjectEmployee = `${shiftType} ${shiftIDNumeric} is pending`
+            messageEmployee = `You have requested the ${shiftType} ${parseTime(data.from, data.to)}. A coordinator will approve or cancel this request.`
+    } else if (data.status === "CANCELLED" && oldShift?.status === "PENDING") {
+            isAdminEmail = false
+            subjectEmployee = `Request for ${shiftType} ${shiftIDNumeric} rejected`
+            messageEmployee = `Your request for the ${shiftType} ${parseTime(data.from, data.to)} has been rejected.`
+    } else if (data.status === "CANCELLED" && oldShift?.status === "ACCEPTED") {
+            subjectAdmin = `${shiftType} ${shiftIDNumeric} has been CANCELLED by Employee ${data.firstName + " " + data.lastName}`
+            messageAdmin = `${oldShift.firstName + " " + oldShift.lastName} is unable to make their ${shiftType} ${parseTime(data.from, data.to)}. The shift is now available for other employees to pick up`
+
+            subjectEmployee = `${shiftType} ${shiftIDNumeric} cancelled`
+            messageEmployee = `You have cancelled your ${shiftType} ${parseTime(data.from, data.to)}. The shift is now available for other employees to pick up.`
+    } else if (data.status === "ACCEPTED") {
+            isAdminEmail = false;
+            subjectEmployee = `Request for ${shiftType} ${shiftIDNumeric} approved`
+            messageEmployee = `Your request for the ${shiftType} ${parseTime(data.from, data.to)} has been approved.`
+    }
+
+    if (isAdminEmail) {
+            await sendEmail({
+                    emailList: adminList,
+                    subject: subjectAdmin,
+                    message: messageAdmin,
+            }).then((response) => {
+                    console.log(response);
+            }).catch((error) => {
+                    throw new Error('something went wrong sending an email', error.message);
+            })
+    }
+
+    await sendEmail({
+            emailList: [userEmail],
+            subject: subjectEmployee,
+            message: messageEmployee,
+    }).then((response) => {
+            console.log(response);
+    }).catch((error) => {
+            throw new Error('something went wrong sending an email', error.message);
+    })
+}
+
+
+export { notifyUsers }

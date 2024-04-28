@@ -3,7 +3,7 @@ import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 import { PrintTwoTone } from '@mui/icons-material'
 import { clerkClient } from '@clerk/nextjs'
-import { sendEmail, parseTime } from "../../lib/email"
+import { notifyUsers } from "../../lib/email"
 const prisma = new PrismaClient()
 
 
@@ -101,74 +101,16 @@ export async function PUT(req: NextRequest) {
                         "created_at": new Date(data.created_at)
                 };
 
-                const userID = data.userID;
-                const userEmail = (await clerkClient.users.getUser(userID)).emailAddresses[0].emailAddress;
-                const users = await clerkClient.users.getUserList()
+                               
+                console.log(data) /* TODO: remove */
+                console.log("SHIFT ID NUMERIC", shiftIDNumeric)
 
-                const adminList = users.filter((user) => {
-                        return user.publicMetadata.role === 'Coordinator';
-                }).map((user) => {
-                        return user.emailAddresses[0].emailAddress;
-                });
-                adminList.push("Sean.Reilly@tufts.edu")
-
-                let messageAdmin = "";
-                let subjectAdmin = "";
-                let messageEmployee = "";
-                let subjectEmployee = "";
 
                 const oldShift = await prisma.primaryShift.findUnique({
                         where: { primaryShiftID: shiftIDNumeric, },
                 })
-
-                let isAdminEmail = true;
-
-                if (data.status === "PENDING") {
-                        subjectAdmin = `Shift ${shiftIDNumeric} is PENDING`;
-                        messageAdmin = `${data.firstName + " " + data.lastName + " (userID: " + data.userID + ")"} has requested the shift ${parseTime(data.from, data.to)}. Approve this shift to assign it to ${data.firstName + " " + data.lastName}.`
-
-                        subjectEmployee = `PENDING SHIFT ${shiftIDNumeric}`
-                        messageEmployee = `You have requested the shift on ${parseTime(data.from, data.to)}. A coordinator will approve or cancel this request.`
-                } else if (data.status === "CANCELLED" && oldShift?.status === "PENDING") {
-                        isAdminEmail = false
-                        subjectEmployee = `Request for shift ${shiftIDNumeric} Rejected`
-                        messageEmployee = `Your request for the shift on ${parseTime(data.from, data.to)} has been rejected.`
-                } else if (data.status === "CANCELLED" && oldShift?.status === "ACCEPTED") {
-                        // To all admin: "[Employee name] is unable to make their shift on [date/time]. The shift is now available for other employees to pick up."
-                        // To the employee who canceled the shift: "You have canceled your shift on [date/time]. The shift is now available for other employees to pick up."
-                        subjectAdmin = `Shift ${shiftIDNumeric} has been CANCELLED by Employee ${data.firstName + " " + data.lastName}`
-                        messageAdmin = `${data.firstName + " " + data.lastName} is unable to make their shift on ${fromMonth}/${fromDay}/${fromYear}. The shift is now available for other employees to pick up`
-
-                        subjectEmployee = `Shift ${shiftIDNumeric} CANCELLED `
-                        messageEmployee = `You have cancelled your shift ${parseTime(data.from, data.to)}. The shift is now available for other employees to pick up.`
-                } else if (data.status === "ACCEPTED") {
-                        isAdminEmail = false;
-                        subjectEmployee = `Shift ${shiftIDNumeric} CANCELLED `
-                        messageEmployee = `Your request for the shift ${parseTime(data.from, data.to)} has been approved.`
-                }
-
-                if (isAdminEmail) {
-                        await sendEmail({
-                                emailList: adminList,
-                                subject: subjectAdmin,
-                                message: messageAdmin,
-                        }).then((response) => {
-                                console.log(response);
-                        }).catch((error) => {
-                                throw new Error('something went wrong sending an email', error.message);
-                        })
-                }
-
-                await sendEmail({
-                        emailList: [userEmail],
-                        subject: subjectEmployee,
-                        message: messageEmployee,
-                }).then((response) => {
-                        console.log(response);
-                }).catch((error) => {
-                        throw new Error('something went wrong sending an email', error.message);
-                })
-
+                /* this caused so much pain */ 
+                notifyUsers(data, oldShift, shiftIDNumeric, "Shift"); 
 
                 const shift = await prisma.primaryShift.upsert({
                         where: { primaryShiftID: shiftIDNumeric },
@@ -176,13 +118,10 @@ export async function PUT(req: NextRequest) {
                         create: data
                 })
                 return new Response(JSON.stringify(shift))
-        } catch (error) {
-                if (error instanceof Prisma.PrismaClientValidationError) {
-                        return new Response('Error: ' + error.message, { status: 400, })
-                } else {
-                        return new Response('Error: An unexpected error occured', { status: 500, })
-                }
+        } catch(error) {
+                return new Response('Error: An unexpected error occured', { status: 500, })
         }
+                /* TODO: add catch */
 }
 
 

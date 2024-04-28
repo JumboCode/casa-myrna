@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 import { start } from 'repl'
+import { notifyUsers } from '@/app/lib/email'
 const prisma = new PrismaClient()
 
 
@@ -101,7 +102,7 @@ export async function POST(req: Request) {
  * of the onCallShift model. Also requires a shiftID as a query param
  */
 export async function PUT(req: NextRequest) {
-        try {
+        // try {
                 const searchParams = req.nextUrl.searchParams
                 let idString = searchParams.get('shiftID')
                 let idNum = parseInt(idString as string, 10) // 10 = base 10 
@@ -127,15 +128,22 @@ export async function PUT(req: NextRequest) {
                 "created_at": new Date()
         };
 
+        console.log("Printing Data 131", data); 
+
+        const oldShift = await prisma.onCallShift.findUnique({
+                where: { onCallShiftID: idNum, },
+        })
+        notifyUsers(data, oldShift, idNum, "On-Call Shift")
+
         const shift = await prisma.onCallShift.upsert({
                 where: {onCallShiftID: idNum},
                 update: data,
                 create: data
         })
                 return new Response(JSON.stringify(shift))
-        } catch (error){
-                return new Response('Error: An unexpected error occured', {status: 500,})
-          }
+        // } catch (error){
+        //         return new Response('Error: An unexpected error occured', {status: 500,})
+        //   }
         }
 
 /* 
