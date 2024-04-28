@@ -102,7 +102,7 @@ export async function POST(req: Request) {
  * of the onCallShift model. Also requires a shiftID as a query param
  */
 export async function PUT(req: NextRequest) {
-        // try {
+        try {
                 const searchParams = req.nextUrl.searchParams
                 let idString = searchParams.get('shiftID')
                 let idNum = parseInt(idString as string, 10) // 10 = base 10 
@@ -141,9 +141,9 @@ export async function PUT(req: NextRequest) {
                 create: data
         })
                 return new Response(JSON.stringify(shift))
-        // } catch (error){
-        //         return new Response('Error: An unexpected error occured', {status: 500,})
-        //   }
+        } catch (error){
+                return new Response('Error: An unexpected error occured', {status: 500,})
+          }
         }
 
 /* 
