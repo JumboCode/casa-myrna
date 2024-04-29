@@ -936,7 +936,7 @@ const MyCalendar = (props: {
                         {formData?.style?.backgroundColor == "green"
                           ? "Assigned"
                           : formData?.style?.backgroundColor == "gray"
-                            ? "Cancelled"
+                            ? "Available"
                             : "Pending"}{" "}
                       </Typography>{" "}
                     </Box>
@@ -1223,11 +1223,11 @@ const Cal = () => {
                               <Checkbox
                                 checked={cancelled}
                                 onChange={handleFilterChange}
-                                name="cancelled"
+                                name="Cancelled"
                               />
                             }
                             onClick={(e) => e.stopPropagation()}
-                            label="Cancelled"
+                            label="Available"
                           />
                         </FormGroup>
                       </Grid>
