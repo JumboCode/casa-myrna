@@ -37,6 +37,8 @@ import { UserProfile, clerkClient } from "@clerk/nextjs";
 import CalendarModalButton from "./CalendarModalButton";
 
 import CloseIcon from "@mui/icons-material/Close";
+import ComboBox from "./ComboBox";
+
 
 const style = {
   position: "absolute" as "absolute",
@@ -944,28 +946,6 @@ const Cal = () => {
     cancelled: true,
   });
 
-  // const filterShifts = (shift: CalendarInfo, filters: any) => {
-  //   const { partTime, fullTime, manager, lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
-
-  //   // Add your logic here based on the filters
-  //   if (
-  //     (partTime && shift.partTime) ||
-  //     (fullTime && shift.fullTime) ||
-  //     (manager && shift.manager) ||
-  //     (lineOne && shift.lineOne) ||
-  //     (lineTwo && shift.lineTwo) ||
-  //     (lineThree && shift.lineThree) ||
-  //     (onCall && shift.onCall) ||
-  //     (approved && shift.status === Status.ACCEPTED) || /* TODO: standardize 'approved' and 'acepted' */
-  //     (pending && shift.status === Status.PENDING) ||
-  //     (cancelled && shift.status === Status.CANCELLED)
-  //   ) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // };
-
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter({
       ...filterState,
@@ -986,6 +966,12 @@ const Cal = () => {
     cancelled,
   } = filterState;
 
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  const handleSelectEmployee = (selectedValue: string) => {
+      setSelectedEmployee(selectedValue); // Update selectedEmployee state
+  };
+
   const [open, setOpen] = useState(false);
 
   // const [openCancelModal, setOpenCancelModal] = useState(false);
@@ -997,23 +983,8 @@ const Cal = () => {
     setOpen(true);
   };
 
-  const handleSelectClose = (
-    event: React.ChangeEvent<{}>,
-    reason?:
-      | "select-option"
-      | "remove-option"
-      | "close"
-      | "clear"
-      | "escape"
-      | "backdropClick"
-  ) => {
-    if (
-      reason === "select-option" ||
-      reason === "escape" ||
-      reason === "backdropClick"
-    ) {
-      setOpen(false);
-    }
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -1062,182 +1033,172 @@ const Cal = () => {
               label="Grouping"
               open={open}
               onOpen={handleSelectOpen}
-            // onClose={(_e: any, reason: string) => {
-            //   if (reason !== "backdropClick") {
-            //     setOpen(false);
-            //   }
-            // }}
+              onClose={handleClose}              
             >
-              <Grid container direction="row" spacing={1} marginRight={2}>
+              <Grid container direction="row" spacing={1} width={'50em'}>
                 {/* EMPLOYEE NAME Column */}
-                <Grid container direction="column" spacing={1}>
-                  <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
-                    <ListSubheader>
-                      {" "}
-                      <b>Employee Name</b>
-                    </ListSubheader>
-                    <Autocomplete
-                      disablePortal
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onClose={(e) => {
-                        e.stopPropagation();
-                      }}
-                      options={employeeOptions}
-                      sx={{ width: 175 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Employee Name" />
-                      )}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    />
-                  </Grid>
+                <Grid item xs={12} md={3} lg={3}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
+                        <ListSubheader>
+                          {" "}
+                          <b>Employee Name</b>
+                        </ListSubheader>
+                        <ComboBox value={selectedEmployee} onSelect={handleSelectEmployee} boxWidth={175} label={"Employee Name"}/>
+                      </Grid>
+                    </Grid>
                 </Grid>
 
                 {/* EMPLOYEE TYPE Column */}
-                <Grid container direction="column" spacing={1}>
-                  <Grid>
-                    <ListSubheader>
-                      {" "}
-                      <b>Employee Type</b>
-                    </ListSubheader>
-                    <FormGroup sx={{ px: 1.5 }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={partTime}
-                            onChange={handleFilterChange}
-                            name="partTime"
+                <Grid item xs={12} md={3} lg={3}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid>
+                        <ListSubheader>
+                          {" "}
+                          <b>Employee Type</b>
+                        </ListSubheader>
+                        <FormGroup sx={{ px: 1.5 }}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={partTime}
+                                onChange={handleFilterChange}
+                                name="partTime"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Part Time"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Part Time"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={fullTime}
-                            onChange={handleFilterChange}
-                            name="fullTime"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={fullTime}
+                                onChange={handleFilterChange}
+                                name="fullTime"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Full Time"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Full Time"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={manager}
-                            onChange={handleFilterChange}
-                            name="manager"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={manager}
+                                onChange={handleFilterChange}
+                                name="manager"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Manager"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Manager"
-                      />
-                    </FormGroup>
-                  </Grid>
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
                 </Grid>
 
                 {/* PHONE LINE Column */}
-                <Grid container direction="column" spacing={1}>
-                  <Grid>
-                    <ListSubheader>
-                      {" "}
-                      <b>Phone Line</b>
-                    </ListSubheader>
-                    <FormGroup sx={{ px: 1.5 }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={lineOne}
-                            onChange={handleFilterChange}
-                            name="lineOne"
+                <Grid item xs={12} md={3} lg={3}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid>
+                        <ListSubheader>
+                          {" "}
+                          <b>Phone Line</b>
+                        </ListSubheader>
+                        <FormGroup sx={{ px: 1.5 }}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={lineOne}
+                                onChange={handleFilterChange}
+                                name="lineOne"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Line 1"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Line 1"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={lineTwo}
-                            onChange={handleFilterChange}
-                            name="lineTwo"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={lineTwo}
+                                onChange={handleFilterChange}
+                                name="lineTwo"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Line 2"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Line 2"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={lineThree}
-                            onChange={handleFilterChange}
-                            name="lineThree"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={lineThree}
+                                onChange={handleFilterChange}
+                                name="lineThree"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Line 3"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Line 3"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={onCall}
-                            onChange={handleFilterChange}
-                            name="onCall"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={onCall}
+                                onChange={handleFilterChange}
+                                name="onCall"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="On Call"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="On Call"
-                      />
-                    </FormGroup>
-                  </Grid>
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
                 </Grid>
 
                 {/* SHIFT STATUS Column */}
-                <Grid container direction="column" spacing={1}>
-                  <Grid>
-                    <ListSubheader>
-                      {" "}
-                      <b>Shift Status</b>
-                    </ListSubheader>
-                    <FormGroup sx={{ px: 1.5 }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={approved}
-                            onChange={handleFilterChange}
-                            name="approved"
+                <Grid item xs={12} md={3} lg={3}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid>
+                        <ListSubheader>
+                          {" "}
+                          <b>Shift Status</b>
+                        </ListSubheader>
+                        <FormGroup sx={{ px: 1.5 }}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={approved}
+                                onChange={handleFilterChange}
+                                name="approved"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Approved"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Approved"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={pending}
-                            onChange={handleFilterChange}
-                            name="pending"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={pending}
+                                onChange={handleFilterChange}
+                                name="pending"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Pending"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Pending"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={cancelled}
-                            onChange={handleFilterChange}
-                            name="cancelled"
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={cancelled}
+                                onChange={handleFilterChange}
+                                name="cancelled"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Cancelled"
                           />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        label="Cancelled"
-                      />
-                    </FormGroup>
-                  </Grid>
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
                 </Grid>
               </Grid>
             </Select>
