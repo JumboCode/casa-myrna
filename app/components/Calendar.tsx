@@ -126,18 +126,18 @@ const MyCalendar = (props: {
         // refactored names into the .then promise, so far nothing has broke.
         await fetch(
           "api/shifts?from=" +
-            firstDayOfWeek.toISOString() +
-            "&to=" +
-            lastDayOfWeek.toISOString
+          firstDayOfWeek.toISOString() +
+          "&to=" +
+          lastDayOfWeek.toISOString
         ).then(async (response) => {
           const data = await response.json();
           setShiftInfo(data);
         });
         await fetch(
           "api/on-call-shifts?from=" +
-            firstDayOfWeek.toISOString() +
-            "&to=" +
-            lastDayOfWeek.toISOString()
+          firstDayOfWeek.toISOString() +
+          "&to=" +
+          lastDayOfWeek.toISOString()
         ).then(async (response) => {
           const data = await response.json();
           setOnCallInfo(data);
@@ -176,7 +176,7 @@ const MyCalendar = (props: {
       // (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
       (approved &&
         shift.status ===
-          Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
+        Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
       (pending && shift.status === Status.PENDING) ||
       (cancelled && shift.status === Status.CANCELLED)
     ) {
@@ -243,6 +243,8 @@ const MyCalendar = (props: {
       date: new Date(onCallShift.date), // not sure what to set this
       from: new Date(onCallShift.from),
       to: new Date(onCallShift.to),
+      firstName: onCallShift.firstName,
+      lastName: onCallShift.lastName,
       status: onCallShift.status,
       message: onCallShift.message,
       phoneLine: onCallShift.phoneLine,
@@ -250,7 +252,7 @@ const MyCalendar = (props: {
 
       start: new Date(onCallShift.from),
       end: new Date(onCallShift.to),
-      title: onCallShift.firstName + " " + onCallShift.lastName,
+      title: `${onCallShift.firstName} ${onCallShift.lastName}`,
       style: {
         opacity: 0.5,
         backgroundColor: background_color,
@@ -258,8 +260,37 @@ const MyCalendar = (props: {
     };
   });
 
-  // this is to tell typescript that if the array is undefined, then use the empty list instead
-  const events = [...(shifts ?? []), ...(onCallShifts ?? [])];
+    /* 
+   * splits shifts that occur over two days into two different events so that
+   * they're rendered correctly on the calendar
+   */
+    const splitOvernightShifts = (shiftsArray: any): any => {
+    
+      if (!shiftsArray) return []
+  
+      let updatedShifts = []
+  
+      for (let shift of shiftsArray) {
+        const isOvernight = shift.start.getDate() !== shift.end.getDate()
+        if (isOvernight) {
+            let shift1 = {...shift, end: new Date(shift.start)};
+            let shift2 = {...shift, start: new Date(shift.end)};
+            
+            shift1.end.setHours(23, 59, 59, 999)
+            shift2.start.setHours(0, 0, 0, 0)
+        
+            updatedShifts.push(shift1)
+            updatedShifts.push(shift2)
+        } else {
+          updatedShifts.push(shift)
+        }
+      }
+      return updatedShifts
+     
+    }
+  
+    // this is to tell typescript that if the array is undefined, then use the empty list instead
+    const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
@@ -337,17 +368,34 @@ const MyCalendar = (props: {
         }
       });
 
-      const response = await fetch(
-        "api/shifts?shiftID=" + formData?.primaryShiftID.toString(),
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      console.log("FORM DATA HELLO: ", formData)
+
+      if ('primaryShiftID' in formData){
+        const response = await fetch(
+          "api/shifts?shiftID=" + formData?.primaryShiftID.toString(),
+          {
+            method: "PUT",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        ); 
+      } else {
+        const response = await fetch(
+          "api/on-call-shifts?shiftID=" + formData?.onCallShiftID.toString(),
+          {
+            method: "PUT",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        ); 
+      }
+
       console.log("Before setfetchShiftsTrigger");
       props.setFetchShiftsTrigger(Date.now());
     }
@@ -647,6 +695,7 @@ const MyCalendar = (props: {
             </Typography>
           </Box>
           <Box>
+
             <form>
               <Grid
                 container
@@ -699,11 +748,11 @@ const MyCalendar = (props: {
                         {" "}
                         {formData
                           ? formData.from
-                              .toString()
-                              .substring(
-                                0,
-                                formData.from.toString().indexOf(" GMT")
-                              )
+                            .toString()
+                            .substring(
+                              0,
+                              formData.from.toString().indexOf(" GMT")
+                            )
                           : ""}{" "}
                       </Typography>{" "}
                     </Box>
@@ -741,11 +790,11 @@ const MyCalendar = (props: {
                         {" "}
                         {formData
                           ? formData.to
-                              .toString()
-                              .substring(
-                                0,
-                                formData.to.toString().indexOf(" GMT")
-                              )
+                            .toString()
+                            .substring(
+                              0,
+                              formData.to.toString().indexOf(" GMT")
+                            )
                           : ""}{" "}
                       </Typography>{" "}
                     </Box>
@@ -852,8 +901,8 @@ const MyCalendar = (props: {
                         {formData?.style?.backgroundColor == "green"
                           ? "Assigned"
                           : formData?.style?.backgroundColor == "gray"
-                          ? "Cancelled"
-                          : "Pending"}{" "}
+                            ? "Cancelled"
+                            : "Pending"}{" "}
                       </Typography>{" "}
                     </Box>
                   </Grid>
@@ -1013,11 +1062,11 @@ const Cal = () => {
               label="Grouping"
               open={open}
               onOpen={handleSelectOpen}
-              // onClose={(_e: any, reason: string) => {
-              //   if (reason !== "backdropClick") {
-              //     setOpen(false);
-              //   }
-              // }}
+            // onClose={(_e: any, reason: string) => {
+            //   if (reason !== "backdropClick") {
+            //     setOpen(false);
+            //   }
+            // }}
             >
               <Grid container direction="row" spacing={1} marginRight={2}>
                 {/* EMPLOYEE NAME Column */}

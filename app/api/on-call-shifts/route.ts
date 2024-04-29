@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 import { start } from 'repl'
+import { notifyUsers } from '@/app/lib/email'
 const prisma = new PrismaClient()
 
 
@@ -126,6 +127,13 @@ export async function PUT(req: NextRequest) {
                 "to": new Date(data.to),
                 "created_at": new Date()
         };
+
+        console.log("Printing Data 131", data); 
+
+        const oldShift = await prisma.onCallShift.findUnique({
+                where: { onCallShiftID: idNum, },
+        })
+        notifyUsers(data, oldShift, idNum, "On-Call Shift")
 
         const shift = await prisma.onCallShift.upsert({
                 where: {onCallShiftID: idNum},
