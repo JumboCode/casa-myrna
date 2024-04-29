@@ -76,8 +76,10 @@ async function notifyUsers(data : any, oldShift: any, shiftIDNumeric : number, s
 
     const userID = (data.userID != '') ? data.userID : oldShift?.userID
     console.log("USER ID: ", userID)
+    let queryFilters: { [key: string]: any } = {}
+    queryFilters["limit"] = 500
     const userEmail = (await clerkClient.users.getUser(userID)).emailAddresses[0].emailAddress;
-    const users = await clerkClient.users.getUserList()
+    const users = await clerkClient.users.getUserList(queryFilters)
 
     const adminList = users.filter((user) => {
             return user.publicMetadata.role === 'Coordinator';
@@ -85,8 +87,6 @@ async function notifyUsers(data : any, oldShift: any, shiftIDNumeric : number, s
             return user.emailAddresses[0].emailAddress;
     });
     console.log(adminList)
-    adminList.push("Sean.Reilly@tufts.edu")
-    adminList.push("Bilguun.soronzonbold@tufts.edu")
 
     let isAdminEmail = true;
 
