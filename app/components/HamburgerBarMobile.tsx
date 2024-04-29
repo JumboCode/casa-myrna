@@ -40,12 +40,6 @@ const HamburgerBarMobile: FC<MobileBarProps> = ({ currentPageComponent }) => {
       Link: "/calendar",
     },
     {
-      Name: "AnnouncementsButton",
-      Icon: Announcements,
-      DisplayName: "Announcements",
-      Link: "/announcements",
-    },
-    {
       Name: "ProfileButton",
       Icon: Profile,
       DisplayName: "Profile",
