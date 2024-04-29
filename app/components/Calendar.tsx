@@ -294,8 +294,9 @@ const MyCalendar = (props: {
     console.error('Deletion failed:', error);
   });
 
-  props.setFetchShiftsTrigger(Date.now());
   handleClose();
+  props.setFetchShiftsTrigger(Date.now());
+
 
   }
   /* Currently unused in form, but may be useful later */
