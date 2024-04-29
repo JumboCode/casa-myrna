@@ -49,8 +49,9 @@ export default function ComboBox({ onSelect, boxWidth, value, label }: ComboBoxP
   // onChange event to store the selected name of the employee form dropdown list
   const handleSelect = (event: React.ChangeEvent<{}>, value: profileData | null) => {
     if (value) {
-      const fullName = `${value.firstName} ${value.lastName}`;
-      onSelect(fullName);
+      // const fullName = `${value.firstName} ${value.lastName}`;
+      // onSelect(fullName);
+      onSelect(value); 
     } else {
       onSelect('');
     }
@@ -58,10 +59,11 @@ export default function ComboBox({ onSelect, boxWidth, value, label }: ComboBoxP
 
 
   // parse through the peopleArray and store firstname and last name
-  const people = peopleArray.map(({ firstName, lastName }) => ({
+  const people = peopleArray.map(({ firstName, lastName, id }) => ({
     label: `${firstName} ${lastName}`,
     firstName,
     lastName,
+    id
   }));
 
   return (

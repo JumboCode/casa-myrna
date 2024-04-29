@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { type NextRequest } from 'next/server'
 import { PrismaClient, Prisma } from '@prisma/client'
 import { PrintTwoTone } from '@mui/icons-material'
+import { clerkClient } from '@clerk/nextjs'
+import { notifyUsers } from "../../lib/email"
 const prisma = new PrismaClient()
 
 
@@ -10,42 +12,41 @@ const prisma = new PrismaClient()
  * A userID, status, and/or after/before times can be provided as query params 
  * to filter results
  */
-export async function GET(req: NextRequest)
-{
-                const searchParams = req.nextUrl.searchParams
-                const userID = searchParams.get('userID')
-                const status = searchParams.get('status')
+export async function GET(req: NextRequest) {
+        const searchParams = req.nextUrl.searchParams
+        const userID = searchParams.get('userID')
+        const status = searchParams.get('status')
 
-                const startBound = searchParams.get('after')  
-                const endBound = searchParams.get('before')
-                const startBoundDate = startBound ? new Date(startBound): null
-                const endBoundDate = endBound ? new Date(endBound): null
-                
-                if ((startBoundDate && isNaN(startBoundDate.getTime())) || 
-                           (endBoundDate && isNaN(endBoundDate.getTime()))) {
-                        return new Response('Error: after & before fields must be valid dates', {
-                                status: 400,
-                        })
-                }
-                
-                let queryFilters  = {
-                        AND: [{}]
-                }
-                if (userID){
-                        queryFilters.AND.push({ userID: userID})
-                }
-                if (status){
-                        queryFilters.AND.push({ status: status})
-                }
-                if (startBound){
-                        queryFilters.AND.push({from : {gte: startBoundDate,}})
-                }
-                if (endBound) {
-                        queryFilters.AND.push({to : {lte: endBoundDate,}})
-                }
+        const startBound = searchParams.get('after')
+        const endBound = searchParams.get('before')
+        const startBoundDate = startBound ? new Date(startBound) : null
+        const endBoundDate = endBound ? new Date(endBound) : null
 
-                let shifts = await prisma.primaryShift.findMany({where: queryFilters})
-                return new Response(JSON.stringify(shifts))
+        if ((startBoundDate && isNaN(startBoundDate.getTime())) ||
+                (endBoundDate && isNaN(endBoundDate.getTime()))) {
+                return new Response('Error: after & before fields must be valid dates', {
+                        status: 400,
+                })
+        }
+
+        let queryFilters = {
+                AND: [{}]
+        }
+        if (userID) {
+                queryFilters.AND.push({ userID: userID })
+        }
+        if (status) {
+                queryFilters.AND.push({ status: status })
+        }
+        if (startBound) {
+                queryFilters.AND.push({ from: { gte: startBoundDate, } })
+        }
+        if (endBound) {
+                queryFilters.AND.push({ to: { lte: endBoundDate, } })
+        }
+
+        let shifts = await prisma.primaryShift.findMany({ where: queryFilters })
+        return new Response(JSON.stringify(shifts))
 }
 
 
@@ -54,27 +55,26 @@ export async function GET(req: NextRequest)
  * Expects the request body to be json with fields corresponding to the fields 
  * of the Shift model
  */
-export async function POST(req: NextRequest)
-{
+export async function POST(req: NextRequest) {
 
         try {
-                console.log(typeof req)
                 let data = await req.json();
                 console.log("PRINTING DATA")
                 console.log(data)
                 data = {
-                ...data,
-                "date": new Date(data.date),
-                "from": new Date(data.from),
-                "to": new Date(data.to),
-                "created_at": new Date(data.created_at)
+                        ...data,
+                        "date": new Date(data.date),
+                        "from": new Date(data.from),
+                        "to": new Date(data.to),
+                        "created_at": new Date(data.created_at)
                 };
-                const shift = await prisma.primaryShift.create({data});
+                const shift = await prisma.primaryShift.create({ data });
                 return new Response(JSON.stringify(shift))
         } catch (error) {
+                console.log(error)
                 return new Response('Error: An unexpected error occured', {
                         status: 500,
-                      })
+                })
         }
 }
 
@@ -83,42 +83,47 @@ export async function POST(req: NextRequest)
  * Expects the request body to be json with fields corresponding to the fields 
  * of the Shift model. Also requires shiftID as a query param
  */
-export async function PUT(req: NextRequest)
-{
+export async function PUT(req: NextRequest) {
         try {
                 const searchParams = req.nextUrl.searchParams
                 const shiftID = searchParams.get('shiftID')
-                const shiftIDNumeric = shiftID ? parseInt(shiftID, 10): null;
-                if (!shiftIDNumeric){
-                        return new Response('Error: An shiftID must be provided as a query parameter', {status: 500,})
+                const shiftIDNumeric = shiftID ? parseInt(shiftID, 10) : null;
+                if (!shiftIDNumeric) {
+                        return new Response('Error: An shiftID must be provided as a query parameter', { status: 500, })
                 }
 
                 let data = await req.json();
                 data = {
-                ...data,
-                "primaryShiftID": shiftIDNumeric,
-                "date": new Date(data.date),
-                "from": new Date(data.from),
-                "to": new Date(data.to),
-                "created_at": new Date(data.created_at)
+                        ...data,
+                        "primaryShiftID": shiftIDNumeric,
+                        "date": new Date(data.date),
+                        "from": new Date(data.from),
+                        "to": new Date(data.to),
+                        "created_at": new Date(data.created_at)
                 };
-    
+
+                               
+                console.log(data) /* TODO: remove */
+                console.log("SHIFT ID NUMERIC", shiftIDNumeric)
+
+
+                const oldShift = await prisma.primaryShift.findUnique({
+                        where: { primaryShiftID: shiftIDNumeric, },
+                })
+                /* this caused so much pain */ 
+                notifyUsers(data, oldShift, shiftIDNumeric, "Shift"); 
+
                 const shift = await prisma.primaryShift.upsert({
-                        where: {primaryShiftID: shiftIDNumeric },
+                        where: { primaryShiftID: shiftIDNumeric },
                         update: data,
                         create: data
-                      })
-
+                })
                 return new Response(JSON.stringify(shift))
-        } catch (error) {
-                if (error instanceof Prisma.PrismaClientValidationError) {
-                        return new Response('Error: ' + error.message, {status: 400,})
-                } else {
-                        return new Response('Error: An unexpected error occured', {status: 500,})
-                }
+        } catch(error) {
+                return new Response('Error: An unexpected error occured', { status: 500, })
         }
+                /* TODO: add catch */
 }
-
 
 
 /* 
@@ -127,31 +132,31 @@ export async function PUT(req: NextRequest)
  */
 export async function DELETE(req: NextRequest) {
         try {
-          const searchParams = req.nextUrl.searchParams
-          let idString = searchParams.get('shiftID')
-          let idNum = parseInt(idString as string, 10) // 10 = base 10 
-      
-          if ((isNaN(idNum))) {
-            return new Response('Error: Please specify an integer shift id', {
-              status: 400,
-            })
-          }
-      
-          let shift = await prisma.primaryShift.delete({
-            where: {
-              primaryShiftID: idNum,
-            },
-          })
-          return Response.json(shift)
-       } catch (error) {
-           if (error instanceof Prisma.PrismaClientKnownRequestError && 
-               error.code === 'P2025') {
-            return new Response('Error: Shift not found', {
-              status: 400,
-            })
-          } else {
-              return new Response('Error: An unexpected error occured', {status: 500,})
-          }
-          }   
+                const searchParams = req.nextUrl.searchParams
+                let idString = searchParams.get('shiftID')
+                let idNum = parseInt(idString as string, 10) // 10 = base 10 
+
+                if ((isNaN(idNum))) {
+                        return new Response('Error: Please specify an integer shift id', {
+                                status: 400,
+                        })
+                }
+
+                let shift = await prisma.primaryShift.delete({
+                        where: {
+                                primaryShiftID: idNum,
+                        },
+                })
+                return Response.json(shift)
+        } catch (error) {
+                if (error instanceof Prisma.PrismaClientKnownRequestError &&
+                        error.code === 'P2025') {
+                        return new Response('Error: Shift not found', {
+                                status: 400,
+                        })
+                } else {
+                        return new Response('Error: An unexpected error occured', { status: 500, })
+                }
+        }
 }
 
