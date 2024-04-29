@@ -166,7 +166,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         };
 
         if (formData.shiftType === "regular") {
-            requestData.onCallShiftID = 6;
+            requestData.onCallShiftID = 1;
         }
 
         // See console to see the form data being sent to POST
