@@ -271,6 +271,33 @@ const MyCalendar = (props: {
     setFormData(null);
   };
 
+  const handleDeleteShift = (shiftId) => {
+    if (!confirm('Are you sure you want to delete this shift?')) {
+      return;
+    }
+    const url = "api/shifts"
+
+  fetch(`${url}?shiftID=${shiftId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+  })
+  .then(data => {
+    console.log('Shift deleted:', data);
+  })
+  .catch(error => {
+    console.error('Deletion failed:', error);
+  });
+
+  props.setFetchShiftsTrigger(Date.now());
+  handleClose();
+
+  }
   /* Currently unused in form, but may be useful later */
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -292,6 +319,8 @@ const MyCalendar = (props: {
       });
     }
   };
+
+  
 
   const handleSubmit = async (e: any, modifiedData: Partial<any>) => {
     Object.keys(modifiedData).forEach((key) => {
@@ -365,6 +394,9 @@ const MyCalendar = (props: {
         <>
           {user?.publicMetadata.role === "Coordinator" && (
             <Button
+            onClick={() => {
+              handleDeleteShift(formData.primaryShiftID);
+            }}
               sx={{
                 marginRight: "5%",
                 paddingLeft: "10%",
