@@ -185,9 +185,9 @@ const BoxSx: FC = () => {
                 {/* Right side of header */}
                 <Grid xs={6}>
                   {/* Add new employee */}
-                  <Grid container>
+                  {/* <Grid container>
                      <AddEmployeeModal profiles={peopleArray} onUpdate={setPeopleArray}/> 
-                  </Grid>
+                  </Grid> */}
 
                   {/* Select filters */}
                   <Grid container spacing={2} columns={3} paddingTop={'23%'}>

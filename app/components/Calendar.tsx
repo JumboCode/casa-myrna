@@ -3,17 +3,14 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Typography } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
 
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 
 import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -27,18 +24,17 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import {
-  PrimaryShift,
   Status,
   Event,
   CalendarInfo,
   OnCallShift,
 } from "../types/types";
-import { UserProfile, clerkClient } from "@clerk/nextjs";
 import CalendarModalButton from "./CalendarModalButton";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ComboBox from "./ComboBox";
 
+import { createShifts, splitOvernightShifts } from "../lib/util"
 
 const style = {
   position: "absolute" as "absolute",
@@ -84,12 +80,6 @@ const style = {
 };
 
 const localizer = momentLocalizer(moment);
-const employeeOptions = [
-  "Ana Quieros",
-  "Anna Seifield",
-  "Anne Brown",
-  "Angel Ferrian",
-];
 
 const MyCalendar = (props: {
   filters: any;
@@ -135,6 +125,7 @@ const MyCalendar = (props: {
           const data = await response.json();
           setShiftInfo(data);
         });
+
         await fetch(
           "api/on-call-shifts?from=" +
           firstDayOfWeek.toISOString() +
@@ -150,149 +141,45 @@ const MyCalendar = (props: {
     })();
   }, [props.fetchShiftsTrigger]);
 
-  // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
+  const filterShifts = (shift: CalendarInfo | OnCallShift, filters: any) => {
+    const { lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
 
-  const filterShifts = (shift: CalendarInfo, filters: any) => {
-    const {
-      partTime,
-      fullTime,
-      manager,
-      lineOne,
-      lineTwo,
-      lineThree,
-      onCall,
-      approved,
-      pending,
-      cancelled,
-    } = filters;
+    let filteredBool = Object.entries(filters).some((_) => {
+      return (
+        ((approved && (shift.status.toString().toLowerCase() === "accepted")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((pending && (shift.status.toString().toLowerCase() === "pending")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((cancelled && (shift.status.toString().toLowerCase() === "cancelled")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        ))
+      );
+    })
 
-    // Add your logic here based on the filters
-    //@ts-ignore
-    if (
-      // (partTime && shift.partTime) ||
-      // (fullTime && shift.fullTime) ||
-      // (manager && shift.manager) ||
-      (lineOne && shift.phoneLine == 1) ||
-      (lineTwo && shift.phoneLine == 2) ||
-      (lineThree && shift.phoneLine == 3) ||
-      // (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
-      (approved &&
-        shift.status ===
-        Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
-      (pending && shift.status === Status.PENDING) ||
-      (cancelled && shift.status === Status.CANCELLED)
-    ) {
-      return true;
-    }
-
-    return false;
+    return filteredBool;
   };
+  /* refactored the code that creates the shifts into a util file */
+  const shifts = createShifts(shiftInfo?.filter((item) => {
+    return filterShifts(item, props.filters);
+  }), "regular");
+  const onCallShifts = createShifts(onCallInfo, "On-Call-Shift");
 
-  const shifts = shiftInfo
-    ?.filter((shift) => filterShifts(shift, props.filters))
-    .map((shift: CalendarInfo, _) => {
-      let background_color = "green";
-
-      if (shift.status.toString() === "CANCELLED") {
-        background_color = "gray";
-      } else if (shift.status.toString() === "PENDING") {
-        background_color = "orange";
-      }
-      return {
-        /*******************************************************
-         *        associated fields for PrimaryShiftInfo       *
-         ******************************************************/
-        primaryShiftID: shift.primaryShiftID,
-        userID: shift.userID,
-        onCallShiftID: shift.onCallShiftID,
-        from: new Date(shift.from),
-        to: new Date(shift.to),
-        firstName: shift.firstName,
-        lastName: shift.lastName,
-        date: new Date(shift.from).setHours(0, 0, 0, 0),
-        status: shift.status,
-        phoneLine: shift.phoneLine,
-        message: shift.message,
-        created_at: new Date(),
-
-        /*******************************************************
-         *            associated fields for Event              *
-         ******************************************************/
-        start: new Date(shift.from),
-        end: new Date(shift.to),
-        title: shift.firstName + " " + shift.lastName, // we don't know what to assign this right now
-        style: {
-          opacity: 0.5,
-          backgroundColor: background_color,
-        },
-      };
-    });
-
-  // appended the on call shifts to the events array to render the event to the calendar.
-  const onCallShifts = onCallInfo?.map((onCallShift: OnCallShift) => {
-    let background_color = "green";
-
-    if (onCallShift.status.toString() === "CANCELLED") {
-      background_color = "gray";
-    } else if (onCallShift.status.toString() === "PENDING") {
-      background_color = "orange";
-    }
-
-    return {
-      onCallShiftID: onCallShift.onCallShiftID,
-      userID: onCallShift.userID,
-      primaryShifts: onCallShift.primaryShifts,
-      date: new Date(onCallShift.date), // not sure what to set this
-      from: new Date(onCallShift.from),
-      to: new Date(onCallShift.to),
-      firstName: onCallShift.firstName,
-      lastName: onCallShift.lastName,
-      status: onCallShift.status,
-      message: onCallShift.message,
-      phoneLine: onCallShift.phoneLine,
-      created_at: new Date(onCallShift.created_at),
-
-      start: new Date(onCallShift.from),
-      end: new Date(onCallShift.to),
-      title: `${onCallShift.firstName} ${onCallShift.lastName}`,
-      style: {
-        opacity: 0.5,
-        backgroundColor: background_color,
-      },
-    };
-  });
-
-    /* 
-   * splits shifts that occur over two days into two different events so that
-   * they're rendered correctly on the calendar
+  /* 
+   *  ?? is to tell typescript that if the array is undefined, then use the empty list instead 
+   *  appended the on call shifts to the events array to render the event to the calendar.
    */
-    const splitOvernightShifts = (shiftsArray: any): any => {
-    
-      if (!shiftsArray) return []
-  
-      let updatedShifts = []
-  
-      for (let shift of shiftsArray) {
-        const isOvernight = shift.start.getDate() !== shift.end.getDate()
-        if (isOvernight) {
-            let shift1 = {...shift, end: new Date(shift.start)};
-            let shift2 = {...shift, start: new Date(shift.end)};
-            
-            shift1.end.setHours(23, 59, 59, 999)
-            shift2.start.setHours(0, 0, 0, 0)
-        
-            updatedShifts.push(shift1)
-            updatedShifts.push(shift2)
-        } else {
-          updatedShifts.push(shift)
-        }
-      }
-      return updatedShifts
-     
-    }
-  
-    // this is to tell typescript that if the array is undefined, then use the empty list instead
-    const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
+  const events = [...splitOvernightShifts(shifts) ?? [], ...onCallShifts ?? []]
 
   const handleOpen = (e: CalendarInfo) => {
     setOpen(true);
@@ -310,51 +197,26 @@ const MyCalendar = (props: {
     }
     const url = "api/shifts"
 
-  fetch(`${url}?shiftID=${shiftId}`, {
-    method: 'DELETE',
-  })
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
-    }
-  })
-  .then(data => {
-    console.log('Shift deleted:', data);
-  })
-  .catch(error => {
-    console.error('Deletion failed:', error);
-  });
+    fetch(`${url}?shiftID=${shiftId}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+      })
+      .then(data => {
+        console.log('Shift deleted:', data);
+      })
+      .catch(error => {
+        console.error('Deletion failed:', error);
+      });
 
-  handleClose();
-  props.setFetchShiftsTrigger(Date.now());
-
-
+    handleClose();
+    props.setFetchShiftsTrigger(Date.now());
   }
-  /* Currently unused in form, but may be useful later */
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
-    if (formData) {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  /* Currently unused in form, but may be useful later */
-  const handleSelectChange = (event: { target: { name: any; value: any } }) => {
-    const { name, value } = event.target;
-    if (formData) {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  
 
   const handleSubmit = async (e: any, modifiedData: Partial<any>) => {
     Object.keys(modifiedData).forEach((key) => {
@@ -373,8 +235,6 @@ const MyCalendar = (props: {
     const eightHoursInMilliseconds = 8 * 60 * 60 * 1000;
 
     // Check if the time difference is within 8 hours
-
-    // handleClose()
 
     if (
       timeDifference <= eightHoursInMilliseconds &&
@@ -402,7 +262,7 @@ const MyCalendar = (props: {
 
       console.log("FORM DATA HELLO: ", formData)
 
-      if ('primaryShiftID' in formData){
+      if ('primaryShiftID' in formData) {
         const response = await fetch(
           "api/shifts?shiftID=" + formData?.primaryShiftID.toString(),
           {
@@ -413,7 +273,7 @@ const MyCalendar = (props: {
             },
             body: JSON.stringify(formData),
           }
-        ); 
+        );
       } else {
         const response = await fetch(
           "api/on-call-shifts?shiftID=" + formData?.onCallShiftID.toString(),
@@ -425,7 +285,7 @@ const MyCalendar = (props: {
             },
             body: JSON.stringify(formData),
           }
-        ); 
+        );
       }
 
       console.log("Before setfetchShiftsTrigger");
@@ -445,9 +305,9 @@ const MyCalendar = (props: {
         <>
           {user?.publicMetadata.role === "Coordinator" && (
             <Button
-            onClick={() => {
-              handleDeleteShift(formData.primaryShiftID);
-            }}
+              onClick={() => {
+                handleDeleteShift(formData.primaryShiftID);
+              }}
               sx={{
                 marginRight: "5%",
                 paddingLeft: "10%",
@@ -1002,14 +862,10 @@ const Cal = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const handleSelectEmployee = (selectedValue: string) => {
-      setSelectedEmployee(selectedValue); // Update selectedEmployee state
+    setSelectedEmployee(selectedValue); // Update selectedEmployee state
   };
 
   const [open, setOpen] = useState(false);
-
-  // const [openCancelModal, setOpenCancelModal] = useState(false);
-  // const handleCancelOpen = () => setOpenCancelModal(true);
-  // const handleCancelClose = () => setOpenCancelModal(false);
 
   // Add the missing setOpenCancelModal function here
   const handleSelectOpen = () => {
@@ -1052,10 +908,9 @@ const Cal = () => {
           </Typography>
         </Grid>
 
-        <Grid xs={5} paddingTop="8%">
+        <Grid xs={5} paddingTop="8%" >
           <CalendarModalButton callback={setFetchShiftsTrigger} />
-
-          <FormControl sx={{ m: 1, minWidth: 160 }}>
+          <FormControl sx={{ m: 1, minWidth: 160, position: "absolute", left: 175, top: 185 }}>
             <InputLabel htmlFor="grouped-select">Choose Filters</InputLabel>
             {/* Menu props align the popup */}
 
@@ -1066,172 +921,172 @@ const Cal = () => {
               label="Grouping"
               open={open}
               onOpen={handleSelectOpen}
-              onClose={handleClose}              
+              onClose={handleClose}
             >
               <Grid container direction="row" spacing={1} width={'50em'}>
                 {/* EMPLOYEE NAME Column */}
                 <Grid item xs={12} md={3} lg={3}>
-                    <Grid container direction="column" spacing={1}>
-                      <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
-                        <ListSubheader>
-                          {" "}
-                          <b>Employee Name</b>
-                        </ListSubheader>
-                        <ComboBox value={selectedEmployee} onSelect={handleSelectEmployee} boxWidth={175} label={"Employee Name"}/>
-                      </Grid>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
+                      <ListSubheader>
+                        {" "}
+                        <b>Employee Name</b>
+                      </ListSubheader>
+                      <ComboBox value={selectedEmployee} onSelect={handleSelectEmployee} boxWidth={175} label={"Employee Name"} />
                     </Grid>
+                  </Grid>
                 </Grid>
 
                 {/* EMPLOYEE TYPE Column */}
                 <Grid item xs={12} md={3} lg={3}>
-                    <Grid container direction="column" spacing={1}>
-                      <Grid>
-                        <ListSubheader>
-                          {" "}
-                          <b>Employee Type</b>
-                        </ListSubheader>
-                        <FormGroup sx={{ px: 1.5 }}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={partTime}
-                                onChange={handleFilterChange}
-                                name="partTime"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Part Time"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={fullTime}
-                                onChange={handleFilterChange}
-                                name="fullTime"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Full Time"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={manager}
-                                onChange={handleFilterChange}
-                                name="manager"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Manager"
-                          />
-                        </FormGroup>
-                      </Grid>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid>
+                      <ListSubheader>
+                        {" "}
+                        <b>Employee Type</b>
+                      </ListSubheader>
+                      <FormGroup sx={{ px: 1.5 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={partTime}
+                              onChange={handleFilterChange}
+                              name="partTime"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Part Time"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={fullTime}
+                              onChange={handleFilterChange}
+                              name="fullTime"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Full Time"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={manager}
+                              onChange={handleFilterChange}
+                              name="manager"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Manager"
+                        />
+                      </FormGroup>
                     </Grid>
+                  </Grid>
                 </Grid>
 
                 {/* PHONE LINE Column */}
                 <Grid item xs={12} md={3} lg={3}>
-                    <Grid container direction="column" spacing={1}>
-                      <Grid>
-                        <ListSubheader>
-                          {" "}
-                          <b>Phone Line</b>
-                        </ListSubheader>
-                        <FormGroup sx={{ px: 1.5 }}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={lineOne}
-                                onChange={handleFilterChange}
-                                name="lineOne"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Line 1"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={lineTwo}
-                                onChange={handleFilterChange}
-                                name="lineTwo"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Line 2"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={lineThree}
-                                onChange={handleFilterChange}
-                                name="lineThree"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Line 3"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={onCall}
-                                onChange={handleFilterChange}
-                                name="onCall"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="On Call"
-                          />
-                        </FormGroup>
-                      </Grid>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid>
+                      <ListSubheader>
+                        {" "}
+                        <b>Phone Line</b>
+                      </ListSubheader>
+                      <FormGroup sx={{ px: 1.5 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={lineOne}
+                              onChange={handleFilterChange}
+                              name="lineOne"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Line 1"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={lineTwo}
+                              onChange={handleFilterChange}
+                              name="lineTwo"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Line 2"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={lineThree}
+                              onChange={handleFilterChange}
+                              name="lineThree"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Line 3"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={onCall}
+                              onChange={handleFilterChange}
+                              name="onCall"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="On Call"
+                        />
+                      </FormGroup>
                     </Grid>
+                  </Grid>
                 </Grid>
 
                 {/* SHIFT STATUS Column */}
                 <Grid item xs={12} md={3} lg={3}>
-                    <Grid container direction="column" spacing={1}>
-                      <Grid>
-                        <ListSubheader>
-                          {" "}
-                          <b>Shift Status</b>
-                        </ListSubheader>
-                        <FormGroup sx={{ px: 1.5 }}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={approved}
-                                onChange={handleFilterChange}
-                                name="approved"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Approved"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={pending}
-                                onChange={handleFilterChange}
-                                name="pending"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Pending"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={cancelled}
-                                onChange={handleFilterChange}
-                                name="Cancelled"
-                              />
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                            label="Available"
-                          />
-                        </FormGroup>
-                      </Grid>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid>
+                      <ListSubheader>
+                        {" "}
+                        <b>Shift Status</b>
+                      </ListSubheader>
+                      <FormGroup sx={{ px: 1.5 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={approved}
+                              onChange={handleFilterChange}
+                              name="approved"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Approved"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={pending}
+                              onChange={handleFilterChange}
+                              name="pending"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Pending"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={cancelled}
+                              onChange={handleFilterChange}
+                              name="cancelled"
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          label="Available"
+                        />
+                      </FormGroup>
                     </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Select>

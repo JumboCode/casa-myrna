@@ -1,24 +1,19 @@
 // @ts-nocheck
 "use client";
 // Import necessary dependencies and components
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Grid, MenuItem, Select } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { format, parse } from "date-fns";
-import theme from "../theme";
-// Add employee modal functionality imports
-// import { POST } from '../api/shifts/route';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { FormatListNumberedRtlSharp } from "@mui/icons-material";
-import { request } from "http";
-import { profileData } from "./types";
 import ComboBox from "./ComboBox";
+import theme from "../theme";
+import { timeList, hourList, periodList, phoneLines } from "../lib/directory"
 
 const style = {
     position: "absolute" as "absolute",
@@ -34,7 +29,6 @@ const style = {
         xs: "70%",
     },
     bgcolor: "#ffffff",
-    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     borderRadius: "35px",
@@ -79,6 +73,16 @@ const initialFormData = {
     phoneLine: "",
 };
 
+const timeStyle = {
+    borderRadius: "10px",
+    width: "70px",
+    backgroundColor: "#FFFFFF",
+    outlineColor: "#000000",
+    height: "56px",
+    marginRight: "5px",
+}
+
+
 const CalendarModalButton: FC<any> = ({ callback }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -88,12 +92,55 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
     const [endDate, setEndDate] = useState(new Date());
     const [formData, setFormData] = useState(initialFormData);
 
-    // For ComboBox Emplyee Selection
-    // const [selectedEmployee, setSelectedEmployee] = useState<profileData | null>(null);
 
-    // const handleSelectEmployee = (selectedValue: profileData | null) => {
-    //   setSelectedEmployee(selectedValue);
-    // };
+    const timeComponentInfo = [
+        {
+            label: "Start Time: ",
+            datePickerLabel: "Start Date",
+            timeName: "",
+            content: timeList,
+            selectInfo: [
+                {
+                    name: "startHour",
+                    value: formData.startHour,
+                    content: timeList
+                },
+                {
+                    name: "startMin",
+                    value: formData.startMin,
+                    content: hourList
+                },
+                {
+                    name: "startAm",
+                    value: formData.startAm,
+                    content: periodList
+                }
+            ]
+        },
+        {
+            label: "End Time: ",
+            datePickerLabel: "End Date",
+            timeName: "",
+            content: timeList,
+            selectInfo: [
+                {
+                    name: "endHour",
+                    value: formData.endHour,
+                    content: timeList
+                },
+                {
+                    name: "endMin",
+                    value: formData.endMin,
+                    content: hourList
+                },
+                {
+                    name: "endAm",
+                    value: formData.endAm,
+                    content: periodList
+                }
+            ]
+        },
+    ]
 
     const handleSelectEmployee = (selectedValue: string) => {
         setFormData((prevFormData) => ({
@@ -108,13 +155,11 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    // Handle form submission (IN PROGRESS)
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const createdAt = new Date().toISOString();
 
-        // format start and end date/times
-        //     startDate.setHours(formData.startTime);
         if (formData.startAm === "pm") {
             if (formData.startHour !== 12) {
                 formData.startHour = (parseInt(formData.startHour) + 12) % 24;
@@ -130,29 +175,18 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
         startDate.setHours(formData.startHour, formData.startMin);
         endDate.setHours(formData.endHour, formData.endMin);
 
-        console.log(startDate.toISOString());
-        console.log(endDate.toISOString());
-
         let firstName, lastName, id;
         if (formData.assignedEmployee) {
             firstName = formData.assignedEmployee.firstName
-            console.log("FirstName: ", firstName)
             lastName = formData.assignedEmployee.lastName
-            console.log("LastName: ", lastName)
             id = formData.assignedEmployee.id
-            console.log("ID: ", id)
         } else {
-            firstName = '', 
-            lastName = '',
-            id = '';
+            firstName = '',
+                lastName = '',
+                id = '';
         }
-        
-        console.log("First Name: ", firstName);
-        console.log("Last Name: ", lastName);
 
-        // TODO: remove 'any' type
         let requestData: any = {
-            // ...formData,
             firstName: firstName,
             lastName: lastName,
             phoneLine: parseInt(formData.phoneLine),
@@ -161,7 +195,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             to: endDate.toISOString(),
             created_at: createdAt,
             userID: id,
-            message: "hello",
+            message: `shift was requested at ${startDate.toISOString}`,
             status: "ACCEPTED",
         };
 
@@ -169,13 +203,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             requestData.onCallShiftID = 1;
         }
 
-        // See console to see the form data being sent to POST
-        console.log("Request Payload:", requestData);
-        console.log("TESTING PRINT");
-
         try {
-            // value={"regular"}>Regular</MenuItem>
-            // <MenuItem value={"onCall"}
             let response = null;
             if (formData.shiftType === "regular") {
                 response = await fetch("api/shifts", {
@@ -197,13 +225,9 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                 });
             }
 
-            console.log("after retrieving response");
             if (!response.ok) {
                 throw new Error(`Failed to assign shift. Status: ${response.status}`);
             }
-
-            const result = await response.json();
-            console.log("Shift assigned successfully:", result);
 
             // Reset form data after successful submission
             setFormData(initialFormData);
@@ -215,22 +239,26 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
     };
 
     return (
-        <>
+        <div sx={{ position: "relative" }}>
             <Button
                 variant="contained"
-                // color="#FFFFFF"
                 onClick={handleOpen}
-                style={{
-                    marginBottom: "10px",
-                    marginLeft: "10px",
-                    textTransform: "none",
-                    minWidth: 160,
-                    fontFamily: "Montserrat",
-                    fontSize: "16",
-                    fontWeight: "bold",
-                    color: "#FFFFFF",
-                }}
+                className="add-shift-btn"
+                style={{ marginBottom: '10px', marginLeft: '10px', textTransform: 'none', minWidth: 180, minHeight: 60, maxHeight: 70, fontFamily: 'Montserrat', fontSize: '16', fontWeight: 'bold', color: 'black', backgroundColor: "white", border: true, borderRadius: "35px", border: '1px solid purple' }}
+                display={{ sm: "absolute", top: 80, right: 0 }}
+                top={{ sm: 0 }}
+                right={{ sm: 0 }}
             >
+                <svg style={{ maxHeight: 60 }} viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" className="add-shift-svg">
+                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#0a0a0a"
+                        strokeWidth="1.392"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <rect width="6" height="6" fill="white"></rect>
+                        <path fillRule="evenodd" clipRule="evenodd"
+                            d="M13 9C13 8.44772 12.5523 8 12 8C11.4477 8 11 8.44772 11 9V11H9C8.44772 11 8 11.4477 8 12C8 12.5523 8.44772 13 9 13H11V15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15V13H15C15.5523 13 16 12.5523 16 12C16 11.4477 15.5523 11 15 11H13V9ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12Z"
+                            fill="#3c0085"></path>
+                    </g>
+                </svg>
                 Add Shift
             </Button>
             <Modal open={open} onClose={handleClose}>
@@ -269,11 +297,13 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                             <Grid
                                 container
                                 spacing={5}
-                                columnSpacing={{ xs: 10, sm: 80, md: 5, lg: 5 }}
-                                justify-content="flex-start"
-                                alignItems="flex-start"
                                 columns={12}
-                                margin={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+                                sx={{
+                                    justifyContent: "flex-start",
+                                    alignItems: "flex-start",
+                                    margin: { xs: 1, sm: 2, md: 3, lg: 4 },
+                                    columnSpacing: { xs: 10, sm: 80, md: 5, lg: 5 }
+                                }}
                             >
                                 <Grid
                                     container
@@ -285,12 +315,11 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                     <Grid
                                         container
                                         direction="row"
-                                        justifyContent={"flex-end"}
                                         xs={12}
                                         sm={12}
                                         md={12}
                                         lg={12}
-                                        sx={{ marginTop: "20px", marginLeft: "-130px" }}
+                                        sx={{ marginTop: "20px", marginLeft: "-130px", justifyContent: "flex-end" }}
                                     >
                                         <Typography
                                             variant="h4"
@@ -318,192 +347,51 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                         </Select>
                                     </Grid>
 
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent={"flex-end"}
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{ marginTop: "20px", marginLeft: "-130px" }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "10px" }}
+                                    {timeComponentInfo.map((timeInfo) => (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{ marginTop: "20px", marginLeft: "-130px", justifyContent: "flex-end" }}
                                         >
-                                            Start Time: <span style={{ color: "red" }}>*</span>
-                                        </Typography>
+                                            <Typography
+                                                sx={{ marginTop: "15px", marginRight: "10px" }}
+                                            >
+                                                {timeInfo.label} <span style={{ color: "red" }}>*</span>
+                                            </Typography>
 
-                                        {/* Start Date */}
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DatePicker
-                                                label="Start Date"
-                                                onChange={(newValue) =>
-                                                    setStartDate(new Date(newValue))
-                                                }
-                                                sx={{ marginRight: "10px", width: "153px" }}
-                                            />
-                                        </LocalizationProvider>
-
-                                        <Select
-                                            name="startHour"
-                                            value={formData.startHour}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"01"}>01</MenuItem>
-                                            <MenuItem value={"02"}>02</MenuItem>
-                                            <MenuItem value={"03"}>03</MenuItem>
-                                            <MenuItem value={"04"}>04</MenuItem>
-                                            <MenuItem value={"05"}>05</MenuItem>
-                                            <MenuItem value={"06"}>06</MenuItem>
-                                            <MenuItem value={"07"}>07</MenuItem>
-                                            <MenuItem value={"08"}>08</MenuItem>
-                                            <MenuItem value={"09"}>09</MenuItem>
-                                            <MenuItem value={"10"}>10</MenuItem>
-                                            <MenuItem value={"11"}>11</MenuItem>
-                                            <MenuItem value={"12"}>12</MenuItem>
-                                        </Select>
-
-                                        <Select
-                                            name="startMin"
-                                            value={formData.startMin}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"00"}>00</MenuItem>
-                                            <MenuItem value={"15"}>15</MenuItem>
-                                            <MenuItem value={"30"}>30</MenuItem>
-                                            <MenuItem value={"45"}>45</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="startAm"
-                                            value={formData.startAm}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
-                                        >
-                                            <MenuItem value={"am"}>am</MenuItem>
-                                            <MenuItem value={"pm"}>pm</MenuItem>
-                                        </Select>
-                                    </Grid>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{
-                                            marginTop: "18px",
-                                            marginLeft: "-130px",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "10px" }}
-                                        >
-                                            End Time : <span style={{ color: "red" }}>*</span>
-                                        </Typography>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <div component={["DatePicker"]}>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
-                                                    label="End Date"
-                                                    onChange={(newValue) =>
-                                                        setEndDate(new Date(newValue))
-                                                    }
+                                                    label={timeInfo.datePickerLabel}
+                                                    onChange={(newValue) => {
+                                                        if (timeInfo.datePickerLabel === "End Date") {
+                                                            setEndDate(new Date(newValue));
+                                                        } else {
+                                                            setStartDate(new Date(newValue))
+                                                        }
+                                                    }}
                                                     sx={{ marginRight: "10px", width: "153px" }}
                                                 />
-                                            </div>
-                                        </LocalizationProvider>
+                                            </LocalizationProvider>
 
-                                        <Select
-                                            name="endHour"
-                                            value={formData.endHour}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"01"}>01</MenuItem>
-                                            <MenuItem value={"02"}>02</MenuItem>
-                                            <MenuItem value={"03"}>03</MenuItem>
-                                            <MenuItem value={"04"}>04</MenuItem>
-                                            <MenuItem value={"05"}>05</MenuItem>
-                                            <MenuItem value={"06"}>06</MenuItem>
-                                            <MenuItem value={"07"}>07</MenuItem>
-                                            <MenuItem value={"08"}>08</MenuItem>
-                                            <MenuItem value={"09"}>09</MenuItem>
-                                            <MenuItem value={"10"}>10</MenuItem>
-                                            <MenuItem value={"11"}>11</MenuItem>
-                                            <MenuItem value={"12"}>12</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="endMin"
-                                            value={formData.endMin}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"00"}>00</MenuItem>
-                                            <MenuItem value={"15"}>15</MenuItem>
-                                            <MenuItem value={"30"}>30</MenuItem>
-                                            <MenuItem value={"45"}>45</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="endAm"
-                                            value={formData.endAm}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
-                                        >
-                                            <MenuItem value={"am"}>am</MenuItem>
-                                            <MenuItem value={"pm"}>pm</MenuItem>
-                                        </Select>
-                                    </Grid>
+                                            {timeInfo.selectInfo.map((select) => (
+                                                <Select
+                                                    name={select.name}
+                                                    value={select.value}
+                                                    onChange={handleInputChange}
+                                                    required
+                                                    sx={timeStyle}
+                                                >
+                                                    {select.content.map((content) => (
+                                                        <MenuItem value={content}>{content}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            ))}
+                                        </Grid>
+                                    ))}
                                     <Grid
                                         container
                                         direction="row"
@@ -523,7 +411,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                         >
                                             Assigned Employee :
                                         </Typography>
-                                        <ComboBox onSelect={handleSelectEmployee} boxWidth={300} label={"Assigned Employee"}/>
+                                        <ComboBox onSelect={handleSelectEmployee} boxWidth={300} label={"Assigned Employee"} />
                                     </Grid>
                                     <Grid
                                         container
@@ -557,13 +445,9 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                                 height: "56px",
                                             }}
                                         >
-                                            <MenuItem value={"0"}>N/A</MenuItem>
-                                            <MenuItem value={"1"}>1</MenuItem>
-                                            <MenuItem value={"2"}>2</MenuItem>
-                                            <MenuItem value={"3"}>3</MenuItem>
-                                            <MenuItem value={"4"}>4</MenuItem>
-                                            <MenuItem value={"5"}>5</MenuItem>
-                                            <MenuItem value={"6"}>6</MenuItem>
+                                            {phoneLines.map((line) => (
+                                                <MenuItem value={line}>{line}</MenuItem>
+                                            ))}
                                         </Select>
                                     </Grid>
                                     <Grid
@@ -606,7 +490,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                     </Box>
                 </Box>
             </Modal>
-        </>
+        </div>
     );
 };
 
