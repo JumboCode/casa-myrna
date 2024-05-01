@@ -192,7 +192,7 @@ const MyCalendar = (props: {
   };
 
   const handleDeleteShift = (shiftId) => {
-    if (!confirm('Are you sure you want to delete this shift? On call shifts CANNOT be deleted')) {
+    if (!confirm('Are you sure you want to delete this shift? On call shifts CANNOT be deleted, but can be cancelled.')) {
       return;
     }
     const url = "api/shifts"
