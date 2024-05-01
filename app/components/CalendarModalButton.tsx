@@ -196,7 +196,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             created_at: createdAt,
             userID: id,
             message: `shift was requested at ${startDate.toISOString}`,
-            status: "ACCEPTED",
+            status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
         };
 
         if (formData.shiftType === "regular") {
@@ -347,10 +347,11 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                         </Select>
                                     </Grid>
 
-                                    {timeComponentInfo.map((timeInfo) => (
+                                    {timeComponentInfo.map((timeInfo, index) => (
                                         <Grid
                                             container
                                             direction="row"
+                                            key={index}
                                             xs={12}
                                             sm={12}
                                             md={12}
@@ -377,16 +378,17 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                                 />
                                             </LocalizationProvider>
 
-                                            {timeInfo.selectInfo.map((select) => (
+                                            {timeInfo.selectInfo.map((select, index) => (
                                                 <Select
+                                                    key={index}
                                                     name={select.name}
                                                     value={select.value}
                                                     onChange={handleInputChange}
                                                     required
                                                     sx={timeStyle}
                                                 >
-                                                    {select.content.map((content) => (
-                                                        <MenuItem value={content}>{content}</MenuItem>
+                                                    {select.content.map((content, index) => (
+                                                        <MenuItem key={index} value={content}>{content}</MenuItem>
                                                     ))}
                                                 </Select>
                                             ))}
@@ -445,8 +447,8 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
                                                 height: "56px",
                                             }}
                                         >
-                                            {phoneLines.map((line) => (
-                                                <MenuItem value={line}>{line}</MenuItem>
+                                            {phoneLines.map((line, index) => (
+                                                <MenuItem  key={index} value={line}>{line}</MenuItem>
                                             ))}
                                         </Select>
                                     </Grid>
