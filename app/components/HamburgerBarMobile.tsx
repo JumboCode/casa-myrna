@@ -15,6 +15,7 @@ import CloseIcon from "../images/closeIcon.svg";
 import { SignOutButton, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import React from "react";
 
 interface MobileBarProps {
   currentPageComponent: FC; // Update prop type to React Functional Component
