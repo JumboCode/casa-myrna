@@ -152,41 +152,35 @@ const MyCalendar = (props: {
 
   // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
 
-  const filterShifts = (shift: CalendarInfo, filters: any) => {
-    const {
-      partTime,
-      fullTime,
-      manager,
-      lineOne,
-      lineTwo,
-      lineThree,
-      onCall,
-      approved,
-      pending,
-      cancelled,
-    } = filters;
+  const filterShifts = (shift: CalendarInfo | OnCallShift, filters: any) => {
+    const { lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
 
-    // Add your logic here based on the filters
-    //@ts-ignore
-    if (
-      // (partTime && shift.partTime) ||
-      // (fullTime && shift.fullTime) ||
-      // (manager && shift.manager) ||
-      (lineOne && shift.phoneLine == 1) ||
-      (lineTwo && shift.phoneLine == 2) ||
-      (lineThree && shift.phoneLine == 3) ||
-      // (onCall && shift.onCall) || /* TODO: add filtering for on call shifts */
-      (approved &&
-        shift.status ===
-        Status.ACCEPTED) /* TODO: standardize 'approved' and 'acepted' */ ||
-      (pending && shift.status === Status.PENDING) ||
-      (cancelled && shift.status === Status.CANCELLED)
-    ) {
-      return true;
-    }
+    let filteredBool = Object.entries(filters).some((_) => {
+      return (
+        ((approved && (shift.status.toString().toLowerCase() === "accepted")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((pending && (shift.status.toString().toLowerCase() === "pending")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        )) ||
+        ((cancelled && (shift.status.toString().toLowerCase() === "cancelled")) && (
+          (lineOne && (shift.phoneLine === 1)) ||
+          (lineTwo && (shift.phoneLine === 2)) ||
+          (lineThree && (shift.phoneLine === 3)) ||
+          (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
+        ))
+      );
+    })
 
-    return false;
+    return filteredBool;
   };
+
 
   const shifts = shiftInfo
     ?.filter((shift) => filterShifts(shift, props.filters))
@@ -1223,7 +1217,7 @@ const Cal = () => {
                               <Checkbox
                                 checked={cancelled}
                                 onChange={handleFilterChange}
-                                name="Cancelled"
+                                name="cancelled"
                               />
                             }
                             onClick={(e) => e.stopPropagation()}

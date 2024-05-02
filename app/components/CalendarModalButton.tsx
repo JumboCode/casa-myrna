@@ -19,6 +19,7 @@ import { FormatListNumberedRtlSharp } from "@mui/icons-material";
 import { request } from "http";
 import { profileData } from "./types";
 import ComboBox from "./ComboBox";
+import { useUser } from "@clerk/nextjs";
 
 const style = {
     position: "absolute" as "absolute",
@@ -213,401 +214,406 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             console.error("Error assigning shift:", error);
         }
     };
+    const { isSignedIn, user, isLoaded } = useUser();
 
-    return (
-        <>
-            <Button
-                variant="contained"
-                // color="#FFFFFF"
-                onClick={handleOpen}
-                style={{
-                    marginBottom: "10px",
-                    marginLeft: "10px",
-                    textTransform: "none",
-                    minWidth: 160,
-                    fontFamily: "Montserrat",
-                    fontSize: "16",
-                    fontWeight: "bold",
-                    color: "#FFFFFF",
-                }}
-            >
-                Add Shift
-            </Button>
-            <Modal open={open} onClose={handleClose}>
-                {/* Gray Modal Box */}
-                <Box sx={style}>
-                    {/* Button Box */}
-                    <Box
-                        sx={{
-                            width: 50,
-                            height: 50,
-                            position: "absolute",
-                            right: "5%",
-                            fill: "none",
-                        }}
-                    >
-                        <button
-                            onClick={() => {
-                                handleClose();
-                            }}
-                        >
-                            <CloseOutlinedIcon color="secondary" />
-                        </button>
-                    </Box>
-                    <Box sx={{ paddingLeft: 2, paddingRight: 6 }}>
-                        <Typography
+    if (user?.publicMetadata.role == "Coordinator") {
+        return (
+            <>
+                <Button
+                    variant="contained"
+                    // color="#FFFFFF"
+                    onClick={handleOpen}
+                    style={{
+                        marginBottom: "10px",
+                        marginLeft: "10px",
+                        textTransform: "none",
+                        minWidth: 160,
+                        fontFamily: "Montserrat",
+                        fontSize: "16",
+                        fontWeight: "bold",
+                        color: "#FFFFFF",
+                    }}
+                >
+                    Add Shift
+                </Button>
+                <Modal open={open} onClose={handleClose}>
+                    {/* Gray Modal Box */}
+                    <Box sx={style}>
+                        {/* Button Box */}
+                        <Box
                             sx={{
-                                fontFamily: "Montserrat",
-                                fontSize: { lg: "36px", xs: "22px" },
+                                width: 50,
+                                height: 50,
+                                position: "absolute",
+                                right: "5%",
+                                fill: "none",
                             }}
                         >
-                            Add Shift
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <form onSubmit={handleSubmit}>
-                            <Grid
-                                container
-                                spacing={5}
-                                columnSpacing={{ xs: 10, sm: 80, md: 5, lg: 5 }}
-                                justify-content="flex-start"
-                                alignItems="flex-start"
-                                columns={12}
-                                margin={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+                            <button
+                                onClick={() => {
+                                    handleClose();
+                                }}
                             >
+                                <CloseOutlinedIcon color="secondary" />
+                            </button>
+                        </Box>
+                        <Box sx={{ paddingLeft: 2, paddingRight: 6 }}>
+                            <Typography
+                                sx={{
+                                    fontFamily: "Montserrat",
+                                    fontSize: { lg: "36px", xs: "22px" },
+                                }}
+                            >
+                                Add Shift
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <form onSubmit={handleSubmit}>
                                 <Grid
                                     container
-                                    spacing={4}
-                                    direction="column"
+                                    spacing={5}
+                                    columnSpacing={{ xs: 10, sm: 80, md: 5, lg: 5 }}
+                                    justify-content="flex-start"
                                     alignItems="flex-start"
-                                    paddingBottom="13%"
+                                    columns={12}
+                                    margin={{ xs: 1, sm: 2, md: 3, lg: 4 }}
                                 >
                                     <Grid
                                         container
-                                        direction="row"
-                                        justifyContent={"flex-end"}
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{ marginTop: "20px", marginLeft: "-130px" }}
+                                        spacing={4}
+                                        direction="column"
+                                        alignItems="flex-start"
+                                        paddingBottom="13%"
                                     >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "10px" }}
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent={"flex-end"}
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{ marginTop: "20px", marginLeft: "-130px" }}
                                         >
-                                            Shift Type: <span style={{ color: "red" }}>*</span>
-                                        </Typography>
-
-                                        <Select
-                                            name="shiftType"
-                                            value={formData.shiftType}
-                                            onChange={handleInputChange}
-                                            placeholder="Shift Type"
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "57.75%",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ marginTop: "15px", marginRight: "10px" }}
+                                            >
+                                                Shift Type: <span style={{ color: "red" }}>*</span>
+                                            </Typography>
+    
+                                            <Select
+                                                name="shiftType"
+                                                value={formData.shiftType}
+                                                onChange={handleInputChange}
+                                                placeholder="Shift Type"
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "57.75%",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                }}
+                                            >
+                                                <MenuItem value={"regular"}>Regular</MenuItem>
+                                                <MenuItem value={"onCall"}>On Call</MenuItem>
+                                            </Select>
+                                        </Grid>
+    
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent={"flex-end"}
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{ marginTop: "20px", marginLeft: "-130px" }}
                                         >
-                                            <MenuItem value={"regular"}>Regular</MenuItem>
-                                            <MenuItem value={"onCall"}>On Call</MenuItem>
-                                        </Select>
-                                    </Grid>
-
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent={"flex-end"}
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{ marginTop: "20px", marginLeft: "-130px" }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "10px" }}
-                                        >
-                                            Start Time: <span style={{ color: "red" }}>*</span>
-                                        </Typography>
-
-                                        {/* Start Date */}
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DatePicker
-                                                label="Start Date"
-                                                onChange={(newValue) =>
-                                                    setStartDate(new Date(newValue))
-                                                }
-                                                sx={{ marginRight: "10px", width: "153px" }}
-                                            />
-                                        </LocalizationProvider>
-
-                                        <Select
-                                            name="startHour"
-                                            value={formData.startHour}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"01"}>01</MenuItem>
-                                            <MenuItem value={"02"}>02</MenuItem>
-                                            <MenuItem value={"03"}>03</MenuItem>
-                                            <MenuItem value={"04"}>04</MenuItem>
-                                            <MenuItem value={"05"}>05</MenuItem>
-                                            <MenuItem value={"06"}>06</MenuItem>
-                                            <MenuItem value={"07"}>07</MenuItem>
-                                            <MenuItem value={"08"}>08</MenuItem>
-                                            <MenuItem value={"09"}>09</MenuItem>
-                                            <MenuItem value={"10"}>10</MenuItem>
-                                            <MenuItem value={"11"}>11</MenuItem>
-                                            <MenuItem value={"12"}>12</MenuItem>
-                                        </Select>
-
-                                        <Select
-                                            name="startMin"
-                                            value={formData.startMin}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"00"}>00</MenuItem>
-                                            <MenuItem value={"15"}>15</MenuItem>
-                                            <MenuItem value={"30"}>30</MenuItem>
-                                            <MenuItem value={"45"}>45</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="startAm"
-                                            value={formData.startAm}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
-                                        >
-                                            <MenuItem value={"am"}>am</MenuItem>
-                                            <MenuItem value={"pm"}>pm</MenuItem>
-                                        </Select>
-                                    </Grid>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{
-                                            marginTop: "18px",
-                                            marginLeft: "-130px",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "10px" }}
-                                        >
-                                            End Time : <span style={{ color: "red" }}>*</span>
-                                        </Typography>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <div component={["DatePicker"]}>
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ marginTop: "15px", marginRight: "10px" }}
+                                            >
+                                                Start Time: <span style={{ color: "red" }}>*</span>
+                                            </Typography>
+    
+                                            {/* Start Date */}
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
-                                                    label="End Date"
+                                                    label="Start Date"
                                                     onChange={(newValue) =>
-                                                        setEndDate(new Date(newValue))
+                                                        setStartDate(new Date(newValue))
                                                     }
                                                     sx={{ marginRight: "10px", width: "153px" }}
                                                 />
-                                            </div>
-                                        </LocalizationProvider>
-
-                                        <Select
-                                            name="endHour"
-                                            value={formData.endHour}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"01"}>01</MenuItem>
-                                            <MenuItem value={"02"}>02</MenuItem>
-                                            <MenuItem value={"03"}>03</MenuItem>
-                                            <MenuItem value={"04"}>04</MenuItem>
-                                            <MenuItem value={"05"}>05</MenuItem>
-                                            <MenuItem value={"06"}>06</MenuItem>
-                                            <MenuItem value={"07"}>07</MenuItem>
-                                            <MenuItem value={"08"}>08</MenuItem>
-                                            <MenuItem value={"09"}>09</MenuItem>
-                                            <MenuItem value={"10"}>10</MenuItem>
-                                            <MenuItem value={"11"}>11</MenuItem>
-                                            <MenuItem value={"12"}>12</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="endMin"
-                                            value={formData.endMin}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            <MenuItem value={"00"}>00</MenuItem>
-                                            <MenuItem value={"15"}>15</MenuItem>
-                                            <MenuItem value={"30"}>30</MenuItem>
-                                            <MenuItem value={"45"}>45</MenuItem>
-                                        </Select>
-                                        <Select
-                                            name="endAm"
-                                            value={formData.endAm}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "70px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
-                                        >
-                                            <MenuItem value={"am"}>am</MenuItem>
-                                            <MenuItem value={"pm"}>pm</MenuItem>
-                                        </Select>
-                                    </Grid>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{
-                                            marginTop: "18px",
-                                            marginLeft: "-130px",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "20px" }}
-                                        >
-                                            Assigned Employee :
-                                        </Typography>
-                                        <ComboBox onSelect={handleSelectEmployee} boxWidth={300} label={"Assigned Employee"}/>
-                                    </Grid>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{
-                                            marginTop: "18px",
-                                            marginLeft: "-130px",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ marginTop: "15px", marginRight: "182px" }}
-                                        >
-                                            Phone Line : <span style={{ color: "red" }}>*</span>
-                                        </Typography>
-                                        <Select
-                                            name="phoneLine"
-                                            value={formData.phoneLine}
-                                            onChange={handleInputChange}
-                                            required
-                                            sx={{
-                                                borderRadius: "10px",
-                                                width: "195px",
-                                                backgroundColor: "#FFFFFF",
-                                                outlineColor: "#000000",
-                                                height: "56px",
-                                            }}
-                                        >
-                                            <MenuItem value={"0"}>N/A</MenuItem>
-                                            <MenuItem value={"1"}>1</MenuItem>
-                                            <MenuItem value={"2"}>2</MenuItem>
-                                            <MenuItem value={"3"}>3</MenuItem>
-                                            <MenuItem value={"4"}>4</MenuItem>
-                                            <MenuItem value={"5"}>5</MenuItem>
-                                            <MenuItem value={"6"}>6</MenuItem>
-                                        </Select>
-                                    </Grid>
-                                    <Grid
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        container
-                                        spacing={6}
-                                        justifyContent="flex-end"
-                                        textAlign="center"
-                                        sx={{
-                                            marginTop: "1px",
-                                            display: "flex",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
-                                        <Grid item xs={3}>
-                                            <Button
-                                                type="submit"
-                                                variant="contained"
+                                            </LocalizationProvider>
+    
+                                            <Select
+                                                name="startHour"
+                                                value={formData.startHour}
+                                                onChange={handleInputChange}
+                                                required
                                                 sx={{
-                                                    paddingLeft: "10%",
-                                                    textIndent: "5.5px",
-                                                    paddingRight: "10%",
                                                     borderRadius: "10px",
-                                                    backgroundColor: theme.palette.secondary.main,
-                                                    "&:hover": { backgroundColor: "#89B839" },
-                                                    textTransform: "none",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                    marginRight: "5px",
                                                 }}
                                             >
-                                                Assign Shift
-                                            </Button>
+                                                <MenuItem value={"01"}>01</MenuItem>
+                                                <MenuItem value={"02"}>02</MenuItem>
+                                                <MenuItem value={"03"}>03</MenuItem>
+                                                <MenuItem value={"04"}>04</MenuItem>
+                                                <MenuItem value={"05"}>05</MenuItem>
+                                                <MenuItem value={"06"}>06</MenuItem>
+                                                <MenuItem value={"07"}>07</MenuItem>
+                                                <MenuItem value={"08"}>08</MenuItem>
+                                                <MenuItem value={"09"}>09</MenuItem>
+                                                <MenuItem value={"10"}>10</MenuItem>
+                                                <MenuItem value={"11"}>11</MenuItem>
+                                                <MenuItem value={"12"}>12</MenuItem>
+                                            </Select>
+    
+                                            <Select
+                                                name="startMin"
+                                                value={formData.startMin}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                    marginRight: "5px",
+                                                }}
+                                            >
+                                                <MenuItem value={"00"}>00</MenuItem>
+                                                <MenuItem value={"15"}>15</MenuItem>
+                                                <MenuItem value={"30"}>30</MenuItem>
+                                                <MenuItem value={"45"}>45</MenuItem>
+                                            </Select>
+                                            <Select
+                                                name="startAm"
+                                                value={formData.startAm}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                }}
+                                            >
+                                                <MenuItem value={"am"}>am</MenuItem>
+                                                <MenuItem value={"pm"}>pm</MenuItem>
+                                            </Select>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{
+                                                marginTop: "18px",
+                                                marginLeft: "-130px",
+                                                justifyContent: "flex-end",
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ marginTop: "15px", marginRight: "10px" }}
+                                            >
+                                                End Time : <span style={{ color: "red" }}>*</span>
+                                            </Typography>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <div component={["DatePicker"]}>
+                                                    <DatePicker
+                                                        label="End Date"
+                                                        onChange={(newValue) =>
+                                                            setEndDate(new Date(newValue))
+                                                        }
+                                                        sx={{ marginRight: "10px", width: "153px" }}
+                                                    />
+                                                </div>
+                                            </LocalizationProvider>
+    
+                                            <Select
+                                                name="endHour"
+                                                value={formData.endHour}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                    marginRight: "5px",
+                                                }}
+                                            >
+                                                <MenuItem value={"01"}>01</MenuItem>
+                                                <MenuItem value={"02"}>02</MenuItem>
+                                                <MenuItem value={"03"}>03</MenuItem>
+                                                <MenuItem value={"04"}>04</MenuItem>
+                                                <MenuItem value={"05"}>05</MenuItem>
+                                                <MenuItem value={"06"}>06</MenuItem>
+                                                <MenuItem value={"07"}>07</MenuItem>
+                                                <MenuItem value={"08"}>08</MenuItem>
+                                                <MenuItem value={"09"}>09</MenuItem>
+                                                <MenuItem value={"10"}>10</MenuItem>
+                                                <MenuItem value={"11"}>11</MenuItem>
+                                                <MenuItem value={"12"}>12</MenuItem>
+                                            </Select>
+                                            <Select
+                                                name="endMin"
+                                                value={formData.endMin}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                    marginRight: "5px",
+                                                }}
+                                            >
+                                                <MenuItem value={"00"}>00</MenuItem>
+                                                <MenuItem value={"15"}>15</MenuItem>
+                                                <MenuItem value={"30"}>30</MenuItem>
+                                                <MenuItem value={"45"}>45</MenuItem>
+                                            </Select>
+                                            <Select
+                                                name="endAm"
+                                                value={formData.endAm}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "70px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                }}
+                                            >
+                                                <MenuItem value={"am"}>am</MenuItem>
+                                                <MenuItem value={"pm"}>pm</MenuItem>
+                                            </Select>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{
+                                                marginTop: "18px",
+                                                marginLeft: "-130px",
+                                                justifyContent: "flex-end",
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ marginTop: "15px", marginRight: "20px" }}
+                                            >
+                                                Assigned Employee :
+                                            </Typography>
+                                            <ComboBox onSelect={handleSelectEmployee} boxWidth={300} label={"Assigned Employee"}/>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            sx={{
+                                                marginTop: "18px",
+                                                marginLeft: "-130px",
+                                                justifyContent: "flex-end",
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ marginTop: "15px", marginRight: "182px" }}
+                                            >
+                                                Phone Line : <span style={{ color: "red" }}>*</span>
+                                            </Typography>
+                                            <Select
+                                                name="phoneLine"
+                                                value={formData.phoneLine}
+                                                onChange={handleInputChange}
+                                                required
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    width: "195px",
+                                                    backgroundColor: "#FFFFFF",
+                                                    outlineColor: "#000000",
+                                                    height: "56px",
+                                                }}
+                                            >
+                                                <MenuItem value={"0"}>N/A</MenuItem>
+                                                <MenuItem value={"1"}>1</MenuItem>
+                                                <MenuItem value={"2"}>2</MenuItem>
+                                                <MenuItem value={"3"}>3</MenuItem>
+                                                <MenuItem value={"4"}>4</MenuItem>
+                                                <MenuItem value={"5"}>5</MenuItem>
+                                                <MenuItem value={"6"}>6</MenuItem>
+                                            </Select>
+                                        </Grid>
+                                        <Grid
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            container
+                                            spacing={6}
+                                            justifyContent="flex-end"
+                                            textAlign="center"
+                                            sx={{
+                                                marginTop: "1px",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            {/* ASSIGN SHIFT CONFIRMATION BUTTON (where we post shift) */}
+                                            <Grid item xs={3}>
+                                                <Button
+                                                    type="submit"
+                                                    variant="contained"
+                                                    sx={{
+                                                        paddingLeft: "10%",
+                                                        textIndent: "5.5px",
+                                                        paddingRight: "10%",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: theme.palette.secondary.main,
+                                                        "&:hover": { backgroundColor: "#89B839" },
+                                                        textTransform: "none",
+                                                    }}
+                                                >
+                                                    Assign Shift
+                                                </Button>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        </form>
+                            </form>
+                        </Box>
                     </Box>
-                </Box>
-            </Modal>
-        </>
-    );
+                </Modal>
+            </>
+        );
+      } 
+
+    
 };
 
 export default CalendarModalButton;

@@ -3,7 +3,7 @@ import React from "react";
 import { ClerkProvider } from '@clerk/nextjs'
  
 export const metadata = {
-  title: 'Next.js 13 with Clerk',
+  title: 'Shift Manager',
 }
  
 export default function RootLayout({
