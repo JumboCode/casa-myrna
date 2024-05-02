@@ -38,6 +38,7 @@ import CalendarModalButton from "./CalendarModalButton";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ComboBox from "./ComboBox";
+import { tree } from "next/dist/build/templates/app-page";
 
 
 const style = {
@@ -153,26 +154,38 @@ const MyCalendar = (props: {
   // const shifts = shiftInfo?.map((shift: CalendarInfo, _) => {
 
   const filterShifts = (shift: CalendarInfo | OnCallShift, filters: any) => {
-    const { lineOne, lineTwo, lineThree, onCall, approved, pending, cancelled } = filters;
+    const { lineOne, lineTwo, lineThree, lineFour, lineFive, lineSix, noLine, onCall, approved, pending, cancelled } = filters;
 
     let filteredBool = Object.entries(filters).some((_) => {
       return (
         ((approved && (shift.status.toString().toLowerCase() === "accepted")) && (
+          (noLine && (shift.phoneLine === 0)) ||
           (lineOne && (shift.phoneLine === 1)) ||
           (lineTwo && (shift.phoneLine === 2)) ||
           (lineThree && (shift.phoneLine === 3)) ||
+          (lineFour && (shift.phoneLine === 4)) ||
+          (lineFive && (shift.phoneLine === 5)) ||
+          (lineSix && (shift.phoneLine === 6)) ||
           (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
         )) ||
         ((pending && (shift.status.toString().toLowerCase() === "pending")) && (
+          (noLine && (shift.phoneLine === 0)) ||
           (lineOne && (shift.phoneLine === 1)) ||
           (lineTwo && (shift.phoneLine === 2)) ||
           (lineThree && (shift.phoneLine === 3)) ||
+          (lineFour && (shift.phoneLine === 4)) ||
+          (lineFive && (shift.phoneLine === 5)) ||
+          (lineSix && (shift.phoneLine === 6)) ||
           (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
         )) ||
         ((cancelled && (shift.status.toString().toLowerCase() === "cancelled")) && (
+          (noLine && (shift.phoneLine === 0)) ||
           (lineOne && (shift.phoneLine === 1)) ||
           (lineTwo && (shift.phoneLine === 2)) ||
           (lineThree && (shift.phoneLine === 3)) ||
+          (lineFour && (shift.phoneLine === 4)) ||
+          (lineFive && (shift.phoneLine === 5)) ||
+          (lineSix && (shift.phoneLine === 6)) ||
           (onCall && ((shift as OnCallShift)["primaryShifts"] !== undefined))
         ))
       );
@@ -964,9 +977,13 @@ const Cal = () => {
     partTime: true,
     fullTime: true,
     manager: true,
+    noLine: true,
     lineOne: true,
     lineTwo: true,
     lineThree: true,
+    lineFour: true,
+    lineFive: true,
+    lineSix: true,
     onCall: true,
     approved: true,
     pending: true,
@@ -984,9 +1001,13 @@ const Cal = () => {
     partTime,
     fullTime,
     manager,
+    noLine,
     lineOne,
     lineTwo,
     lineThree,
+    lineFour,
+    lineFive,
+    lineSix,
     onCall,
     approved,
     pending,
@@ -1064,17 +1085,7 @@ const Cal = () => {
             >
               <Grid container direction="row" spacing={1} width={'50em'}>
                 {/* EMPLOYEE NAME Column */}
-                <Grid item xs={12} md={3} lg={3}>
-                    <Grid container direction="column" spacing={1}>
-                      <Grid sx={{ ml: 2 }} onClick={(e) => e.stopPropagation()}>
-                        <ListSubheader>
-                          {" "}
-                          <b>Employee Name</b>
-                        </ListSubheader>
-                        <ComboBox value={selectedEmployee} onSelect={handleSelectEmployee} boxWidth={175} label={"Employee Name"}/>
-                      </Grid>
-                    </Grid>
-                </Grid>
+                
 
                 {/* EMPLOYEE TYPE Column */}
                 <Grid item xs={12} md={3} lg={3}>
@@ -1132,6 +1143,17 @@ const Cal = () => {
                           <b>Phone Line</b>
                         </ListSubheader>
                         <FormGroup sx={{ px: 1.5 }}>
+                        <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={noLine}
+                                onChange={handleFilterChange}
+                                name="noLine"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="N/A"
+                          />
                           <FormControlLabel
                             control={
                               <Checkbox
@@ -1168,13 +1190,35 @@ const Cal = () => {
                           <FormControlLabel
                             control={
                               <Checkbox
-                                checked={onCall}
+                                checked={lineFour}
                                 onChange={handleFilterChange}
-                                name="onCall"
+                                name="lineFour"
                               />
                             }
                             onClick={(e) => e.stopPropagation()}
-                            label="On Call"
+                            label="Line 4"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={lineFive}
+                                onChange={handleFilterChange}
+                                name="lineFive"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Line 5"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={lineSix}
+                                onChange={handleFilterChange}
+                                name="lineSix"
+                              />
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            label="Line 6"
                           />
                         </FormGroup>
                       </Grid>
