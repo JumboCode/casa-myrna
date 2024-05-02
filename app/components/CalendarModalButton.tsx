@@ -163,7 +163,7 @@ const CalendarModalButton: FC<any> = ({ callback }) => {
             created_at: createdAt,
             userID: id,
             message: "hello",
-            status: "ACCEPTED",
+            status: firstName === '' && lastName === '' ? 'CANCELLED' : 'ACCEPTED',
         };
 
         if (formData.shiftType === "regular") {
